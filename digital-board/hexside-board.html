@@ -1,0 +1,2391 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Hexside Base Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b2420; --paper:#faf8f3; --paper-2:#f1ede2; --muted:#6b7268;
+  --pitch-green:#2f6b4f; --pitch-green-2:#3d8062; --pitch-green-3:#5aa07e;
+  --cmd-navy:#25334d; --ochre:#b5842a; --lane-top:#e4efe7; --lane-bottom:#dfe6ee;
+  --seam:#efe6d3;
+  --yellow-card:#e8c547; --red-card:#a4372f; --card-face:#ffffff; --rule:#d8d2c2;
+  --gk-zone:#c7c2b3;
+  --side-a:#2f6b4f; --side-a-dark:#234f3a; --side-b:#a4372f; --side-b-dark:#7c281f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif}
+.mono{font-family:'IBM Plex Mono',monospace}
+.app{max-width:1280px;margin:0 auto;padding:18px 20px 40px}
+h1,h2,h3{font-family:'Fraunces',ui-serif,Georgia,serif;font-weight:600;line-height:1.1;text-wrap:balance;color:var(--ink);margin:0}
+
+/* ---- header / scoreboard ---- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand h1{font-size:1.7rem}
+.brand .tag{font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--ochre);font-weight:600}
+.scoreboard{display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--paper);border-radius:12px;padding:10px 20px;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.sb-team{display:flex;flex-direction:column;align-items:center;min-width:64px}
+.sb-team .name{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.sb-team .score{font-family:'Fraunces',serif;font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.sb-team.a .name{color:#7ec9a5}
+.sb-team.b .name{color:#e39a90}
+.sb-mid{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;opacity:.85;min-width:74px}
+.sb-mid .half{text-transform:uppercase;letter-spacing:.07em}
+.flair-row{display:flex;gap:14px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem}
+.flair-pips{display:inline-flex;gap:2px;margin-left:5px;vertical-align:middle}
+.pip{width:8px;height:8px;border-radius:50%;background:var(--paper-2);border:1px solid var(--rule)}
+.pip.on{background:var(--ochre);border-color:var(--ochre)}
+.iconbtn{font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;background:var(--paper-2);border:1px solid var(--rule);color:var(--ink);border-radius:7px;padding:7px 12px;cursor:pointer}
+.iconbtn:hover{background:var(--rule)}
+
+/* ---- layout ---- */
+.layout{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.board-col{flex:1 1 620px;min-width:340px}
+.side-col{flex:0 1 320px;min-width:280px;display:flex;flex-direction:column;gap:14px}
+
+.panel{background:var(--card-face);border:1px solid var(--rule);border-radius:12px;padding:14px 16px}
+.panel h2{font-size:.92rem;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px}
+
+/* ---- board ---- */
+.board-wrap{background:linear-gradient(180deg,#eef2ea,#e7ede6);border:1px solid var(--rule);border-radius:14px;padding:10px;position:relative}
+svg.board{width:100%;height:auto;display:block}
+.hex{stroke:#ffffff;stroke-width:2px;cursor:default}
+.hex.clickable{cursor:pointer}
+.hex.dest{filter:drop-shadow(0 0 0 rgba(0,0,0,0))}
+.hex-label{font-family:'IBM Plex Mono',monospace;fill:#8b9186;pointer-events:none;user-select:none}
+.token{cursor:pointer}
+.token.inactive{cursor:default;opacity:.55}
+.token-label{font-family:'IBM Plex Sans',sans-serif;font-weight:700;fill:#fff;pointer-events:none;user-select:none}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.72rem;color:var(--muted);margin-top:8px;font-family:'IBM Plex Mono',monospace}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* ---- action bar ---- */
+.actionbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;min-height:40px}
+.actionbar .prompt{font-size:.88rem;color:var(--muted);margin-right:auto}
+.hint{font-size:.82rem;color:var(--red-card);background:#fdeeec;border:1px solid #f0c9c4;border-radius:7px;padding:7px 11px;margin-top:8px}
+button.act{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:.86rem;background:var(--pitch-green);color:#fff;border:none;border-radius:8px;padding:9px 16px;cursor:pointer;transition:background .1s}
+button.act:hover{background:var(--pitch-green-2)}
+button.act.secondary{background:var(--paper-2);color:var(--ink);border:1px solid var(--rule)}
+button.act.secondary:hover{background:var(--rule)}
+button.act.danger{background:var(--red-card)}
+button.act:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---- hand of cards ---- */
+.hand{display:flex;gap:8px;flex-wrap:wrap}
+.card{width:84px;height:112px;border-radius:9px;border:2px solid var(--cmd-navy);background:linear-gradient(160deg,#2c3c58,var(--cmd-navy));color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:8px 7px;cursor:pointer;transition:transform .1s;position:relative;font-family:'IBM Plex Sans',sans-serif}
+.card:hover{transform:translateY(-3px)}
+.card.disabled{opacity:.4;cursor:not-allowed;transform:none}
+.card .ctype{font-family:'IBM Plex Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;color:#f0c96a}
+.card .cname{font-size:.8rem;font-weight:700;line-height:1.15}
+.card .cdesc{font-size:.56rem;color:#c9d2e0;line-height:1.25}
+.cardback{width:40px;height:56px;border-radius:6px;border:2px solid var(--cmd-navy);background:repeating-linear-gradient(135deg,var(--cmd-navy),var(--cmd-navy) 4px,#324567 4px,#324567 8px)}
+.hand-b{display:flex;gap:5px}
+
+/* ---- log ---- */
+.log{max-height:230px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;font-size:.79rem}
+.log .line{padding:4px 7px;border-radius:6px;background:var(--paper-2)}
+.log .line.win{border-left:3px solid var(--pitch-green)}
+.log .line.lose{border-left:3px solid var(--red-card)}
+.log .line.info{border-left:3px solid var(--rule);color:var(--muted)}
+.log .line.goal{background:#fdf0d9;border-left:3px solid var(--ochre);font-weight:600}
+.log .line.card-line{border-left:3px solid var(--yellow-card);color:#7a5f10}
+
+/* ---- dice ---- */
+.diceroll{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.dicegroup{display:flex;flex-direction:column;gap:5px;align-items:center}
+.dicegroup .glabel{font-family:'IBM Plex Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.dice{display:flex;gap:4px}
+.die{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;font-family:'IBM Plex Mono',monospace;border:1px solid rgba(0,0,0,.15)}
+.die.blank{background:#e6e2d6;color:#8b8676}
+.die.flair{background:var(--ochre);color:#fff}
+.die.hit{background:var(--pitch-green);color:#fff}
+.die.hit.def{background:var(--cmd-navy)}
+.resultline{font-weight:700;font-size:.9rem}
+
+/* ---- modal ---- */
+.modal-overlay{position:fixed;inset:0;background:rgba(20,22,18,.55);display:flex;align-items:center;justify-content:center;z-index:50}
+.modal{background:var(--paper);border-radius:14px;padding:26px 28px;max-width:440px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.modal.wide{max-width:680px;max-height:82vh;overflow-y:auto}
+.slotpick{margin:14px 0}
+.slotpick .slothead{font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.slotpick .opts{display:flex;gap:8px;flex-wrap:wrap}
+.slotopt{border:2px solid var(--rule);border-radius:9px;padding:8px 11px;cursor:pointer;font-size:.82rem;background:#fff;min-width:132px;max-width:200px}
+.slotopt:hover{border-color:var(--ochre)}
+.slotopt.picked{border-color:var(--pitch-green);background:#eaf3ee}
+.slotopt .oname{font-weight:700;display:block}
+.slotopt .osig{color:var(--ochre);font-size:.72rem;display:block;margin-top:2px}
+.slotopt .odesc{color:var(--muted);font-size:.68rem;display:block;margin-top:2px;line-height:1.3}
+.modal h3{font-size:1.25rem;margin-bottom:8px;color:var(--pitch-green)}
+.modal p{font-size:.92rem;line-height:1.5;color:var(--ink)}
+.modal .row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+
+.unit-info{display:flex;gap:10px;align-items:center;font-size:.82rem;background:var(--paper-2);border-radius:8px;padding:8px 10px;margin-top:8px}
+.unit-info b{font-family:'Fraunces',serif}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px 10px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted)}
+.footer-note{font-size:.74rem;color:var(--muted);margin-top:16px;line-height:1.5}
+[hidden]{display:none!important}
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><h1>Hexside</h1><span class="tag">Base Game &middot; vs CPU</span></div>
+    <div class="scoreboard">
+      <div class="sb-team a"><span class="name">You (A)</span><span class="score" id="scoreA">0</span></div>
+      <div class="sb-mid"><span class="half mono" id="halfLabel">Half 1</span><span class="mono" id="turnLabel">Turn 1/48</span></div>
+      <div class="sb-team b"><span class="name">CPU (B)</span><span class="score" id="scoreB">0</span></div>
+    </div>
+    <div class="flair-row">
+      <span>Your Flair<span class="flair-pips" id="flairA"></span></span>
+      <span>CPU Flair<span class="flair-pips" id="flairB"></span></span>
+      <button class="iconbtn" id="newMatchBtn">New Match</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="board-col">
+      <div class="board-wrap">
+        <svg class="board" id="board" viewBox="0 0 100 100"></svg>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--side-a)"></i>Your units</span>
+        <span><i style="background:var(--side-b)"></i>CPU units</span>
+        <span><i style="background:var(--gk-zone)"></i>Goalkeeper Zone</span>
+        <span><i style="background:var(--ochre)"></i>Ball</span>
+      </div>
+      <div class="panel" style="margin-top:12px">
+        <div class="actionbar" id="actionbar"><span class="prompt" id="prompt">Setting up the match&hellip;</span></div>
+        <div class="hint" id="hexHint" hidden></div>
+        <div id="diceArea"></div>
+      </div>
+      <div class="panel" style="margin-top:12px" id="unitInfoPanel" hidden>
+        <h2>Selected unit</h2>
+        <div id="unitInfo"></div>
+      </div>
+    </div>
+
+    <div class="side-col">
+      <div class="panel">
+        <h2>Your Command Cards</h2>
+        <div class="hand" id="handA"></div>
+      </div>
+      <div class="panel">
+        <h2>CPU hand (<span id="handBCount">5</span> cards)</h2>
+        <div class="hand-b" id="handB"></div>
+      </div>
+      <div class="panel">
+        <h2>Match Log</h2>
+        <div class="log" id="log"></div>
+      </div>
+      <div class="panel">
+        <h2>Rules note</h2>
+        <div class="footer-note">Faithful to the printed Base Game rulebook: real Command Card hand &amp; deck, dice-based Pass/Dribble/Shot/Tackle resolution (including Bounce Pass, §8), Save-retention &amp; rebounds, Discipline deck &amp; sin-bin, and optional Character Skins with all 12 Signatures live (Showman needs a real Tactic Deck, which Base Game never deals, so it structurally can't trigger here — not a gap) — and a real hand-played kickoff-placement draft at kickoff, every goal, and half-time: you name your own taker and place your own units, alternating with the CPU, reacting to what's already on the board. One simplification for this digital build: the CPU plays sound but not optimal tactics.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================== GEOMETRY (ported from board.py) ============================== */
+// 2026-09-22: row model corrected to match board.py's 2026-09-15 half-hex-caps change,
+// which this file never got ported for - short columns run rows 0-6 (7 positions, a
+// half-height cap hex at each end), not the old 1-5. minRow/maxRow mirror board.py's own
+// functions exactly. Tall columns are unaffected (still 1-6). rowsInCol is now 7 for a
+// short column (was 5) - fromXY/the draft pool/touchlineHex/allHexes all use minRow/maxRow
+// directly rather than rowsInCol as a loop bound, deliberately: reusing rowsInCol=7 as an
+// upper row-index bound would generate the nonexistent "B7" the Python port's own docstring
+// warns about, instead of the real B6.
+const COLS = "ABCDEFGHIJK";
+const isShort = c => COLS.indexOf(c) % 2 === 1;
+const minRow = c => isShort(c) ? 0 : 1;
+const maxRow = c => 6;
+const rowsInCol = c => maxRow(c) - minRow(c) + 1;
+const parseHex = h => [h[0], parseInt(h.slice(1),10)];
+function gridDY(c,r){ return 2*r + (isShort(c)?1:0); }
+function fromXY(x,Y){
+  if(x<0||x>=COLS.length) return null;
+  const c = COLS[x], short = isShort(c);
+  if(short && Y%2===0) return null;
+  if(!short && Y%2===1) return null;
+  const r = (Y-(short?1:0))/2;
+  if(r<minRow(c)||r>maxRow(c)) return null;
+  return c+r;
+}
+function neighbors(h){
+  const [c,r] = parseHex(h);
+  const x = COLS.indexOf(c), Y = gridDY(c,r);
+  const out = [];
+  for(const [dx,dy] of [[0,-2],[0,2],[-1,-1],[-1,1],[1,-1],[1,1]]){
+    const nx=x+dx, nY=Y+dy;
+    if(nx>=0 && nx<COLS.length){ const rr=fromXY(nx,nY); if(rr) out.push(rr); }
+  }
+  return out;
+}
+function adjacent(h1,h2){ return neighbors(h1).includes(h2); }
+function thirdOf(c){ const i=COLS.indexOf(c); return i<=3?1:(i<=6?2:3); }
+function laneOf(c,r){
+  if(isShort(c)){ if(r<=2) return ['Top']; if(r===3) return ['Top','Bottom']; return ['Bottom']; }
+  return r<=3 ? ['Top'] : ['Bottom'];
+}
+function zoneOf(h){ const [c,r]=parseHex(h); return [thirdOf(c), laneOf(c,r)]; }
+function straightLine(h1,h2){
+  const [c1,r1]=parseHex(h1), [c2,r2]=parseHex(h2);
+  if(h1===h2) return [0,[]];
+  const x1=COLS.indexOf(c1), x2=COLS.indexOf(c2);
+  if(c1===c2){
+    const d=Math.abs(r1-r2), step=r2>r1?1:-1, mids=[];
+    for(let i=1;i<d;i++) mids.push(c1+(r1+step*i));
+    return [d,mids];
+  }
+  const Y1=gridDY(c1,r1), Y2=gridDY(c2,r2), dx=x2-x1, dyv=Y2-Y1;
+  if(dyv===0 && (x1%2)===(x2%2)){
+    const d=Math.abs(dx), step=dx>0?2:-2, mids=[]; let xx=x1+step;
+    while(xx!==x2){ mids.push(COLS[xx]+r1); xx+=step; }
+    return [d,mids];
+  }
+  if(Math.abs(dx)===Math.abs(dyv) && dx!==0){
+    const d=Math.abs(dx), sx=dx>0?1:-1, sy=dyv>0?1:-1, mids=[];
+    for(let i=1;i<d;i++) mids.push(fromXY(x1+sx*i, Y1+sy*i));
+    return [d,mids];
+  }
+  return [null,null];
+}
+const GK_ZONE = {A:['A3','A4','B3'], K:['K3','K4','J3']};
+const REBOUND_HEX = {A:{Top:'B2',Bottom:'B4'}, K:{Top:'J2',Bottom:'J4'}};
+const NET_POINTS = {A:[[-1,2],[-1,3],[-1,4]], K:[[11,2],[11,3],[11,4]]};
+function shortIdx(i){ return (((i%2)+2)%2)===1; }
+function dYIdx(i,r){ return 2*r + (shortIdx(i)?1:0); }
+function straightDistIdx(i1,r1,i2,r2){
+  if(i1===i2 && r1===r2) return 0;
+  if(i1===i2) return Math.abs(r1-r2);
+  const Y1=dYIdx(i1,r1), Y2=dYIdx(i2,r2), dx=i2-i1, dyv=Y2-Y1;
+  if(dyv===0 && (((i1%2)+2)%2)===(((i2%2)+2)%2)) return Math.abs(dx);
+  if(Math.abs(dx)===Math.abs(dyv) && dx!==0) return Math.abs(dx);
+  return null;
+}
+function shotDist(h,end){
+  const [c,r]=parseHex(h), i1=COLS.indexOf(c);
+  let best=null;
+  for(const [i2,r2] of NET_POINTS[end]){
+    const d = straightDistIdx(i1,r,i2,r2);
+    if(d!==null && (best===null||d<best)) best=d;
+  }
+  return best;
+}
+const KICKOFF_ZONE = new Set([...neighbors('F3'), 'F3']);
+
+/* ============================== BOUNCE PASS (ported from engine/board.py + sim.py, 2026-09-22) ==============================
+   V can only ever hit a side wall, H only ever a back wall (each runs parallel to the
+   other); a diagonal can hit either and always reflects to the OTHER diagonal (the
+   board's only two diagonal directions). Verified against the Python port's own
+   reflection-angle math, not re-derived. */
+const _AXIS_STEPS = { V:[[0,-2],[0,2]], D1:[[-1,-1],[1,1]], D2:[[-1,1],[1,-1]], H:[[-2,0],[2,0]] };
+const _BOUNCE_REFLECT = { 'V,side':'V', 'H,back':'H', 'D1,side':'D2', 'D2,side':'D1', 'D1,back':'D2', 'D2,back':'D1' };
+const _AXIS_STEP_COST = { V:1, D1:1, D2:1, H:2 }; // H already crosses 2 real columns per step - straightLine's own horizontal branch charges distance 2 for it, so this must too.
+
+function _walkAxis(i, Y, dIdx, dDY, cost, budget){
+  const pts = [];
+  let remaining = budget;
+  while(remaining >= cost){
+    const ni = i+dIdx, nY = Y+dDY;
+    if(!(ni>=0 && ni<COLS.length)) return {pts, remaining, exited:'back'};
+    if(fromXY(ni,nY)===null) return {pts, remaining, exited:'side'};
+    i=ni; Y=nY;
+    pts.push([i,Y]);
+    remaining -= cost;
+  }
+  return {pts, remaining, exited:null};
+}
+// Every legal bounce-pass LINE for one (axis, direction) from `start`, budgeted by
+// `budget` (both legs together, same as a straight Pass counts every hex crossed).
+// Returns {path, reachesNet, bounced, wall}: path is every real hex actually crossed,
+// nearest first, any one a legal landing spot (mirrors board.py's own contract exactly).
+// wall is 'side'/'back' if a real reflection happened, else null (includes the "reaches
+// net directly on the first leg, no bounce needed" case - see bouncePassOptions).
+function bouncePassReach(start, axis, direction, budget){
+  const [col,row] = parseHex(start);
+  const i0 = COLS.indexOf(col), Y0 = gridDY(col,row);
+  const [dIdx,dDY] = _AXIS_STEPS[axis][direction];
+  const cost = _AXIS_STEP_COST[axis];
+  const {pts:pts1, remaining, exited} = _walkAxis(i0,Y0,dIdx,dDY,cost,budget);
+  let path = pts1.map(([i,Y])=>fromXY(i,Y));
+  if(path.length){
+    const [cLast,rLast] = parseHex(path[path.length-1]);
+    if((cLast==='A'||cLast==='K') && (rLast===3||rLast===4)) return {path, reachesNet:cLast, bounced:false, wall:null};
+  }
+  if(exited===null) return {path, reachesNet:null, bounced:false, wall:null};
+  const [lastI,lastY] = pts1.length ? pts1[pts1.length-1] : [i0,Y0];
+  const ni = lastI+dIdx, nY = lastY+dDY;
+  const end = ni<0 ? 'A' : (ni>=COLS.length ? 'K' : null);
+  if(end && NET_POINTS[end].some(([ci,r])=>ci===ni && dYIdx(ci,r)===nY)) return {path, reachesNet:end, bounced:false, wall:null};
+  if(!path.length) return {path:[], reachesNet:null, bounced:false, wall:null}; // already flush on this wall/axis - nothing to bounce
+  const newAxis = _BOUNCE_REFLECT[axis+','+exited];
+  if(!newAxis) return {path, reachesNet:null, bounced:false, wall:null}; // defensive - a real wall hit can't actually produce this
+  let rdIdx=null, rdDY=null;
+  for(const [cDx,cDY] of _AXIS_STEPS[newAxis]){
+    const testI = lastI+cDx, testY = lastY+cDY;
+    if(testI>=0 && testI<COLS.length && fromXY(testI,testY)!==null){ rdIdx=cDx; rdDY=cDY; break; }
+  }
+  if(rdIdx===null) return {path, reachesNet:null, bounced:false, wall:null}; // a corner where neither reflected direction re-enters the grid
+  const {pts:pts2} = _walkAxis(lastI,lastY,rdIdx,rdDY,_AXIS_STEP_COST[newAxis],remaining);
+  path = path.concat(pts2.map(([i,Y])=>fromXY(i,Y)));
+  return {path, reachesNet:null, bounced:true, wall:exited};
+}
+// Every legal bounce-pass OUTCOME for `unit` from its current hex: tries all 4 axes, both
+// directions (8 lines), budgeted by the unit's own Pass Range. kind is 'net' (resolves as
+// a Shot, budgeted against Pass Range not Shot Range - the one way a Pass can score
+// directly), 'teammate' (a completed pass via a bent path), 'intercepted' (lands on an
+// opposing unit - legal to attempt, a bad idea), or 'loose' (lands on nobody - ball goes
+// loose there, same as a Clearance). A line that reaches its target WITHOUT ever needing
+// an actual wall reflection is still a real, distinct option from a normal Pass in that
+// same direction: unlike a normal Pass, nothing here is ever contested by a Zone of
+// Control (§8) - this is the rulebook's own ruling, not a simplification.
+function bouncePassOptions(side, unit){
+  const unitHex = S.pos[side][unit];
+  const budget = unitStats(side,unit).prange;
+  const ownPos = new Set(Object.entries(S.pos[side]).filter(([u])=>u!==unit).map(([,h])=>h));
+  const oppSide = side==='A'?'B':'A';
+  const oppPos = new Set(Object.values(S.pos[oppSide]));
+  const out = [];
+  for(const axis of ['V','D1','D2','H']){
+    for(const direction of [0,1]){
+      const r = bouncePassReach(unitHex, axis, direction, budget);
+      if(r.reachesNet){
+        out.push({kind:'net', end:r.reachesNet, endHex:null, axis, direction, wall:r.wall});
+      } else if(r.path.length){
+        const target = r.path[r.path.length-1];
+        const kind = ownPos.has(target) ? 'teammate' : (oppPos.has(target) ? 'intercepted' : 'loose');
+        out.push({kind, endHex:target, axis, direction, wall:r.wall});
+      }
+    }
+  }
+  return out;
+}
+// Human-readable label for one bounce option, shared between the human's choice modal
+// and both sides' resolution log lines so the two stay consistent. wall is null for a
+// line that reaches its target with no actual reflection (still legal, still never
+// contested - see bouncePassOptions's own comment) - phrased differently since "bounces
+// off the wall" would be inaccurate for it.
+function describeBounceOutcome(side, opt){
+  const wallPart = opt.wall ? `bounces off the ${opt.wall} wall` : `runs straight down the line, no bounce needed`;
+  if(opt.kind==='net') return `${wallPart} — lines up a shot on goal!`;
+  const oppSide = side==='A' ? 'B' : 'A';
+  if(opt.kind==='teammate'){
+    const recv = Object.entries(S.pos[side]).find(([,h])=>h===opt.endHex)[0];
+    return `${wallPart} — passes to ${unitStats(side,recv).role} at ${opt.endHex}`;
+  }
+  if(opt.kind==='intercepted'){
+    const def = Object.entries(S.pos[oppSide]).find(([,h])=>h===opt.endHex)[0];
+    return `${wallPart} — straight to ${sideName(oppSide)}'s ${unitStats(oppSide,def).role} at ${opt.endHex}! Risky.`;
+  }
+  return `${wallPart} — ball goes loose at ${opt.endHex}`;
+}
+// Resolves a chosen 'teammate'/'loose'/'intercepted' bounce option - never contested (§8:
+// "None of this is contested along the way, at either leg"), unlike a normal Pass. The
+// passer itself doesn't move, only the ball travels (mirrors driver_base.py's own
+// resolve_bounce_completion). A 'net' option is NOT handled here - see
+// executeHumanBouncePass/cpuTryBounceNet, which resolve it as a real Shot instead
+// (Save-contested, reusing humanShoot/cpuShoot directly rather than duplicating that
+// whole dice/goal/rebound sequence a second time).
+function resolveBounceCompletion(side, unit, opt){
+  const oppSide = side==='A' ? 'B' : 'A';
+  const target = opt.endHex;
+  const desc = describeBounceOutcome(side, opt);
+  if(opt.kind==='teammate'){
+    const recv = Object.entries(S.pos[side]).find(([,h])=>h===target)[0];
+    S.ball = {side, unit:recv, hex:target};
+    log(`${unitName(side,unit)} ${desc}.`, side==='A'?'win':'info');
+  } else if(opt.kind==='intercepted'){
+    const def = Object.entries(S.pos[oppSide]).find(([,h])=>h===target)[0];
+    S.ball = {side:oppSide, unit:def, hex:target};
+    log(`${unitName(side,unit)} ${desc} — turned over.`, side==='A'?'lose':'win');
+  } else {
+    S.ball = {side:null, unit:null, hex:target};
+    log(`${unitName(side,unit)} ${desc}.`, 'info');
+  }
+  checkNoOverlap();
+}
+
+/* ============================== ROSTER ============================== */
+// Standard five, unchanged - now the "no alternate picked" option for each slot rather
+// than the only option. sig is a programmatic key (SIG_INFO below carries the display
+// name/description) - kept distinct from the unit's own `name` (its card identity,
+// "Standard Goalkeeper" or e.g. "The Wall") so UI text can show either.
+const BASE_ROSTER = {
+  GK: {pace:2, shot:0, control:2, prange:2, srange:null, tackle:2, save:3, sig:'shot_stopper', role:'Goalkeeper', name:'Standard Goalkeeper'},
+  SW: {pace:3, shot:3, control:5, prange:2, srange:2, tackle:3, sig:'overlap', role:'Sweeper', name:'Standard Sweeper'},
+  WB: {pace:2, shot:3, control:5, prange:3, srange:2, tackle:4, sig:'last_man', role:'Wingback', name:'Standard Wingback'},
+  PM: {pace:3, shot:4, control:4, prange:4, srange:3, tackle:2, sig:'vision', role:'Playmaker', name:'Standard Playmaker'},
+  PO: {pace:4, shot:5, control:5, prange:1, srange:4, tackle:2, sig:'clinical', role:'Poacher', name:'Standard Poacher'},
+};
+const UNIT_ORDER = ['GK','SW','WB','PM','PO'];
+
+// Character Skins (hexside-character-cards.html, 2026-09-17): optional alternates, one
+// per slot at most, each a stat delta from BASE_ROSTER plus a replacement Signature.
+// `role` stays the slot's own footballing position (used all over the UI for labels
+// like "Your Sweeper") - `name` is the character identity shown alongside it.
+const CHARACTERS = {
+  GK: [
+    {pace:3, shot:0, control:2, prange:1, srange:null, tackle:2, save:4, sig:'immovable', role:'Goalkeeper', name:'"The Wall"'},
+    {pace:4, shot:0, control:4, prange:2, srange:null, tackle:2, save:2, sig:'playing_out', role:'Goalkeeper', name:'"Sunday Ederson"'},
+  ],
+  SW: [
+    {pace:4, shot:3, control:4, prange:2, srange:2, tackle:4, sig:'no_way_through', role:'Sweeper', name:'"Big Dave"'},
+    {pace:3, shot:3, control:5, prange:3, srange:2, tackle:3, sig:'reads_the_game', role:'Sweeper', name:'"Uncle Barry"'},
+    {pace:4, shot:2, control:5, prange:3, srange:2, tackle:3, sig:'marshalled', role:'Sweeper', name:'"Gaffer"'},
+  ],
+  WB: [
+    {pace:4, shot:3, control:5, prange:3, srange:2, tackle:4, sig:'gasser', role:'Wingback', name:'"The Engine"'},
+    {pace:4, shot:3, control:4, prange:3, srange:2, tackle:3, sig:'one_more_run', role:'Wingback', name:'"Dodgy Knee"'},
+  ],
+  PM: [
+    {pace:4, shot:4, control:3, prange:4, srange:3, tackle:3, sig:'sees_red', role:'Playmaker', name:'"Roy"'},
+    {pace:4, shot:4, control:5, prange:3, srange:3, tackle:1, sig:'showman', role:'Playmaker', name:'"Magic"'},
+  ],
+  PO: [
+    {pace:5, shot:3, control:4, prange:1, srange:4, tackle:2, sig:'out_of_nowhere', role:'Poacher', name:'"Flash"'},
+    {pace:5, shot:5, control:5, prange:1, srange:4, tackle:1, sig:'main_character', role:'Poacher', name:'"Me!"'},
+    {pace:3, shot:5, control:5, prange:1, srange:2, tackle:2, sig:'immovable_object', role:'Poacher', name:'"The Wardrobe"'},
+  ],
+};
+// Display name + one-line rules text per Signature key - the same key/label/desc split
+// this file already uses for Command Cards (CARD_LABEL/CARD_DESC), reused here rather
+// than inventing a second pattern. Showman has real text but never actually triggers in
+// this Base-Game-only build (no Tactic Deck to play a Nutmeg/Step-Over from) - same as
+// in driver_base.py; kept for completeness on the character-select screen, not a bug.
+const SIG_INFO = {
+  shot_stopper: {name:'Shot-Stopper', desc:'Once/match, reroll 1 Blank die on a Save.'},
+  overlap: {name:'Overlap', desc:'Once/turn (Lane/Third card), +1 Pace if it lands in Third 2.'},
+  last_man: {name:'Last Man', desc:'Once/match, free Tackle Challenge, no Counter needed.'},
+  vision: {name:'Vision', desc:'Once/match, ignores a Zone of Control on a Pass or Clearance — free, no Flair.'},
+  clinical: {name:'Clinical', desc:'Once/match, reroll 1 Blank die on a Shot.'},
+  immovable: {name:'Immovable', desc:'Once/match, reroll up to 2 Blank dice on a Save.'},
+  playing_out: {name:'Playing Out', desc:'Once/match, acts as an outfield unit for one activation - then must get back to its zone next turn or draws a Yellow Card.'},
+  no_way_through: {name:'No Way Through', desc:'Once/match, auto-win a Tackle Challenge, no roll - but draws Discipline twice regardless.'},
+  reads_the_game: {name:'Reads the Game', desc:'Once/match, free -1 Pace to an adjacent opponent’s move - no Flair, no card.'},
+  marshalled: {name:'Marshalled', desc:'Once/match, one teammate may act as though also activated this turn.'},
+  gasser: {name:'Gasser', desc:'From the start of the second half, standing -1 Pace for the rest of the match.'},
+  one_more_run: {name:'One More Run', desc:'Once/match, ignores a Zone of Control - then -1 Pace for the rest of that half.'},
+  sees_red: {name:'Sees Red', desc:'Once/match, +1 Attack die on a Tackle - but draws Discipline twice if it’s lost.'},
+  showman: {name:'Showman', desc:'Next Nutmeg/Step-Over costs 1 less Flair - no Tactic Deck in this build, never triggers.'},
+  out_of_nowhere: {name:'Out of Nowhere', desc:'Once/match, ignores a Zone of Control - but can’t Shoot that activation.'},
+  main_character: {name:'Main Character', desc:'Once/match, reroll ALL Blank dice on a Shot (redesigned 2026-09-21 - the original "must Shoot when Through on Goal" had nothing to restrict, same finding as both Python drivers).'},
+  immovable_object: {name:'Immovable Object', desc:'Once/match, cancels 1 attacker Success on an incoming Tackle Challenge.'},
+};
+
+/* ============================== DECKS ============================== */
+// 2026-09-22 (revised same day): Zone trimmed 2->1 each. Lane/Third/TacticalFree
+// briefly went to 3/3/7 (+1-each) but were reverted to their original 2/2/6 - all 6
+// freed slots then went to Lane alone (2->5 each), the one type where +6 divides
+// evenly across its 2 variants with no remainder to arbitrate. Net vs. original: only
+// Zone (2->1) and Lane (2->5) changed. See engine/sim.py's COMMAND for full rationale.
+// Total stays 36.
+const COMMAND_SPEC = [
+  ['Zone-T1-Top',1],['Zone-T1-Bottom',1],['Zone-T2-Top',1],['Zone-T2-Bottom',1],
+  ['Zone-T3-Top',1],['Zone-T3-Bottom',1],['Lane-Top',5],['Lane-Bottom',5],
+  ['Third-1',2],['Third-2',2],['Third-3',2],['TacticalFree',6],
+  ['FullPress',3],['KeepersCall',2],['Counter',3]
+];
+const FALLBACK_CARDS = new Set(['Zone-T1-Top','Zone-T1-Bottom','Zone-T2-Top','Zone-T2-Bottom','Zone-T3-Top','Zone-T3-Bottom']);
+const SEAM_EXTRA = {'Zone-T2-Top':['D','H'], 'Zone-T2-Bottom':['D','H']};
+const CARD_ZONE = {'Zone-T1-Top':[1,'Top'],'Zone-T1-Bottom':[1,'Bottom'],'Zone-T2-Top':[2,'Top'],
+  'Zone-T2-Bottom':[2,'Bottom'],'Zone-T3-Top':[3,'Top'],'Zone-T3-Bottom':[3,'Bottom']};
+const CARD_LABEL = {
+  'Zone-T1-Top':'Zone: T1 / Top', 'Zone-T1-Bottom':'Zone: T1 / Bottom',
+  'Zone-T2-Top':'Zone: T2 / Top', 'Zone-T2-Bottom':'Zone: T2 / Bottom',
+  'Zone-T3-Top':'Zone: T3 / Top', 'Zone-T3-Bottom':'Zone: T3 / Bottom',
+  'Lane-Top':'Lane: Top', 'Lane-Bottom':'Lane: Bottom',
+  'Third-1':'Third 1', 'Third-2':'Third 2', 'Third-3':'Third 3',
+  'TacticalFree':'Tactical Free', 'FullPress':'Full Press', 'KeepersCall':"Keeper's Call", 'Counter':'Counter',
+};
+const CARD_DESC = {
+  'TacticalFree':'Activate any 2 units', 'FullPress':'Activate all 5, 2 Acts, then 2-draw debt',
+  'KeepersCall':'Activate GK, +1 draw', 'Counter':'Hold — play on opponent’s turn',
+};
+function cardDesc(card){
+  if(CARD_DESC[card]) return CARD_DESC[card];
+  if(card.startsWith('Zone-')) return 'Activate units there, else 1 anywhere';
+  if(card.startsWith('Lane-')) return 'Activate every unit in that lane';
+  if(card.startsWith('Third-')) return 'Activate every unit in that third';
+  return '';
+}
+function buildDeck(spec){ const out=[]; for(const [name,n] of spec) for(let i=0;i<n;i++) out.push(name); return out; }
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+const DISC_POOL = ['Warning','Warning','AdvantagePlayOn','YellowCard','YellowCard','RedCard',
+  'CleanChallenge','CleanChallenge','CleanChallenge','CleanChallenge','CleanChallenge','CleanChallenge'];
+function drawDisc(){ return DISC_POOL[Math.floor(Math.random()*12)]; }
+
+/* ============================== DICE ============================== */
+function rollDie(){ return 1+Math.floor(Math.random()*6); }
+function face(v, attack){ if(v<=2) return 'blank'; if(v<=4) return 'flair'; return attack?'success':'stop'; }
+function rollDice(state, side, n, attack){
+  n = Math.max(0,n);
+  const vals=[]; for(let i=0;i<n;i++) vals.push(rollDie());
+  const faces = vals.map(v=>face(v,attack));
+  const hits = faces.filter(f=>f===(attack?'success':'stop')).length;
+  const flair = faces.filter(f=>f==='flair').length;
+  state.flair[side] = Math.min(5, state.flair[side]+flair);
+  return {vals,faces,hits,attack};
+}
+function rerollBlank(state, side, rollObj){
+  const i = rollObj.faces.indexOf('blank');
+  if(i<0) return false;
+  const v = rollDie(); rollObj.vals[i]=v;
+  const f = face(v, rollObj.attack); rollObj.faces[i]=f;
+  if(f===(rollObj.attack?'success':'stop')) rollObj.hits++;
+  if(f==='flair') state.flair[side]=Math.min(5,state.flair[side]+1);
+  return true;
+}
+
+/* ============================== GAME STATE ============================== */
+let S = null;      // rules state
+let UI = null;     // interaction state
+const HUMAN='A', CPU='B';
+// Bump this whenever a fix changes what a saved game's fields mean (e.g. the half-time
+// kicker fix below) — a save written by older logic can hold values that were correct
+// under the old rules but are wrong under the new ones, and loading new code doesn't
+// rewrite old data. loadGame() refuses to resume a save from an older version instead of
+// silently replaying a stale bug forever.
+const SAVE_VERSION = 2;
+
+function freshState(){
+  const s = {
+    turn:1, half:1, kicker:null, aDefendsLow:true,
+    pos:{A:{},B:{}}, ball:{side:null,unit:null,hex:null}, kickoffTaker:null,
+    score:{A:0,B:0}, flair:{A:0,B:0},
+    yellow:[], sentOff:[], sinbin:{}, emergencyGk:{}, paceMod:{},
+    handCmd:{A:[],B:[]}, cmdDraw:{A:[],B:[]}, cmdDiscard:{A:[],B:[]},
+    debt:{A:0,B:0},
+    counterUsedThisContestGuard:false,
+    // Every slot now gets a once-per-match sigUsed entry, not just GK/WB/PM/PO - a
+    // Character Skin can put a once-per-match Signature on the SW slot too (base SW's
+    // own Overlap stays tracked separately below, since it's once/turn not once/match).
+    sigUsed:{A:{GK:false,SW:false,WB:false,PM:false,PO:false},B:{GK:false,SW:false,WB:false,PM:false,PO:false}},
+    overlapUsedThisTurn:false,
+    // Character Skins (2026-09-17) state - see CHARACTERS/SIG_INFO above.
+    roster:{A:{}, B:{}}, // the actual per-side, per-slot stat+sig objects in use this match
+    playingOutPendingReturn:{A:false,B:false}, // GK forced-return check due at the start of this side's own next turn
+    playingOutThisTurn:{A:false,B:false}, // per-turn: was the zone-lock bypassed THIS turn (unlocks a Shot for this same activation)
+    bigMoveHalfDebuff:{A:null,B:null}, // One More Run: which half its -1 Pace debuff started, if used
+    outOfNowhereNoShot:{A:false,B:false}, // Out of Nowhere: blocks a Shot for one activation
+    log:[], matchOver:false,
+  };
+  return s;
+}
+function unitStats(side, unit){ return S.roster[side][unit]; }
+
+function log(text, cls){
+  S.log.push({text, cls: cls||'info'});
+  renderLog();
+}
+
+/* ---- deck plumbing ---- */
+function drawCmd(side){
+  if(S.cmdDraw[side].length===0){
+    if(S.cmdDiscard[side].length===0) S.cmdDraw[side] = shuffle(buildDeck(COMMAND_SPEC));
+    else { S.cmdDraw[side] = shuffle(S.cmdDiscard[side]); S.cmdDiscard[side]=[]; }
+  }
+  return S.cmdDraw[side].pop();
+}
+function replenish(side){
+  const needed = 5 - S.handCmd[side].length;
+  for(let i=0;i<needed;i++){
+    const c = drawCmd(side);
+    if(S.debt[side]>0){ S.debt[side]--; S.cmdDiscard[side].push(c);
+      log(`${sideName(side)} draw-up: 1 card discarded unseen (Full Press debt, ${S.debt[side]} left)`,'info');
+    } else S.handCmd[side].push(c);
+  }
+}
+function sideName(side){ return side==='A' ? 'You' : 'CPU'; }
+function unitName(side,unit){ return `${side==='A'?'Your':"CPU's"} ${unitStats(side,unit).role}`; }
+
+/* ============================== FORMATION / KICKOFF DRAFT ============================== */
+function kickoffTakerPick(pool){
+  for(const u of ['PO','PM','WB','SW']) if(pool.includes(u)) return u;
+  return pool[0];
+}
+function rankDist(h,end){
+  const d = shotDist(h,end);
+  return d===null ? 999 : d;
+}
+function draftPool(colSet, occ, kicking, mustReach){
+  let p=[];
+  for(const c of colSet) for(let r=minRow(c);r<=maxRow(c);r++){
+    const h=c+r;
+    if(occ.has(h)) continue;
+    if(!kicking && KICKOFF_ZONE.has(h)) continue;
+    p.push(h);
+  }
+  if(mustReach){
+    const [target,maxDist]=mustReach;
+    p = p.filter(h=>{ const [d,]=straightLine(h,target); return d!==null && d<=maxDist; });
+  }
+  return p;
+}
+function bestDraftHex(side, lowEnd, cols, occ, kicking, mustReach){
+  const attEnd = lowEnd ? 'K' : 'A';
+  const fullCols = lowEnd ? ['A','B','C','D','E'] : ['G','H','I','J','K'];
+  let candidates = draftPool(cols, occ, kicking, mustReach);
+  if(candidates.length===0 && cols!==fullCols) candidates = draftPool(fullCols, occ, kicking, mustReach);
+  if(candidates.length===0) candidates = draftPool(fullCols.concat(cols), occ, kicking, mustReach); // safety net, should be unreachable
+  const opp = side==='A'?'B':'A';
+  const oppAttEnd = lowEnd ? 'A' : 'K';
+  const oppHexes = Object.entries(S.pos[opp]).filter(([u])=>u!=='GK').map(([,h])=>h);
+  let threatHex=null, bestT=Infinity;
+  for(const h of oppHexes){ const d=rankDist(h,oppAttEnd); if(d<bestT){bestT=d;threatHex=h;} }
+  const threatNeighbors = threatHex ? new Set(neighbors(threatHex)) : new Set();
+  let best=null, bestScore=Infinity;
+  for(const h of candidates){
+    const sc = rankDist(h,attEnd) + (threatNeighbors.has(h)?0:0.3);
+    if(sc<bestScore){bestScore=sc;best=h;}
+  }
+  return best;
+}
+function zoneHex(side, excludeUnit){
+  const ownEnd = (side==='A')===S.aDefendsLow ? 'A' : 'K';
+  const occ = occupiedHexes(excludeUnit?[side,excludeUnit]:null);
+  for(const h of GK_ZONE[ownEnd]) if(!occ.has(h)) return h;
+  return GK_ZONE[ownEnd][0];
+}
+function humanChooseTaker(pool){
+  return new Promise(resolve=>{
+    setPrompt('Kickoff draft — name your kickoff-taker (any outfield unit, not necessarily the Poacher).');
+    renderActionButtons(pool.map(u=>({text:unitStats(HUMAN,u).role, onClick:()=>resolve(u)})));
+    renderAll();
+  });
+}
+function humanDraftPick(side, remainingUnits, ownThirdCols, fullCols, occ, mustReach, isKicking){
+  return new Promise(resolve=>{
+    setPrompt(isKicking && mustReach
+      ? `Kickoff draft — place a unit. Your first placement must land within your kickoff-taker's Pass Range (${mustReach[1]}) of F3.`
+      : 'Kickoff draft — place a unit. Choose which one.');
+    renderActionButtons(remainingUnits.map(u=>({text:unitStats(side,u).role, onClick:()=>{
+      const cols = (u==='SW'||u==='WB') ? ownThirdCols : fullCols;
+      let candidates = draftPool(cols, occ, isKicking, mustReach);
+      if(candidates.length===0 && cols!==fullCols) candidates = draftPool(fullCols, occ, isKicking, mustReach);
+      UI.phase = 'await-draft-hex';
+      UI.clickableHexes = new Set(candidates);
+      UI.draftHexResolve = (hex)=>resolve({unit:u, hex});
+      setPrompt(`Place your ${unitStats(side,u).role} — click a highlighted hex (${candidates.length} legal).`);
+      renderActionButtons([]);
+      renderAll();
+    }})));
+    renderAll();
+  });
+}
+async function runDraft(kicker, sentOff, avoidTaker){
+  sentOff = sentOff || new Set();
+  const lowEnd = {A:S.aDefendsLow, B:!S.aDefendsLow};
+  const remaining = {A:[],B:[]};
+  for(const side of ['A','B']) remaining[side] = UNIT_ORDER.filter(u=>u!=='GK' && !sentOff.has(`${side}:${u}`));
+  for(const side of ['A','B']) if(!sentOff.has(`${side}:GK`)) S.pos[side]['GK']=zoneHex(side);
+  let occ = new Set([...Object.values(S.pos.A), ...Object.values(S.pos.B)]);
+  UI.phase='draft'; renderAll();
+
+  const gkAlive = !sentOff.has(`${kicker}:GK`);
+  const takerPool = remaining[kicker].concat(gkAlive?['GK']:[]);
+  const preferred = takerPool.filter(u=>u!==avoidTaker);
+  const finalPool = preferred.length?preferred:takerPool;
+  let taker;
+  if(kicker===HUMAN){
+    // §5: the Goalkeeper may only be named taker if it's the only unit left — never a real
+    // choice while any outfield unit remains, unlike the auto-picker's pool above (which
+    // can safely include it since its own preference order never actually selects it here).
+    const outfieldOnly = finalPool.filter(u=>u!=='GK');
+    const humanChoices = outfieldOnly.length ? outfieldOnly : finalPool;
+    taker = humanChoices.length>1 ? await humanChooseTaker(humanChoices) : humanChoices[0];
+  } else {
+    taker = kickoffTakerPick(finalPool);
+  }
+  if(taker==='GK') occ.delete(S.pos[kicker]['GK']);
+  else remaining[kicker] = remaining[kicker].filter(u=>u!==taker);
+  S.pos[kicker][taker] = 'F3'; occ.add('F3');
+  log(`${sideName(kicker)} name the ${unitStats(kicker,taker).role} as kickoff-taker.`, 'info');
+  renderAll();
+
+  const nonKicker = kicker==='A'?'B':'A';
+  let turn = nonKicker, kickerNeedsSupport = true;
+  while(remaining.A.length || remaining.B.length){
+    if(!remaining[turn].length){ turn = turn==='A'?'B':'A'; continue; }
+    const fullCols = lowEnd[turn] ? ['A','B','C','D','E'] : ['G','H','I','J','K'];
+    const ownThirdCols = lowEnd[turn] ? ['A','B','C','D'] : ['H','I','J','K'];
+    const mustReach = (turn===kicker && kickerNeedsSupport) ? ['F3', unitStats(kicker,taker).prange] : null;
+    let unit, h;
+    if(turn===HUMAN){
+      const pick = await humanDraftPick(turn, remaining[turn], ownThirdCols, fullCols, occ, mustReach, turn===kicker);
+      unit = pick.unit; h = pick.hex;
+    } else {
+      unit = remaining[turn][0]; // CPU's own default preference order, not a rules requirement
+      const cols = (unit==='SW'||unit==='WB') ? ownThirdCols : fullCols;
+      h = bestDraftHex(turn, lowEnd[turn], cols, occ, turn===kicker, mustReach);
+    }
+    remaining[turn] = remaining[turn].filter(u=>u!==unit);
+    if(turn===kicker) kickerNeedsSupport = false;
+    S.pos[turn][unit] = h; occ.add(h);
+    log(`${unitName(turn,unit)} placed at ${h}.`, 'info');
+    UI.phase='draft'; UI.clickableHexes=new Set();
+    renderAll();
+    turn = turn==='A'?'B':'A';
+  }
+  UI.phase='idle'; UI.clickableHexes=new Set();
+  renderActionButtons([]);
+  return taker;
+}
+function occupiedHexes(excludeSideUnit){
+  const out = new Set();
+  for(const side of ['A','B']) for(const [u,h] of Object.entries(S.pos[side])){
+    if(excludeSideUnit && excludeSideUnit[0]===side && excludeSideUnit[1]===u) continue;
+    out.add(h);
+  }
+  return out;
+}
+function checkNoOverlap(){
+  const seen=new Map();
+  for(const side of ['A','B']) for(const [u,h] of Object.entries(S.pos[side])){
+    if(seen.has(h)) console.error('OCCUPANCY CONFLICT at', h, seen.get(h), side+u);
+    seen.set(h, side+u);
+  }
+}
+function reapplyEmergencyGk(){
+  for(const [side,unit] of Object.entries(S.emergencyGk)){
+    if('GK' in S.pos[side] || !(unit in S.pos[side])) continue;
+    S.pos[side][unit] = zoneHex(side, unit);
+  }
+}
+async function goalRestart(concedingSide){
+  S.pos = {A:{},B:{}};
+  const sentOff = new Set(S.sentOff);
+  const deputy = S.emergencyGk[concedingSide];
+  const taker = await runDraft(concedingSide, sentOff, deputy);
+  reapplyEmergencyGk();
+  S.ball = {side:concedingSide, unit:taker, hex:'F3'};
+  S.kickoffTaker = {side:concedingSide, unit:taker};
+  checkNoOverlap();
+}
+async function halftimeReset(){
+  const opener = S.kicker;
+  const newKicker = opener==='A'?'B':'A';
+  S.aDefendsLow = !S.aDefendsLow;
+  S.pos = {A:{},B:{}};
+  const sentOff = new Set(S.sentOff);
+  const deputy = S.emergencyGk[newKicker];
+  const taker = await runDraft(newKicker, sentOff, deputy);
+  reapplyEmergencyGk();
+  S.ball = {side:newKicker, unit:taker, hex:'F3'};
+  S.kickoffTaker = {side:newKicker, unit:taker};
+  // currentMover() derives whose turn it is from S.kicker's parity — §5's "the side with
+  // kickoff moves first" only holds for the second half if this is updated too. A goal
+  // restart never needs this (whoever just conceded is already next in the strict A/B/A/B
+  // alternation by construction), but half-time is a hard reset at a fixed turn boundary,
+  // independent of who last had the ball, so nothing else keeps the two in sync.
+  S.kicker = newKicker;
+  S.half = 2; S.debt = {A:0,B:0};
+  log(`HALFTIME — ends swapped, ${sideName(newKicker)} kick off the second half`, 'info');
+  checkNoOverlap();
+}
+
+/* ============================== MOVEMENT ============================== */
+function isGoalkeeperRole(side,unit){ return unit==='GK' || S.emergencyGk[side]===unit; }
+function ownEnd(side){ return (side==='A')===S.aDefendsLow ? 'A' : 'K'; }
+function attEnd(side){ return ownEnd(side)==='A' ? 'K' : 'A'; }
+function reach(side, unit, extraPace){
+  extraPace = extraPace||0;
+  const start = S.pos[side][unit];
+  const occ = occupiedHexes([side,unit]);
+  // Gasser (The Engine): passive, always-on from the start of the second half - no
+  // 'used' flag at all, just a standing -1 Pace for the rest of the match.
+  const gasserMod = (S.half===2 && unitStats(side,unit).sig==='gasser') ? -1 : 0;
+  // One More Run (Dodgy Knee): after using its once/match ZoC-ignoring move, -1 Pace
+  // for the REST OF THAT HALF only - tracked as "which half did it start" rather than
+  // a flat modifier, so it naturally stops applying once the half changes with no
+  // separate clear-on-halftime step needed.
+  const oneMoreRunMod = (unitStats(side,unit).sig==='one_more_run' && S.bigMoveHalfDebuff[side]===S.half) ? -1 : 0;
+  let pace = unitStats(side,unit).pace + extraPace + gasserMod + oneMoreRunMod + (S.paceMod[`${side}:${unit}`]||0);
+  pace = Math.max(pace,0);
+  const best = new Map([[start,{cost:0,path:[start]}]]);
+  let frontier=[start];
+  for(let step=0; step<pace; step++){
+    const nf=[];
+    for(const h of frontier){
+      const d0 = best.get(h).cost;
+      for(const n of neighbors(h)){
+        if(occ.has(n)) continue;
+        if(!best.has(n) || best.get(n).cost>d0+1){
+          best.set(n, {cost:d0+1, path:best.get(h).path.concat([n])});
+          nf.push(n);
+        }
+      }
+    }
+    frontier=nf;
+  }
+  return best;
+}
+function legalReach(side, unit, extraPace, ignoreZoneLock){
+  const r = reach(side, unit, extraPace);
+  const own = ownEnd(side);
+  if(isGoalkeeperRole(side,unit) && !ignoreZoneLock){
+    const zone = new Set(GK_ZONE[own]);
+    return new Map([...r].filter(([h])=>zone.has(h)));
+  }
+  const offLimits = new Set(GK_ZONE[attEnd(side)]);
+  return new Map([...r].filter(([h])=>!offLimits.has(h)));
+}
+function enemyZoc(side){
+  const other = side==='A'?'B':'A';
+  const z = new Set();
+  for(const h of Object.values(S.pos[other])) for(const n of neighbors(h)) z.add(n);
+  return z;
+}
+function escapeHexesFree(carrierHex){
+  const occ = occupiedHexes(null);
+  return neighbors(carrierHex).filter(h=>!occ.has(h));
+}
+function wouldSealLastGap(carrierSide, carrierHex, destHex){
+  if(!adjacent(destHex,carrierHex)) return false;
+  const free = escapeHexesFree(carrierHex);
+  return free.length===1 && free[0]===destHex;
+}
+function tryClaimLooseBall(side, unit, hex){
+  // §8: a unit claims a loose ball simply by being activated while standing on its hex —
+  // no roll, no separate action. Covers both a unit that moves onto the hex and one that
+  // was already sitting there when the ball went loose.
+  if(S.ball.side===null && S.ball.hex===hex){
+    S.ball = {side, unit, hex};
+    log(`${unitName(side,unit)} claims the loose ball at ${hex}.`, 'info');
+    return true;
+  }
+  return false;
+}
+
+/* ============================== CONTEST / RESOLUTION ============================== */
+function contest(atkSide, atkDice, defSide, defDice, label, isTackle){
+  const A = rollDice(S, atkSide, atkDice, true);
+  const D = rollDice(S, defSide, defDice, false);
+  const win = A.hits > D.hits;
+  let flairNote = '';
+  if(isTackle && !win && S.flair[atkSide]>0){ S.flair[atkSide]--; flairNote = ` — ${sideName(atkSide)} docked 1 Flair`; }
+  const line = `${label}: ${sideName(atkSide)} ${A.hits} vs ${sideName(defSide)} ${D.hits} → ${win?'ATTACKER WINS':'DEFENDER HOLDS'}${flairNote}`;
+  log(line, win?'win':'lose');
+  showDice(label, A, D);
+  return {win, A, D};
+}
+function drawAndApplyDiscipline(side, unit){
+  const card = drawDisc();
+  applyDiscipline(side, unit, card);
+}
+// If `unit` (about to be/just removed from side's S.pos) is the current ball carrier,
+// the ball can't leave the pitch with it - set it loose at the hex it was just
+// standing on instead. Root-caused today in the Python engine, ported here proactively
+// rather than waiting to hit it: every PRE-EXISTING caller of applyDiscipline/
+// sendToSinbin cards whoever INITIATED a challenge (a lost Tackle, a Foul), never the
+// passive ball carrier being tackled/fouled, so this was never reachable before.
+// Playing Out's own forced-return check (nextTurnStart) is the first path that can
+// land a card directly on whichever unit currently holds the ball.
+function dropBallIfHolding(side, unit, hex){
+  if(S.ball.side===side && S.ball.unit===unit) S.ball = {side:null, unit:null, hex};
+}
+function applyDiscipline(side, unit, card){
+  const key = `${side}:${unit}`;
+  let sentOffNow=false, firstYellowNow=false, text='';
+  if(card==='YellowCard'){
+    if(S.yellow.includes(key)){
+      S.yellow = S.yellow.filter(k=>k!==key);
+      const hex = S.pos[side][unit];
+      delete S.pos[side][unit];
+      dropBallIfHolding(side, unit, hex);
+      S.sentOff.push(key); delete S.sinbin[key];
+      sentOffNow=true; text=`${unitName(side,unit)}: 2nd Yellow → RED, sent off`;
+    } else {
+      S.yellow.push(key);
+      S.paceMod[key] = (S.paceMod[key]||0) - 1;
+      firstYellowNow=true; text=`${unitName(side,unit)}: YELLOW CARD, Pace -1 for the match`;
+    }
+  } else if(card==='RedCard'){
+    const hex = S.pos[side][unit];
+    delete S.pos[side][unit];
+    dropBallIfHolding(side, unit, hex);
+    S.sentOff.push(key); delete S.sinbin[key];
+    sentOffNow=true; text=`${unitName(side,unit)}: RED CARD, sent off`;
+  } else if(card==='AdvantagePlayOn'){
+    text = 'Discipline draw: Advantage / Play On — no effect';
+  } else if(card==='CleanChallenge'){
+    text = 'Discipline draw: Clean Challenge — no effect';
+  } else { text = `Discipline draw: ${card}`; }
+  log(text, sentOffNow||firstYellowNow?'card-line':'info');
+  if(sentOffNow && isGoalkeeperRole(side,unit)) assignEmergencyGk(side);
+  else if(firstYellowNow) sendToSinbin(side,unit);
+}
+function assignEmergencyGk(side, unit){
+  if(!unit){ for(const u of ['SW','WB','PM','PO']) if(u in S.pos[side]){unit=u;break;} }
+  if(!unit) return null;
+  const target = zoneHex(side, unit);
+  S.pos[side][unit] = target;
+  S.emergencyGk[side] = unit;
+  log(`${unitName(side,unit)} becomes Emergency Goalkeeper at ${target} (Save 1)`, 'card-line');
+  return unit;
+}
+function saveStat(side, unit){ return S.emergencyGk[side]===unit ? 1 : unitStats(side,unit).save; }
+function sendToSinbin(side, unit){
+  const hex = S.pos[side][unit];
+  if(hex===undefined) return;
+  delete S.pos[side][unit];
+  dropBallIfHolding(side, unit, hex);
+  S.sinbin[`${side}:${unit}`] = 2;
+  log(`${unitName(side,unit)} sent to the sin-bin — misses next turn`, 'card-line');
+}
+function touchlineHex(side){
+  const own = ownEnd(side);
+  const halfCols = own==='A' ? ['A','B','C','D','E'] : ['G','H','I','J','K'];
+  const occ = occupiedHexes(null);
+  for(const c of halfCols){
+    for(const h of [c+minRow(c), c+maxRow(c)]) if(!occ.has(h)) return h;
+  }
+  return halfCols[0]+minRow(halfCols[0]);
+}
+function sinbinCheck(side){
+  for(const key of Object.keys(S.sinbin)){
+    const [kSide,unit] = key.split(':');
+    if(kSide!==side) continue;
+    if(S.sentOff.includes(key)){ delete S.sinbin[key]; continue; }
+    S.sinbin[key]--;
+    if(S.sinbin[key]<=0){
+      delete S.sinbin[key];
+      const target = isGoalkeeperRole(side,unit) ? zoneHex(side) : touchlineHex(side);
+      S.pos[side][unit] = target;
+      log(`${unitName(side,unit)} returns from the sin-bin at ${target}`, 'info');
+    }
+  }
+}
+function gkZoneOccupied(side){
+  const own = ownEnd(side);
+  const zone = new Set(GK_ZONE[own]);
+  return Object.entries(S.pos[side]).some(([u,h])=>zone.has(h) && isGoalkeeperRole(side,u));
+}
+
+/* ---- Counter reaction hook: returns a Promise({forcedTackle:bool, extraDefDie:0/1}) ---- */
+function hasCounter(side){ return S.handCmd[side].includes('Counter'); }
+function useCounter(side){ const i=S.handCmd[side].indexOf('Counter'); if(i>=0) S.handCmd[side].splice(i,1); }
+
+async function maybeCounterWindow(defSide, offSide, opts){
+  // opts: {carrierHex, allowForceTackle, label}
+  if(defSide===CPU) return cpuCounterDecision(defSide, offSide, opts);
+  if(defSide===HUMAN){
+    if(!hasCounter(HUMAN) && !lastManAvailable(HUMAN, opts)) return {forcedTackle:false, extraDefDie:0};
+    return await humanCounterPrompt(offSide, opts);
+  }
+  return {forcedTackle:false, extraDefDie:0};
+}
+function lastManAvailable(side, opts){
+  if(!opts || !opts.carrierHex || opts.noLastMan) return false;
+  if(S.sigUsed[side].WB) return false;
+  const wbHex = S.pos[side].WB;
+  if(!wbHex) return false;
+  // Gated on the WB slot's actual sig, not just its presence - a Character Skin in
+  // this slot (Gasser/One More Run) doesn't carry Last Man at all. Missing before this
+  // pass: the pre-existing code only ever checked "is there a WB here," which happened
+  // to be harmless while every WB was the standard one.
+  if(unitStats(side,'WB').sig!=='last_man') return false;
+  return adjacent(wbHex, opts.carrierHex);
+}
+function cpuCounterDecision(defSide, offSide, opts){
+  // simple heuristic: use Last Man / Counter-force-tackle if it has decent odds, else add defense die sometimes
+  if(lastManAvailable(defSide, opts)){
+    const odds = unitStats(defSide,'WB').tackle; // rough proxy
+    if(odds>=3 && Math.random()<0.6){ S.sigUsed[defSide].WB=true; log(`${sideName(defSide)} uses Last Man! Wingback forces a Tackle Challenge.`, 'card-line'); return {forcedTackle:true, extraDefDie:0, viaLastMan:true}; }
+  }
+  if(hasCounter(defSide)){
+    if(opts && opts.allowForceTackle && opts.carrierHex){
+      const adjUnit = Object.entries(S.pos[defSide]).find(([u,h])=>adjacent(h,opts.carrierHex) && u!=='GK');
+      if(adjUnit && Math.random()<0.35){ useCounter(defSide); log(`${sideName(defSide)} discards Counter — forces an immediate Tackle Challenge!`, 'card-line'); return {forcedTackle:true, extraDefDie:0, forcedUnit:adjUnit[0]}; }
+    }
+    if(Math.random()<0.45){ useCounter(defSide); log(`${sideName(defSide)} discards Counter — +1 Defense die.`, 'card-line'); return {forcedTackle:false, extraDefDie:1}; }
+  }
+  return {forcedTackle:false, extraDefDie:0};
+}
+function humanCounterPrompt(offSide, opts){
+  return new Promise(resolve=>{
+    const canForce = opts && opts.allowForceTackle && opts.carrierHex &&
+      Object.entries(S.pos[HUMAN]).some(([u,h])=>adjacent(h,opts.carrierHex) && u!=='GK');
+    const canLastMan = lastManAvailable(HUMAN, opts);
+    const canCounter = hasCounter(HUMAN);
+    if(!canForce && !canCounter && !canLastMan){ resolve({forcedTackle:false, extraDefDie:0}); return; }
+    let body = `<h3>CPU is about to ${opts.label||'act'}</h3><p>React before the dice are rolled?</p><div class="row">`;
+    if(canLastMan) body += `<button class="act" id="cLastMan">Last Man — free Tackle Challenge</button>`;
+    if(canForce) body += `<button class="act" id="cForce">Discard Counter — force a Tackle Challenge</button>`;
+    if(canCounter) body += `<button class="act secondary" id="cDie">Discard Counter — +1 Defense die</button>`;
+    body += `<button class="act secondary" id="cNone">No reaction</button></div>`;
+    showModal(body);
+    if(canLastMan) document.getElementById('cLastMan').onclick=()=>{closeModal(); S.sigUsed[HUMAN].WB=true; log("You use Last Man! Your Wingback forces a Tackle Challenge.",'card-line'); resolve({forcedTackle:true, extraDefDie:0, viaLastMan:true});};
+    if(canForce) document.getElementById('cForce').onclick=()=>{closeModal(); useCounter(HUMAN); log('You discard Counter — force an immediate Tackle Challenge!','card-line'); resolve({forcedTackle:true, extraDefDie:0});};
+    if(canCounter) document.getElementById('cDie').onclick=()=>{closeModal(); useCounter(HUMAN); log('You discard Counter — +1 Defense die.','card-line'); resolve({forcedTackle:false, extraDefDie:1});};
+    document.getElementById('cNone').onclick=()=>{closeModal(); resolve({forcedTackle:false, extraDefDie:0});};
+  });
+}
+
+/* ============================== CORE ACTIONS ============================== */
+async function doTackle(atkSide, atkUnit, defSide, extraDie){
+  const defUnit = S.ball.unit;
+
+  // Immovable Object (The Wardrobe): once/match, when this unit is the ball-carrying
+  // target of a Tackle Challenge, +1 Defense die - approximates "cancel one attacker
+  // Success" as "add one Stop" (this engine's contest() doesn't expose raw dice back
+  // to callers to swap a symbol directly), same shape as Counter's own die-bonus.
+  // Fully independent of `extraDie` (an ATTACK-side bonus, e.g. from a forced-tackle
+  // Counter reaction where this same function's atkSide/defSide have already flipped
+  // for that specific call) - the two are different dice pools, not additive with
+  // each other, so nothing here needs to touch the incoming `extraDie` at all.
+  let immovableObjectBonus = 0;
+  if(unitStats(defSide,defUnit).sig==='immovable_object' && !S.sigUsed[defSide][defUnit]){
+    S.sigUsed[defSide][defUnit] = true;
+    immovableObjectBonus = 1;
+    log(`${unitName(defSide,defUnit)} uses Immovable Object — +1 Defense die on this Tackle Challenge, once per match.`, 'card-line');
+  }
+
+  if(unitStats(atkSide,atkUnit).sig==='no_way_through' && !S.sigUsed[atkSide][atkUnit]){
+    // No Way Through (Big Dave): once/match, automatic win, no roll at all - still
+    // draws Discipline TWICE regardless, applying both (identical to a lost Strong
+    // Tackle's own penalty, per the card's own text).
+    S.sigUsed[atkSide][atkUnit] = true;
+    log(`${unitName(atkSide,atkUnit)} uses No Way Through — automatic Tackle win, once per match.`, 'card-line');
+    S.ball = {side:atkSide, unit:atkUnit, hex:S.pos[atkSide][atkUnit]};
+    drawAndApplyDiscipline(atkSide, atkUnit);
+    drawAndApplyDiscipline(atkSide, atkUnit);
+    freeFollowupPass(atkSide, atkUnit);
+    return true;
+  }
+
+  const seesRed = unitStats(atkSide,atkUnit).sig==='sees_red' && !S.sigUsed[atkSide][atkUnit];
+  if(seesRed){
+    // Sees Red (Roy): once/match, +1 Attack die on this Tackle - but if it's lost,
+    // draws Discipline TWICE instead of once.
+    S.sigUsed[atkSide][atkUnit] = true;
+    extraDie = (extraDie||0) + 1;
+    log(`${unitName(atkSide,atkUnit)} uses Sees Red — +1 Attack die on this Tackle Challenge, once per match.`, 'card-line');
+  }
+
+  const tackleStat = unitStats(atkSide,atkUnit).tackle + (extraDie||0);
+  const label = `Tackle: ${unitStats(atkSide,atkUnit).role} vs ${unitStats(defSide,defUnit).role}`;
+  const reaction = await maybeCounterWindow(defSide, atkSide, {carrierHex:S.pos[defSide][defUnit], allowForceTackle:false, noLastMan:true, label:`Tackle with its ${unitStats(atkSide,atkUnit).role}`});
+  const defDice = unitStats(defSide,defUnit).control + (reaction.extraDefDie||0) + immovableObjectBonus;
+  const {win} = contest(atkSide, tackleStat, defSide, defDice, label, true);
+  if(win){
+    S.ball = {side:atkSide, unit:atkUnit, hex:S.pos[atkSide][atkUnit]};
+    freeFollowupPass(atkSide, atkUnit);
+  } else {
+    drawAndApplyDiscipline(atkSide, atkUnit);
+    if(seesRed) drawAndApplyDiscipline(atkSide, atkUnit);
+  }
+  return win;
+}
+function freeFollowupPass(side, unit){
+  // free, uncontested-by-rule-of-thumb follow-up pass to a teammate in range, resolved simply
+  const teammates = Object.keys(S.pos[side]).filter(u=>u!==unit);
+  const start = S.pos[side][unit];
+  let best=null,bestD=Infinity;
+  for(const u of teammates){
+    const h=S.pos[side][u];
+    const [d,mids]=straightLine(start,h);
+    if(d===null || d>unitStats(side,unit).prange || d===0) continue;
+    const contested = mids.some(m=>enemyZoc(side).has(m)) || enemyZoc(side).has(h);
+    const score = shotDist(h, attEnd(side))===null?50:shotDist(h,attEnd(side));
+    if(score<bestD){bestD=score;best={u,h,contested};}
+  }
+  if(!best){ return; }
+  if(!best.contested){
+    S.ball = {side, unit:best.u, hex:best.h};
+    log(`${unitName(side,unit)} plays a free follow-up Pass to ${unitStats(side,best.u).role}`, 'info');
+  }
+  // if contested, keep it simple: the free pass is only taken when clean (mirrors normal play choosing a safe out)
+}
+
+/* ============================== RENDERING ============================== */
+const R = 34;
+function boardOx(){ return R*1.6; }
+function boardOy(){ return R*1.9; }
+const ROWSTEP = Math.sqrt(3);
+function pixelDY(c,r){ return r*ROWSTEP + (isShort(c)?ROWSTEP/2:0); }
+function center(h){ const [c,r]=parseHex(h); return {x: boardOx()+COLS.indexOf(c)*R*1.5, y: boardOy()+pixelDY(c,r)*R}; }
+function hexPoints(cx,cy){
+  const pts=[];
+  for(let i=0;i<6;i++){ const a=Math.PI/180*(60*i+30); pts.push(`${cx+R*0.95*Math.sin(a)},${cy-R*0.95*Math.cos(a)}`); }
+  return pts.join(' ');
+}
+function svgEl(tag,attrs){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
+
+function allHexes(){ const out=[]; for(const c of COLS) for(let r=minRow(c);r<=maxRow(c);r++) out.push(c+r); return out; }
+
+function renderBoard(){
+  const svg = document.getElementById('board');
+  svg.innerHTML='';
+  const width = boardOx()*2 + (COLS.length-1)*R*1.5 + R*2;
+  const height = boardOy()*2 + 6*ROWSTEP*R;
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+  const clickable = UI.clickableHexes || new Set();
+  const highlight = UI.highlightHexes || new Map(); // hex -> css class suffix
+  const explainPhase = (UI.phase==='await-pass-target') || (UI.phase==='await-unit-select' && UI.pendingMoveUnit) || (UI.phase==='await-draft-hex');
+
+  for(const h of allHexes()){
+    const {x,y} = center(h);
+    const [c,r] = parseHex(h);
+    let fill = laneOf(c,r).length===2 ? 'var(--seam)' : (laneOf(c,r)[0]==='Top' ? 'var(--lane-top)' : 'var(--lane-bottom)');
+    const aEnd = GK_ZONE.A.includes(h), kEnd = GK_ZONE.K.includes(h);
+    if(aEnd||kEnd) fill = 'var(--gk-zone)';
+    const isClick = clickable.has(h);
+    if(isClick) fill = '#f3dfa3';
+    const poly = svgEl('polygon',{points:hexPoints(x,y), fill, class:'hex'+(isClick?' clickable':'')});
+    if(isClick){ poly.style.stroke='var(--ochre)'; poly.style.strokeWidth='3px'; }
+    if(highlight.has(h)){ poly.style.stroke = highlight.get(h); poly.style.strokeWidth='4px'; }
+    if(isClick) poly.onclick = ()=>onHexClick(h);
+    else if(explainPhase){ poly.onclick = ()=>explainIllegalHex(h); poly.style.cursor='help'; }
+    svg.appendChild(poly);
+    const lbl = svgEl('text',{x, y:y+R*0.85, 'text-anchor':'middle','font-size':R*0.28, class:'hex-label'});
+    lbl.textContent = h;
+    svg.appendChild(lbl);
+  }
+  // center spot + third dividers
+  const f3 = center('F3');
+  svg.appendChild(svgEl('circle',{cx:f3.x,cy:f3.y,r:3,fill:'#8b9186'}));
+
+  // ball (if loose, draw marker)
+  if(S.ball && S.ball.hex && !S.ball.unit){
+    const {x,y} = center(S.ball.hex);
+    svg.appendChild(svgEl('circle',{cx:x+R*0.5,cy:y-R*0.5,r:R*0.16, fill:'var(--ochre)', stroke:'#fff','stroke-width':1.5}));
+  }
+
+  for(const side of ['A','B']){
+    for(const [u,h] of Object.entries(S.pos[side])){
+      const {x,y} = center(h);
+      const color = side==='A' ? 'var(--side-a)' : 'var(--side-b)';
+      const g = svgEl('g',{class:'token'+(UI.selectableUnits && UI.selectableUnits.has(side+':'+u)?'':' inactive')});
+      const yellowed = S.yellow.includes(`${side}:${u}`);
+      g.appendChild(svgEl('circle',{cx:x,cy:y,r:R*0.42, fill:color, stroke: UI.selectedUnit===`${side}:${u}` ? 'var(--ochre)':'#fff', 'stroke-width': UI.selectedUnit===`${side}:${u}`?4:2.5}));
+      if(yellowed) g.appendChild(svgEl('circle',{cx:x+R*0.34,cy:y-R*0.34,r:R*0.11, fill:'var(--yellow-card)', stroke:'#fff','stroke-width':1}));
+      const t = svgEl('text',{x,y:y+R*0.13,'text-anchor':'middle','font-size':R*0.33, class:'token-label'});
+      t.textContent = u;
+      g.appendChild(t);
+      if(S.ball.side===side && S.ball.unit===u){
+        g.appendChild(svgEl('circle',{cx:x+R*0.52,cy:y-R*0.52,r:R*0.17, fill:'var(--ochre)', stroke:'#fff','stroke-width':1.5}));
+      }
+      if(UI.selectableUnits && UI.selectableUnits.has(side+':'+u)) g.onclick = ()=>onUnitClick(side,u);
+      svg.appendChild(g);
+    }
+  }
+}
+
+function renderScoreboard(){
+  document.getElementById('scoreA').textContent = S.score.A;
+  document.getElementById('scoreB').textContent = S.score.B;
+  document.getElementById('halfLabel').textContent = 'Half '+S.half;
+  document.getElementById('turnLabel').textContent = `Turn ${S.turn}/48`;
+  for(const side of ['A','B']){
+    const el = document.getElementById('flair'+side);
+    el.innerHTML='';
+    for(let i=0;i<5;i++){ const p=document.createElement('span'); p.className='pip'+(i<S.flair[side]?' on':''); el.appendChild(p); }
+  }
+}
+function renderHands(){
+  const handA = document.getElementById('handA');
+  handA.innerHTML='';
+  S.handCmd.A.forEach((card,idx)=>{
+    const div = document.createElement('div');
+    const playable = UI.phase==='await-card' && card!=='Counter';
+    div.className = 'card'+(playable?'':' disabled');
+    div.innerHTML = `<div class="ctype">Command</div><div class="cname">${CARD_LABEL[card]}</div><div class="cdesc">${cardDesc(card)}</div>`;
+    if(playable) div.onclick=()=>onPlayCard(card,idx);
+    handA.appendChild(div);
+  });
+  document.getElementById('handBCount').textContent = S.handCmd.B.length;
+  const handB = document.getElementById('handB');
+  handB.innerHTML='';
+  for(let i=0;i<S.handCmd.B.length;i++){ const d=document.createElement('div'); d.className='cardback'; handB.appendChild(d); }
+}
+function renderLog(){
+  const el = document.getElementById('log');
+  el.innerHTML='';
+  S.log.slice(-60).reverse().forEach(l=>{
+    const d = document.createElement('div'); d.className='line '+l.cls; d.textContent=l.text; el.appendChild(d);
+  });
+}
+function setPrompt(text){ document.getElementById('prompt').textContent = text; clearHint(); }
+function showHint(text){ const h=document.getElementById('hexHint'); h.textContent=text; h.hidden=false; }
+function clearHint(){ const h=document.getElementById('hexHint'); h.hidden=true; h.textContent=''; }
+function explainIllegalHex(hex){
+  // Clicking a non-highlighted hex during targeting used to be silent — this tells the
+  // player exactly why it's not a legal target instead of leaving them guessing.
+  if(UI.phase==='await-pass-target'){
+    const unit = UI.passUnit;
+    const start = S.pos.A[unit];
+    const isKickoff = S.kickoffTaker && S.kickoffTaker.side==='A' && S.kickoffTaker.unit===unit;
+    if(hex===start){ showHint("That's the passer's own hex."); return; }
+    const [d,] = straightLine(start, hex);
+    if(d===null){ showHint(`${hex} isn't on a straight line from ${start} — a Pass only travels along a column, or one of the two diagonals, never a bent or "nearby" path.`); return; }
+    if(d>unitStats('A',unit).prange){ showHint(`${hex} is ${d} hexes away in a straight line — beyond ${unitStats('A',unit).role}'s Pass Range (${unitStats('A',unit).prange}).`); return; }
+    if(isKickoff){ showHint(`The mandatory kickoff Pass must go to a teammate already on the pitch, never an empty hex or an opponent.`); return; }
+    showHint(`Not a legal target.`);
+    return;
+  }
+  if(UI.phase==='await-unit-select' && UI.pendingMoveUnit){
+    const unit = UI.pendingMoveUnit;
+    const oppCarrierHex = S.ball.side==='B' ? S.ball.hex : null;
+    if(oppCarrierHex && wouldSealLastGap('A', oppCarrierHex, hex)){
+      showHint(`${hex} would seal the last open hex next to CPU's ball-carrier — §9's escape-hex rule never allows that move, for either side.`);
+      return;
+    }
+    showHint(`${hex} isn't reachable this move — beyond ${unitStats('A',unit).role}'s Pace (${unitStats('A',unit).pace}) from ${S.pos.A[unit]}, or the path there is blocked by another unit.`);
+    return;
+  }
+  if(UI.phase==='await-draft-hex'){
+    showHint(`Not a legal hex for this placement — outside the unit's own third/half, inside the kickoff exclusion zone, or already occupied.`);
+    return;
+  }
+}
+function renderActionButtons(buttons){
+  const bar = document.getElementById('actionbar');
+  const prompt = document.getElementById('prompt');
+  bar.innerHTML=''; bar.appendChild(prompt);
+  (buttons||[]).forEach(b=>{
+    const btn = document.createElement('button');
+    btn.className = 'act'+(b.secondary?' secondary':'')+(b.danger?' danger':'');
+    btn.textContent = b.text;
+    btn.onclick = b.onClick;
+    if(b.disabled) btn.disabled = true;
+    bar.appendChild(btn);
+  });
+}
+function showDice(label, A, D){
+  const area = document.getElementById('diceArea');
+  const wrap = document.createElement('div'); wrap.className='diceroll';
+  function group(name, roll, isAtk){
+    const g = document.createElement('div'); g.className='dicegroup';
+    const lab = document.createElement('div'); lab.className='glabel'; lab.textContent=name; g.appendChild(lab);
+    const row = document.createElement('div'); row.className='dice';
+    roll.faces.forEach(f=>{
+      const d=document.createElement('div');
+      d.className = 'die '+(f==='blank'?'blank':f==='flair'?'flair':('hit'+(isAtk?'':' def')));
+      d.textContent = f==='blank'?'—':f==='flair'?'F':(isAtk?'S':'D');
+      row.appendChild(d);
+    });
+    g.appendChild(row);
+    return g;
+  }
+  wrap.appendChild(group('Attack',A,true));
+  wrap.appendChild(group('Defense',D,false));
+  const res = document.createElement('div'); res.className='resultline'; res.textContent = label;
+  area.innerHTML=''; area.appendChild(res); area.appendChild(wrap);
+}
+function clearDice(){ document.getElementById('diceArea').innerHTML=''; }
+function showModal(html){
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalOverlay').hidden = false;
+}
+function closeModal(){ document.getElementById('modalOverlay').hidden = true; }
+function renderUnitInfo(side,unit){
+  const panel = document.getElementById('unitInfoPanel');
+  if(!side){ panel.hidden=true; return; }
+  panel.hidden=false;
+  const r = unitStats(side,unit);
+  const sig = SIG_INFO[r.sig];
+  // once/match sigs track via sigUsed; Gasser is passive (no 'used' state - always "active"
+  // once the second half starts); Showman never has a use to report here (no Tactic Deck
+  // in this build). Main Character redesigned 2026-09-21 - it DOES track via sigUsed now.
+  const statusless = new Set(['gasser','showman']);
+  const status = statusless.has(r.sig) ? '' : (S.sigUsed[side][unit] ? ' (used)' : ' (available)');
+  document.getElementById('unitInfo').innerHTML = `<b>${side==='A'?'Your':"CPU's"} ${r.role}</b> — ${r.name} (${unit}) at ${S.pos[side][unit]}
+    <div class="statgrid" style="margin-top:6px">
+      <span>Pace ${r.pace}</span><span>Shot ${r.shot}</span><span>Control ${r.control}</span>
+      <span>Pass Rng ${r.prange}</span><span>Shot Rng ${r.srange??'—'}</span><span>Tackle ${r.tackle}</span>
+    </div>
+    <div style="margin-top:6px;font-size:.78rem;color:var(--muted)"><b style="color:var(--ochre)">${sig.name}</b>${status} — ${sig.desc}</div>`;
+}
+function renderAll(){ renderBoard(); renderScoreboard(); renderHands(); renderLog(); renderUnitInfo(UI.infoSide, UI.infoUnit); }
+
+/* ============================== PERSISTENCE ============================== */
+function saveGame(){ try{ localStorage.setItem('hexside_base_save', JSON.stringify({_saveVersion:SAVE_VERSION, state:S})); }catch(e){} }
+function loadGame(){
+  try{
+    const raw = localStorage.getItem('hexside_base_save');
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(!parsed || parsed._saveVersion !== SAVE_VERSION) return null; // stale save from older logic — start fresh rather than resume a fixed bug
+    return parsed.state;
+  } catch(e){ return null; }
+}
+function clearSave(){ try{ localStorage.removeItem('hexside_base_save'); }catch(e){} }
+
+/* ============================== TURN ENGINE ============================== */
+function cardOptions(side, card){
+  const pos = S.pos[side];
+  let units=[], fallback=false;
+  if(FALLBACK_CARDS.has(card)){
+    const [t,ln] = CARD_ZONE[card];
+    let hit = Object.entries(pos).filter(([u,h])=>{ const [ht,hl]=zoneOf(h); return ht===t && hl.includes(ln); }).map(([u])=>u);
+    if(SEAM_EXTRA[card]){
+      const cols = SEAM_EXTRA[card];
+      for(const [u,h] of Object.entries(pos)){
+        if(cols.includes(h[0]) && laneOf(h[0],parseInt(h.slice(1))).includes(ln) && !hit.includes(u)) hit.push(u);
+      }
+    }
+    if(hit.length){ units=hit; fallback=false; } else { units=Object.keys(pos); fallback=true; }
+  } else if(card.startsWith('Third-')){
+    const t = parseInt(card.split('-')[1],10);
+    units = Object.entries(pos).filter(([u,h])=>zoneOf(h)[0]===t).map(([u])=>u);
+    if(t===2){ for(const [u,h] of Object.entries(pos)) if((h[0]==='D'||h[0]==='H') && !units.includes(u)) units.push(u); }
+  } else if(card.startsWith('Lane-')){
+    const lane = card.split('-')[1];
+    units = Object.entries(pos).filter(([u,h])=>zoneOf(h)[1].includes(lane)).map(([u])=>u);
+  } else if(card==='KeepersCall'){
+    units = ('GK' in pos) ? ['GK'] : [];
+  } else if(card==='TacticalFree' || card==='FullPress'){
+    units = Object.keys(pos);
+  }
+  if(S.ball.side===side){
+    const carrier = S.ball.unit;
+    if(carrier in pos && !units.includes(carrier)) units = units.concat([carrier]);
+  }
+  return {units, fallback};
+}
+
+// ---- Character Skins: roster selection (2026-09-17) ----
+// One optional alternate per slot at most - each carries a small stat delta plus a
+// replacement Signature (see CHARACTERS/SIG_INFO above). The CPU's picks are random
+// (matching this feature's own n=1000 verification methodology in the Python engine -
+// no CPU roster-preference heuristic was built, same as no card-choice heuristic beyond
+// the simple scoring already in runCpuTurn) and never shown before kickoff, same as its
+// hand already stays hidden.
+function pickRandomRoster(){
+  const roster = {};
+  for(const slot of UNIT_ORDER){
+    const opts = [BASE_ROSTER[slot]].concat(CHARACTERS[slot]||[]);
+    roster[slot] = {...opts[Math.floor(Math.random()*opts.length)]};
+  }
+  return roster;
+}
+function chooseRosters(){
+  return new Promise(resolve=>{
+    S.roster.B = pickRandomRoster();
+    const picks = {}; // slot -> chosen option object, defaults to standard
+    for(const slot of UNIT_ORDER) picks[slot] = BASE_ROSTER[slot];
+    function renderPicker(){
+      let html = `<h3>Pick your roster</h3><p>Optional alternate for any slot - amateur five-a-side characters, each a small stat change plus a themed Signature. Standard is always safe to keep.</p>`;
+      for(const slot of UNIT_ORDER){
+        const opts = [BASE_ROSTER[slot]].concat(CHARACTERS[slot]||[]);
+        html += `<div class="slotpick"><div class="slothead">${BASE_ROSTER[slot].role}</div><div class="opts">`;
+        opts.forEach((opt,i)=>{
+          const isPicked = picks[slot]===opt;
+          const sig = SIG_INFO[opt.sig];
+          html += `<div class="slotopt${isPicked?' picked':''}" data-slot="${slot}" data-idx="${i}">
+            <span class="oname">${opt.name}</span>
+            <span class="osig">${sig.name}</span>
+            <span class="odesc">${sig.desc}</span>
+          </div>`;
+        });
+        html += `</div></div>`;
+      }
+      html += `<div class="row"><button class="act" id="rosterConfirmBtn">Confirm roster &amp; continue</button></div>`;
+      const box = document.getElementById('modalBox');
+      box.className = 'modal wide';
+      box.innerHTML = html;
+      box.querySelectorAll('.slotopt').forEach(el=>{
+        el.onclick = ()=>{
+          const slot = el.dataset.slot, idx = +el.dataset.idx;
+          const opts = [BASE_ROSTER[slot]].concat(CHARACTERS[slot]||[]);
+          picks[slot] = opts[idx];
+          renderPicker();
+        };
+      });
+      document.getElementById('rosterConfirmBtn').onclick = ()=>{
+        const roster = {};
+        for(const slot of UNIT_ORDER) roster[slot] = {...picks[slot]};
+        S.roster.A = roster;
+        document.getElementById('modalBox').className = 'modal';
+        closeModal();
+        resolve();
+      };
+    }
+    document.getElementById('modalOverlay').hidden = false;
+    renderPicker();
+  });
+}
+
+async function startMatch(){
+  S = freshState();
+  UI = {phase:'idle', clickableHexes:new Set(), highlightHexes:new Map(), selectableUnits:new Set(), selectedUnit:null, infoSide:null, infoUnit:null};
+  renderAll();
+  await chooseRosters();
+  S.cmdDraw.A = shuffle(buildDeck(COMMAND_SPEC));
+  S.cmdDraw.B = shuffle(buildDeck(COMMAND_SPEC));
+  S.kicker = Math.random()<0.5 ? 'A':'B';
+  log(`Coin toss: ${sideName(S.kicker)} kick off.`, 'info');
+  renderAll();
+  const taker = await runDraft(S.kicker);
+  S.ball = {side:S.kicker, unit:taker, hex:'F3'};
+  S.kickoffTaker = {side:S.kicker, unit:taker};
+  for(const side of ['A','B']){ S.handCmd[side]=[]; for(let i=0;i<5;i++) S.handCmd[side].push(drawCmd(side)); }
+  UI.phase='idle';
+  checkNoOverlap();
+  renderAll();
+  showModal(`<h3>Kickoff!</h3><p>Formations are set. ${sideName(S.kicker)} take the first kickoff — ${unitStats(S.kicker,taker).role} on the centre spot.</p><div class="row"><button class="act" id="startBtn">Start the match</button></div>`);
+  document.getElementById('startBtn').onclick = ()=>{ closeModal(); nextTurnStart(); };
+}
+
+function currentMover(){ return (S.turn%2===1) ? S.kicker : (S.kicker==='A'?'B':'A'); }
+
+function nextTurnStart(){
+  if(S.turn>48){ endMatch(); return; }
+  saveGame(); // checkpoint: state as of the start of this turn, before any of its mutations —
+              // the only point a reload can safely resume from without re-running turn effects twice
+  clearDice();
+  S.goalJustScored = false;
+  const mover = currentMover();
+  S.playingOutThisTurn[mover] = false;
+  S.outOfNowhereNoShot[mover] = false;
+  if(S.playingOutPendingReturn[mover] && 'GK' in S.pos[mover]){
+    // Playing Out (Sunday Ederson): at the start of this side's own next turn, the
+    // Goalkeeper must get back into its own zone under its own normal Pace - a real
+    // move, blockable by units on either side, not a magic teleport. legalReach's own
+    // zone-lock filter already does exactly the right check for free: for a
+    // goalkeeper-role unit it only ever returns hexes that are BOTH reachable this turn
+    // AND inside the zone, so "can it get back at all" is just "is this non-empty."
+    // If blocked or Pace falls short (the common case once it's wandered far - confirmed
+    // directly this is the ordinary outcome, not an edge case): no free pass. A
+    // guaranteed Yellow Card (not a random Discipline Deck draw) does everything else
+    // needed for free via applyDiscipline: permanent Pace -1, and sendToSinbin pulls it
+    // off the pitch for one turn - during which the zone is genuinely empty too, same
+    // as any other sin-binned goalkeeper - and sinbinCheck (below) already returns a
+    // goalkeeper-role unit straight into its zone the instant it comes back. A second
+    // failure (already-carrying a Yellow) escalates to Red via applyDiscipline's own
+    // existing logic, sending the real Goalkeeper off entirely and auto-assigning an
+    // Emergency deputy - an appropriately severe, fully pre-existing consequence.
+    S.playingOutPendingReturn[mover] = false;
+    const r = legalReach(mover, 'GK', 0);
+    if(r.size){
+      const best = [...r.entries()].sort((a,b)=>a[1].cost-b[1].cost)[0][0];
+      S.pos[mover]['GK'] = best;
+      log(`${unitName(mover,'GK')} makes it back into its own zone at ${best} — Playing Out's exception ends.`, 'info');
+    } else {
+      log(`${unitName(mover,'GK')} can't get back into its own zone — blocked or out of Pace.`, 'card-line');
+      applyDiscipline(mover, 'GK', 'YellowCard');
+    }
+    checkNoOverlap();
+  }
+  sinbinCheck(mover);
+  // Only a genuine send-off calls for an Emergency GK (§12) — a Goalkeeper serving a 1-turn
+  // sin-bin (sendToSinbin also deletes it from S.pos, same as a send-off does) must leave its
+  // zone genuinely empty for that turn, never covered by a deputy. Checking sentOff specifically
+  // (not just "GK missing from S.pos") is what keeps those two cases apart.
+  if(S.sentOff.includes(`${mover}:GK`) && !S.emergencyGk[mover]) assignEmergencyGk(mover);
+  S.overlapUsedThisTurn = false;
+  renderAll();
+  if(mover===HUMAN) startHumanTurn();
+  else runCpuTurn();
+}
+
+async function endTurn(){
+  const mover = currentMover();
+  replenish(mover);
+  S.turn++;
+  UI = {phase:'idle', clickableHexes:new Set(), highlightHexes:new Map(), selectableUnits:new Set(), selectedUnit:null, infoSide:null, infoUnit:null};
+  renderAll();
+  if(S.turn===25 && S.half===1){ // just completed turn 24
+    await halftimeReset();
+    renderAll();
+    showModal(`<h3>Half-time</h3><p>Ends have swapped — ${sideName(S.kickoffTaker.side)} kick off the second half.</p><div class="row"><button class="act" id="htBtn">Continue</button></div>`);
+    document.getElementById('htBtn').onclick=()=>{closeModal(); nextTurnStart();};
+    return;
+  }
+  if(S.turn>48){ endMatch(); return; }
+  setTimeout(nextTurnStart, mover===HUMAN?150:550);
+}
+
+function endMatch(){
+  S.matchOver = true;
+  renderAll();
+  saveGame();
+  const you=S.score.A, cpu=S.score.B;
+  const res = you>cpu?'You win!':you<cpu?'CPU wins.':'Draw.';
+  showModal(`<h3>Full time</h3><p style="font-size:1.4rem;font-weight:700">You ${you} – ${cpu} CPU</p><p>${res}</p><div class="row"><button class="act" id="againBtn">New match</button></div>`);
+  document.getElementById('againBtn').onclick=()=>{ closeModal(); clearSave(); startMatch(); };
+}
+
+/* ============================== HUMAN TURN ============================== */
+let humanTurnCtx = null;
+// Defensive guard: every human-action entry point below calls this before touching
+// humanTurnCtx. It should always already be valid (startHumanTurn sets it fresh at the
+// top of every turn) — this only ever fires as a self-heal if some path is ever found
+// that reaches an action handler without going through startHumanTurn first, turning a
+// silent crash (and a permanently stuck UI) into a safe, playable fallback state instead.
+function ensureHumanTurnCtx(){
+  if(!humanTurnCtx) humanTurnCtx = {activated:new Set(), moved:new Set(), acted:0, actedUnits:new Set(), zocEnteredThisActivation:new Set(), breakawayUnit:null, maxActs:1};
+  if(humanTurnCtx.maxActs===undefined) humanTurnCtx.maxActs = 1;
+  return humanTurnCtx;
+}
+
+function startHumanTurn(){
+  UI.phase='await-card';
+  humanTurnCtx = {activated:new Set(), moved:new Set(), acted:0, actedUnits:new Set(), zocEnteredThisActivation:new Set(), breakawayUnit:null};
+  setPrompt('Your turn — play a Command Card, or cycle a card.');
+  renderActionButtons([{text:'Cycle a card instead', secondary:true, onClick:cycleHumanCard}]);
+  renderAll();
+}
+function cycleHumanCard(){
+  if(!S.handCmd.A.length) return;
+  showModal(`<h3>Cycle a card</h3><p>Discard one card face-down and draw a replacement. No activation this turn.</p><div class="row" id="cycleList"></div>`);
+  const list = document.getElementById('cycleList');
+  S.handCmd.A.forEach((c,idx)=>{
+    const b=document.createElement('button'); b.className='act secondary'; b.textContent=CARD_LABEL[c];
+    b.onclick=()=>{
+      S.handCmd.A.splice(idx,1);
+      S.cmdDiscard.A.push(c);
+      S.handCmd.A.push(drawCmd('A'));
+      closeModal();
+      log('You cycle a card.', 'info');
+      endTurn();
+    };
+    list.appendChild(b);
+  });
+  const cancel=document.createElement('button'); cancel.className='act secondary'; cancel.textContent='Cancel';
+  cancel.onclick=closeModal; list.appendChild(cancel);
+}
+// Marshalled (Gaffer): once/match, when this unit is activated by whatever card was
+// played, one OTHER friendly unit already on the pitch may act as though it had also
+// been activated this turn - reuses this file's own Full Press pattern (bump the
+// activation cap by 1) rather than inventing a second one, simplified to auto-pick the
+// most advanced eligible teammate (excluding the Goalkeeper) rather than asking the
+// human to choose, the same "no extra picker UI" simplification CPU's own card/unit
+// choices already make throughout this file.
+function applyMarshalled(side, activatedSet, bumpMaxActs){
+  const hasGaffer = [...activatedSet].some(u=>unitStats(side,u).sig==='marshalled' && u in S.pos[side]);
+  if(!hasGaffer || S.sigUsed[side].SW) return;
+  const candidates = Object.keys(S.pos[side]).filter(u=>u!=='GK' && !activatedSet.has(u));
+  if(!candidates.length) return;
+  const end = attEnd(side);
+  candidates.sort((a,b)=>rankDist(S.pos[side][a],end)-rankDist(S.pos[side][b],end));
+  const chosen = candidates[0];
+  S.sigUsed[side].SW = true;
+  activatedSet.add(chosen);
+  bumpMaxActs();
+  log(`${unitName(side,'SW')} uses Marshalled — ${unitName(side,chosen)} may also act this turn, once per match.`, 'card-line');
+}
+function onPlayCard(card, idx){
+  if(UI.phase!=='await-card') return;
+  ensureHumanTurnCtx();
+  S.handCmd.A.splice(idx,1);
+  S.cmdDiscard.A.push(card);
+  const {units, fallback} = cardOptions('A', card);
+  if(card==='FullPress'){ S.debt.A = 2; }
+  if(card==='KeepersCall'){ S.handCmd.A.push(drawCmd('A')); log('You play Keeper’s Call — extra card drawn.', 'info'); }
+  log(`You play ${CARD_LABEL[card]}${fallback?' (zone empty — fallback: choose 1 unit)':''} — activates ${units.map(u=>unitStats('A',u).role).join(', ')||'nobody'}.`, 'info');
+  humanTurnCtx.cardFallback = fallback;
+  humanTurnCtx.cardIsFullPress = card==='FullPress';
+  humanTurnCtx.maxActs = card==='FullPress' ? 2 : 1;
+  if(fallback){
+    UI.phase='await-fallback-pick';
+    setPrompt('Zone empty — choose any one unit to activate.');
+    UI.selectableUnits = new Set(units.map(u=>'A:'+u));
+    renderActionButtons([]);
+    renderAll();
+    return;
+  }
+  humanTurnCtx.activated = new Set(units);
+  applyMarshalled('A', humanTurnCtx.activated, ()=>{ humanTurnCtx.maxActs++; });
+  beginHumanActivationPhase();
+}
+function beginHumanActivationPhase(){
+  ensureHumanTurnCtx();
+  UI.phase='await-unit-select';
+  // §6: the ball-carrier is always activatable, even mid-turn if possession just changed
+  // hands (a Pass, a won Tackle's follow-up, a won Dribble Challenge) — re-checked every
+  // time this phase (re)starts, not just once when the card was played.
+  const eligibleUnits = new Set(humanTurnCtx.activated);
+  if(S.ball.side==='A' && S.ball.unit in S.pos.A) eligibleUnits.add(S.ball.unit);
+  UI.selectableUnits = new Set([...eligibleUnits].filter(u=>!humanTurnCtx.moved.has(u) || canStillAct(u)).map(u=>'A:'+u));
+  if(UI.selectableUnits.size===0){ setPrompt('No further actions available.'); renderActionButtons([{text:'End turn', onClick:endTurn}]); renderAll(); return; }
+  setPrompt(`Activated: ${[...eligibleUnits].map(u=>unitStats('A',u).role).join(', ')}. Select a unit to move.`);
+  renderActionButtons([{text:'End turn', secondary:true, onClick:endTurn}]);
+  renderAll();
+}
+function canStillAct(unit){
+  ensureHumanTurnCtx();
+  const eligible = (S.ball.side==='A' && S.ball.unit===unit) || isAdjacentToOppCarrier('A',unit);
+  return eligible && humanTurnCtx.acted < humanTurnCtx.maxActs && !humanTurnCtx.actedUnits.has(unit);
+}
+function isAdjacentToOppCarrier(side,unit){
+  if(S.ball.side===side || !S.ball.unit) return false;
+  return adjacent(S.pos[side][unit], S.ball.hex);
+}
+
+function onUnitClick(side, unit){
+  if(side!=='A') return;
+  ensureHumanTurnCtx();
+  if(UI.phase==='await-fallback-pick'){
+    humanTurnCtx.activated = new Set([unit]);
+    applyMarshalled('A', humanTurnCtx.activated, ()=>{ humanTurnCtx.maxActs++; });
+    UI.phase='idle';
+    beginHumanActivationPhase();
+    return;
+  }
+  if(UI.phase!=='await-unit-select') return;
+  UI.selectedUnit = 'A:'+unit;
+  UI.infoSide='A'; UI.infoUnit=unit;
+  tryClaimLooseBall('A', unit, S.pos.A[unit]);
+  if(S.kickoffTaker && S.kickoffTaker.side==='A' && S.kickoffTaker.unit===unit){
+    UI.clickableHexes = new Set();
+    setPrompt(`${unitStats('A',unit).role} took the kickoff — its whole activation must be a single Pass to a teammate within Pass Range.`);
+    renderActionButtons([
+      {text:'Pass', onClick:()=>beginPassTargeting(unit)},
+      {text:'Bounce Pass', secondary:true, onClick:()=>beginBouncePassChoice(unit, true)},
+      {text:'Cancel', secondary:true, onClick:()=>{UI.selectedUnit=null; beginHumanActivationPhase();}},
+    ]);
+    renderAll();
+    return;
+  }
+  const already = humanTurnCtx.moved.has(unit);
+  const canAct = canStillAct(unit) ;
+  const buttons=[];
+  if(!already){
+    const readsGameMod = (S.ball.side==='A' && S.ball.unit===unit) ? tryReadsGame('A', unit) : 0;
+    const legal = legalReach('A', unit, readsGameMod, tryPlayingOutMove('A', unit));
+    const oppCarrierHex = S.ball.side==='B' ? S.ball.hex : null;
+    // §9 escape-hex rule: you may never voluntarily seal the LAST open hex next to the
+    // opposing ball-carrier. Already enforced for the CPU's own moves (cpuReposition) —
+    // this was the missing other half, letting the human box CPU's carrier in completely.
+    UI.clickableHexes = new Set([...legal.keys()].filter(h=>h!==S.pos.A[unit] && !(oppCarrierHex && wouldSealLastGap('A', oppCarrierHex, h))));
+    UI.pendingMoveUnit = unit; UI.pendingReach = legal;
+    setPrompt(`${unitStats('A',unit).role} selected — click a hex to move (Pace ${unitStats('A',unit).pace}), or act in place.`);
+  } else {
+    UI.clickableHexes = new Set();
+    setPrompt(`${unitStats('A',unit).role} already moved this turn.`);
+  }
+  if(canAct){
+    if(S.ball.side==='A' && S.ball.unit===unit){
+      buttons.push({text:'Pass', onClick:()=>beginPassTargeting(unit)});
+      buttons.push({text:'Bounce Pass', secondary:true, onClick:()=>beginBouncePassChoice(unit, false)});
+      if(canShoot('A',unit)) buttons.push({text:'Shoot', onClick:()=>humanShoot(unit)});
+      else explainNoShotIfCarrier(unit);
+    } else if(isAdjacentToOppCarrier('A',unit)){
+      buttons.push({text:'Tackle', onClick:()=>humanTackle(unit)});
+    }
+  }
+  buttons.push({text:'Cancel', secondary:true, onClick:()=>{UI.selectedUnit=null; UI.clickableHexes=new Set(); beginHumanActivationPhase();}});
+  renderActionButtons(buttons);
+  renderAll();
+}
+function canShoot(side,unit){
+  if(S.ball.side!==side || S.ball.unit!==unit) return false;
+  if(S.outOfNowhereNoShot[side]) return false; // Out of Nowhere: no Shot on this activation
+  const d = shotDist(S.pos[side][unit], attEnd(side));
+  // Playing Out (Sunday Ederson): grants a real Shot Range (2, matching a Wingback's
+  // own) for this one activation - the concrete rules difference that matters here is
+  // srange itself (null is what makes a Goalkeeper otherwise unable to Shoot at all).
+  const srange = (unitStats(side,unit).srange===null && S.playingOutThisTurn[side]) ? 2 : unitStats(side,unit).srange;
+  return d!==null && srange!==null && d<=srange;
+}
+function explainNoShotIfCarrier(unit){
+  // Mirrors explainIllegalHex for Pass: Shoot has no hex to click when it's simply not
+  // offered, so without this a unit carrying the ball right next to goal but off the
+  // three shot axes just quietly has no Shoot button, with no way to tell why.
+  if(!(S.ball.side==='A' && S.ball.unit===unit) || canShoot('A',unit)) return;
+  const pos = S.pos.A[unit];
+  const end = attEnd('A');
+  const srange = (unitStats('A',unit).srange===null && S.playingOutThisTurn.A) ? 2 : unitStats('A',unit).srange;
+  if(srange===null){ showHint(`${unitStats('A',unit).role} has no Shot stat — it can never take a Shot.`); return; }
+  const d = shotDist(pos, end);
+  if(d===null){ showHint(`No Shot from ${pos} — it isn't on a straight line to the net (a column, or one of the two diagonals), same rule as a Pass.`); return; }
+  if(d>srange){ showHint(`No Shot from ${pos} — ${d} hexes from the net in a straight line, beyond ${unitStats('A',unit).role}'s Shot Range (${srange}).`); return; }
+}
+
+function onHexClick(hex){
+  if(UI.phase==='await-draft-hex' && UI.draftHexResolve){
+    const resolve = UI.draftHexResolve;
+    UI.draftHexResolve = null;
+    UI.clickableHexes = new Set();
+    resolve(hex);
+    return;
+  }
+  if(UI.phase==='await-unit-select' && UI.pendingMoveUnit){
+    executeHumanMove(UI.pendingMoveUnit, hex);
+    return;
+  }
+  if(UI.phase==='await-pass-target'){
+    executeHumanPass(UI.passUnit, hex);
+    return;
+  }
+}
+
+// Playing Out (Sunday Ederson): once/match, "acts as a normal outfield unit for that
+// one activation" - only reachable when the Goalkeeper is genuinely the ball carrier
+// (mirrors the scope of the Python engine's own equivalent fix: a bare reposition
+// without the ball, e.g. via Keeper's Call, stays zone-locked as normal). Marked used
+// the instant the bypass is granted, not deferred to later in the activation, and sets
+// a pending-return flag consumed at the START of this side's own next turn (see
+// nextTurnStart) - a real one-turn exposure window is the point of this card's own
+// "occasionally undoes the whole team" flavor, not a bug to engineer away (this design,
+// including the guaranteed-Yellow-Card-on-failure fallback below, exactly mirrors the
+// final, twice-corrected version built for the Python engine this same day).
+function tryPlayingOutMove(side, unit){
+  if(!(S.ball.side===side && S.ball.unit===unit)) return false;
+  if(unitStats(side,unit).sig!=='playing_out' || S.sigUsed[side][unit]) return false;
+  S.sigUsed[side][unit] = true;
+  S.playingOutThisTurn[side] = true;
+  S.playingOutPendingReturn[side] = true;
+  log(`${unitName(side,unit)} uses Playing Out — acts as a normal outfield unit for this activation, once per match. Must get back to its own zone at the start of ${sideName(side)}'s next turn.`, 'card-line');
+  return true;
+}
+// Reads the Game (Uncle Barry): once/match, the instant an adjacent opposing unit is
+// activated to move, -1 Pace for that move only - a free Jockey (no Flair, no card),
+// own separate once-per-match budget. Scoped to the ball-carrier's own move (same as
+// Last Man/One More Run above), and - a real, documented simplification - checked at
+// PREVIEW time (when a unit is first selected and its reach is shown), not at the
+// later moment the destination is actually confirmed: this file's own human-move flow
+// computes the move path from that earlier preview (UI.pendingReach), so applying the
+// penalty any later would be too late to affect where the unit can actually go. A
+// human who selects their carrier and immediately cancels without moving still spends
+// the charge - an acceptable, minor imperfection rather than a real bug, matching a
+// player who's already "declared" that unit's move by selecting it.
+function tryReadsGame(side, unit){
+  const opp = side==='A'?'B':'A';
+  const swHex = S.pos[opp].SW;
+  if(!swHex || unitStats(opp,'SW').sig!=='reads_the_game' || S.sigUsed[opp].SW) return 0;
+  if(!adjacent(swHex, S.pos[side][unit])) return 0;
+  S.sigUsed[opp].SW = true;
+  log(`${unitName(opp,'SW')} uses Reads the Game — ${unitName(side,unit)}'s Pace is reduced by 1 for this move, once per match.`, 'card-line');
+  return -1;
+}
+// One More Run (Dodgy Knee) / Out of Nowhere (Flash): once/match, this unit's own move
+// ignores the opposing Zone of Control entirely - no Dribble Challenge. Only spends the
+// once-per-match charge when there's actually a ZoC to bypass (checked by the caller
+// BEFORE calling this - a contest must genuinely exist), not on an already-uncontested
+// move that had nothing to bypass. Shared 'used' flag since a unit carries only one of
+// the two Signatures at a time. Scoped to the ball-carrier's own move only, same as
+// Last Man/Jockey's own existing scope in this file - not every unit's every move.
+function tryBigMoveBypass(side, unit){
+  const sig = unitStats(side,unit).sig;
+  if(!['one_more_run','out_of_nowhere'].includes(sig)) return false;
+  if(S.sigUsed[side][unit]) return false;
+  S.sigUsed[side][unit] = true;
+  if(sig==='one_more_run'){
+    S.bigMoveHalfDebuff[side] = S.half;
+    log(`${unitName(side,unit)} uses One More Run — ignores the Zone of Control, once per match.`, 'card-line');
+  } else {
+    S.outOfNowhereNoShot[side] = true;
+    log(`${unitName(side,unit)} uses Out of Nowhere — ignores the Zone of Control, once per match, no Shot this activation.`, 'card-line');
+  }
+  return true;
+}
+async function executeHumanMove(unit, destHex){
+  ensureHumanTurnCtx();
+  UI.clickableHexes = new Set();
+  const path = UI.pendingReach.get(destHex).path;
+  const carrierMoving = S.ball.side==='A' && S.ball.unit===unit;
+  let finalHex = destHex, stoppedShort=false;
+  if(carrierMoving){
+    const oppZoc = enemyZoc('A');
+    let firstChallengeIdx = -1;
+    for(let i=1;i<path.length;i++){ if(oppZoc.has(path[i])){ firstChallengeIdx=i; break; } }
+    if(firstChallengeIdx>=0 && tryBigMoveBypass('A', unit)){
+      S.pos.A[unit] = destHex; S.ball.hex = destHex;
+    } else if(firstChallengeIdx>=0){
+      const contestedHex = path[firstChallengeIdx];
+      const prevHex = path[firstChallengeIdx-1];
+      S.pos.A[unit] = contestedHex; // unit walks up to the contest point first for the board to make sense
+      const defender = Object.entries(S.pos.B).find(([u,h])=>adjacent(h,contestedHex));
+      const defUnit = defender?defender[0]:'SW';
+      const reaction = await maybeCounterWindow('B','A',{carrierHex:contestedHex, allowForceTackle:true, label:'carry into your Zone of Control'});
+      if(reaction.forcedTackle){
+        const tackleUnit = reaction.forcedUnit || defUnit;
+        const win = await doTackle('B', tackleUnit, 'A', reaction.extraDefDie);
+        finalHex = win ? contestedHex : contestedHex; // carrier's own hex unaffected by a Counter-forced tackle timing-wise; ball moved in doTackle
+        renderAll();
+        finishHumanMove(unit, S.pos.A[unit] || contestedHex);
+        return;
+      }
+      const {win} = contest('A', unitStats('A',unit).control, 'B', unitStats('B',defUnit).tackle + (reaction.extraDefDie||0), `Dribble Challenge: ${unitStats('A',unit).role} vs ${unitStats('B',defUnit).role}`, false);
+      if(win){
+        S.ball.hex = contestedHex;
+        finalHex = destHex; // may continue moving with remaining pace conceptually; we simplify to full requested move on a win
+        S.pos.A[unit] = destHex;
+        S.ball.hex = destHex;
+      } else {
+        S.pos.A[unit] = contestedHex;
+        S.ball = {side:null, unit:null, hex:prevHex};
+        finalHex = contestedHex;
+        stoppedShort = true;
+      }
+    } else {
+      S.pos.A[unit] = destHex; S.ball.hex = destHex;
+    }
+  } else {
+    S.pos.A[unit] = destHex;
+    tryClaimLooseBall('A', unit, destHex);
+  }
+  checkNoOverlap();
+  renderAll();
+  finishHumanMove(unit, finalHex, stoppedShort);
+}
+function finishHumanMove(unit, finalHex){
+  ensureHumanTurnCtx();
+  humanTurnCtx.moved.add(unit);
+  UI.selectedUnit=null; UI.pendingMoveUnit=null;
+  const canAct = canStillAct(unit);
+  const buttons=[];
+  if(canAct){
+    if(S.ball.side==='A' && S.ball.unit===unit){
+      buttons.push({text:'Pass', onClick:()=>beginPassTargeting(unit)});
+      buttons.push({text:'Bounce Pass', secondary:true, onClick:()=>beginBouncePassChoice(unit, false)});
+      if(canShoot('A',unit)) buttons.push({text:'Shoot', onClick:()=>humanShoot(unit)});
+    } else if(isAdjacentToOppCarrier('A',unit)){
+      buttons.push({text:'Tackle', onClick:()=>humanTackle(unit)});
+    }
+  }
+  buttons.push({text:'Done with this unit', secondary:true, onClick:beginHumanActivationPhase});
+  setPrompt(canAct ? `${unitStats('A',unit).role} moved to ${finalHex}. Act now?` : `${unitStats('A',unit).role} moved to ${finalHex}.`);
+  if(canAct && S.ball.side==='A' && S.ball.unit===unit && !canShoot('A',unit)) explainNoShotIfCarrier(unit);
+  renderActionButtons(buttons);
+  UI.phase='await-unit-select';
+  renderAll();
+}
+
+function beginPassTargeting(unit){
+  UI.phase='await-pass-target';
+  UI.passUnit = unit;
+  const isKickoff = S.kickoffTaker && S.kickoffTaker.side==='A' && S.kickoffTaker.unit===unit;
+  const start = S.pos.A[unit];
+  const targets = new Set();
+  for(const h of allHexes()){
+    const [d,] = straightLine(start,h);
+    if(d===null || d<=0 || d>unitStats('A',unit).prange) continue;
+    // §5/§8: the kickoff-release Pass must go to a teammate — no Clearance to open ground,
+    // unlike an ordinary Pass, which may legally target any empty hex in range.
+    if(isKickoff && S.pos.A[unit]===h) continue;
+    if(isKickoff && !Object.values(S.pos.A).includes(h)) continue;
+    targets.add(h);
+  }
+  UI.clickableHexes = targets;
+  setPrompt(isKickoff
+    ? `Kickoff Pass with ${unitStats('A',unit).role} (Pass Range ${unitStats('A',unit).prange}) — click a teammate.`
+    : `Pass with ${unitStats('A',unit).role} (Pass Range ${unitStats('A',unit).prange}) — click a hex.`);
+  renderActionButtons([{text:'Cancel', secondary:true, onClick:()=>{
+    UI.phase='await-unit-select'; UI.clickableHexes=new Set();
+    if(isKickoff) onUnitClick('A', unit); else finishHumanMove(unit, S.pos.A[unit]);
+  }}]);
+  renderAll();
+}
+async function executeHumanPass(unit, target){
+  ensureHumanTurnCtx();
+  UI.clickableHexes=new Set();
+  const start = S.pos.A[unit];
+  const [d, mids] = straightLine(start, target);
+  const receiver = Object.entries(S.pos.A).find(([u,h])=>h===target);
+  const interceptor = Object.entries(S.pos.B).find(([u,h])=>h===target);
+  const lineHexes = mids.concat([target]);
+  const contestedBy = [];
+  for(const h of lineHexes){
+    for(const [u,uh] of Object.entries(S.pos.B)) if(adjacent(uh,h) && !contestedBy.includes(u)) contestedBy.push(u);
+  }
+  humanTurnCtx.acted++; humanTurnCtx.actedUnits.add(unit);
+  if(S.ball.side==='A') releaseKickoffIfNeeded('A',unit);
+  if(contestedBy.length===0 || maybeUseVision('A', unit)){
+    if(receiver){ S.ball={side:'A',unit:receiver[0],hex:target}; log(`Pass completes to your ${unitStats('A',receiver[0]).role} at ${target}.`,'win'); }
+    else if(!interceptor){ S.ball={side:null,unit:null,hex:target}; log(`Clearance to ${target} — ball is loose.`,'info'); }
+    else { S.ball={side:'B',unit:interceptor[0],hex:target}; log(`Pass runs straight to CPU's ${unitStats('B',interceptor[0]).role} — turned over.`,'lose'); }
+    afterHumanAct(unit);
+    return;
+  }
+  const defUnit = contestedBy[0];
+  const reaction = await maybeCounterWindow('B','A',{carrierHex:S.pos.B[defUnit], allowForceTackle:false, label:'attempt a contested Pass'});
+  const {win} = contest('A', unitStats('A',unit).control, 'B', unitStats('B',defUnit).tackle+(reaction.extraDefDie||0), `Pass vs Zone of Control (${unitStats('B',defUnit).role})`, false);
+  if(win){
+    if(receiver){ S.ball={side:'A',unit:receiver[0],hex:target}; }
+    else { S.ball={side:null,unit:null,hex:target}; }
+    log('Pass gets through the challenge.', 'win');
+  } else {
+    S.ball = {side:'B', unit:defUnit, hex:S.pos.B[defUnit]};
+    log(`Intercepted! Ball turned over to CPU's ${unitStats('B',defUnit).role}.`, 'lose');
+  }
+  afterHumanAct(unit);
+}
+// Bounce Pass (§8, 2026-09-22 port): a modal listing every legal wall-bounce line from
+// the carrier's current hex, since the destination is DERIVED from the declared axis/wall
+// rather than freely aimed the way a normal Pass's hex-click targeting is - there's no
+// single set of clickable hexes to highlight the way beginPassTargeting has, since up to
+// 8 distinct bent lines can originate from the same hex. isKickoff mirrors
+// beginPassTargeting's own teammate-only restriction on the kickoff-release Pass.
+function beginBouncePassChoice(unit, isKickoff){
+  let options = bouncePassOptions('A', unit);
+  if(isKickoff) options = options.filter(o=>o.kind==='teammate');
+  if(options.length===0){
+    showHint(`No legal Bounce Pass from here for ${unitStats('A',unit).role}.`);
+    return;
+  }
+  let body = `<h3>Bounce Pass — ${unitStats('A',unit).role}</h3><p>Declare a wall to bounce off (Pass Range ${unitStats('A',unit).prange}). Never contested by a Zone of Control (§8).</p><div class="row" style="flex-direction:column;align-items:stretch">`;
+  options.forEach((opt,i)=>{
+    const cls = 'act'+(opt.kind==='intercepted'?' danger':'');
+    body += `<button class="${cls}" id="bounceOpt${i}" style="margin-bottom:8px;text-align:left">${describeBounceOutcome('A',opt)}</button>`;
+  });
+  body += `<button class="act secondary" id="bounceCancel">Cancel</button></div>`;
+  showModal(body);
+  options.forEach((opt,i)=>{
+    document.getElementById('bounceOpt'+i).onclick = ()=>{ closeModal(); executeHumanBouncePass(unit, opt); };
+  });
+  document.getElementById('bounceCancel').onclick = closeModal;
+}
+async function executeHumanBouncePass(unit, opt){
+  if(opt.kind==='net'){
+    log(`${unitName('A',unit)} ${describeBounceOutcome('A',opt)}`, 'info');
+    await humanShoot(unit); // identical Save-contested resolution to a normal Shot; handles its own turn bookkeeping
+    return;
+  }
+  ensureHumanTurnCtx();
+  humanTurnCtx.acted++; humanTurnCtx.actedUnits.add(unit);
+  if(S.ball.side==='A') releaseKickoffIfNeeded('A',unit);
+  resolveBounceCompletion('A', unit, opt);
+  renderAll();
+  afterHumanAct(unit);
+}
+function releaseKickoffIfNeeded(side,unit){
+  if(S.kickoffTaker && S.kickoffTaker.side===side && S.kickoffTaker.unit===unit) S.kickoffTaker=null;
+}
+// Shot-Stopper/Immovable and Clinical both used to be wired for the CPU's own units
+// only (a pre-existing asymmetry, not something Character Skins introduced) - now that
+// either side can field "The Wall"/"Sunday Ederson"/base Clinical, both sides need the
+// same automatic once-per-match check, so these are shared and called from both
+// humanShoot/cpuShoot rather than duplicated a second time with the sides swapped.
+function maybeUseShotStopper(gkSide, gkUnit, saveRoll, attackRoll){
+  if(!gkUnit) return;
+  const sig = unitStats(gkSide, gkUnit).sig;
+  if(!['shot_stopper','immovable'].includes(sig)) return;
+  if(S.sigUsed[gkSide][gkUnit]) return;
+  if(attackRoll.hits < saveRoll.hits) return; // Save's already clearly winning, nothing to fix
+  S.sigUsed[gkSide][gkUnit] = true;
+  const rerolls = sig==='immovable' ? 2 : 1;
+  for(let i=0;i<rerolls;i++) rerollBlank(S, gkSide, saveRoll);
+  log(`${sideName(gkSide)} uses ${SIG_INFO[sig].name} — reroll${rerolls>1?'s up to 2 Blanks':'s a Blank'} on the Save.`, 'card-line');
+}
+function maybeUseClinical(side, unit, attackRoll, defenseRoll){
+  if(unitStats(side,unit).sig!=='clinical') return;
+  if(S.sigUsed[side][unit]) return;
+  if(!(attackRoll.hits<=defenseRoll.hits && defenseRoll.faces.includes('stop'))) return;
+  S.sigUsed[side][unit] = true;
+  rerollBlank(S, side, attackRoll);
+  log(`${sideName(side)} uses Clinical — rerolls a Blank on the Shot.`, 'card-line');
+}
+// Vision (§14): once/match, a Pass or Clearance by the unit carrying this sig skips a
+// contested roll entirely, free - the same effect Through Ball buys for 1 Flair (Advanced
+// Game only, so never relevant here), just permanently on the card instead. Sig-gated like
+// every other Signature here, not slot-hardcoded the way both Python drivers' own
+// `passer_unit == 'PM'` check is - a Character Skin swapping the PM slot to Sees Red or
+// Showman correctly does NOT carry this ability on the digital board, only "Standard
+// Playmaker" does. Called from the passer's own side at the contest point, before the
+// roll happens; returns true if it fired (caller should treat the attempt as uncontested).
+function maybeUseVision(side, unit){
+  if(unitStats(side,unit).sig!=='vision') return false;
+  if(S.sigUsed[side][unit]) return false;
+  S.sigUsed[side][unit] = true;
+  log(`${sideName(side)} uses Vision — ignores a Zone of Control on this Pass, free.`, 'card-line');
+  return true;
+}
+// Main Character (Me!) redesigned 2026-09-21: the original "must Shoot instead of Pass
+// when Through on Goal" had nothing to restrict - this build never offers that choice to
+// anyone (same finding as both Python drivers). Replaced with "reroll ALL Blank dice on a
+// Shot, once/match" - same trigger condition and sigUsed bookkeeping as Clinical above,
+// just sized up: counts the blanks once before rerolling, then spends exactly that many
+// rerollBlank() calls, rather than looping until zero blanks remain (a stronger, different
+// effect neither Python driver implements).
+function maybeUseMainCharacter(side, unit, attackRoll, defenseRoll){
+  if(unitStats(side,unit).sig!=='main_character') return;
+  if(S.sigUsed[side][unit]) return;
+  if(!(attackRoll.hits<=defenseRoll.hits && defenseRoll.faces.includes('stop'))) return;
+  S.sigUsed[side][unit] = true;
+  const nBlank = attackRoll.faces.filter(f=>f==='blank').length;
+  for(let i=0;i<nBlank;i++) rerollBlank(S, side, attackRoll);
+  log(`${sideName(side)} uses Main Character — rerolls all ${nBlank} Blanks on the Shot.`, 'card-line');
+}
+async function humanShoot(unit){
+  ensureHumanTurnCtx();
+  humanTurnCtx.acted++; humanTurnCtx.actedUnits.add(unit);
+  const gkEntry = Object.entries(S.pos.B).find(([u])=>isGoalkeeperRole('B',u));
+  if(!gkZoneOccupied('B')){
+    S.score.A++; log(`GOAL! Open net — ${unitStats('A',unit).role} scores. ${S.score.A}-${S.score.B}`, 'goal');
+    checkNoOverlap(); renderAll();
+    setTimeout(()=>goalScored('A'), 400);
+    return;
+  }
+  const gkUnit = gkEntry[0];
+  const reaction = await maybeCounterWindow('B','A',{carrierHex:null, allowForceTackle:false, label:'take a Shot'});
+  const A = rollDice(S,'A',unitStats('A',unit).shot,true);
+  const D = rollDice(S,'B',saveStat('B',gkUnit)+(reaction.extraDefDie||0),false);
+  if(A.hits<=D.hits) maybeUseClinical('A', unit, A, D);
+  if(A.hits<=D.hits) maybeUseMainCharacter('A', unit, A, D);
+  maybeUseShotStopper('B', gkUnit, D, A);
+  const win = A.hits>D.hits;
+  showDice(`Shot: You ${A.hits} vs CPU Save ${D.hits}`, A, D);
+  log(`Shot: You ${A.hits} vs CPU Save ${D.hits} → ${win?'GOAL!':'SAVED'}`, win?'goal':'lose');
+  if(win){
+    S.score.A++;
+    checkNoOverlap(); renderAll();
+    setTimeout(()=>goalScored('A'), 400);
+    return;
+  }
+  resolveSave('B', gkUnit, D, S.pos.A[unit]);
+  afterHumanAct(unit);
+}
+function resolveSave(gkSide, gkUnit, saveRoll, shotFromHex){
+  const hasFlair = saveRoll.faces.includes('flair');
+  if(hasFlair){ log(`${sideName(gkSide)} holds on — Save-retention (Flair on the Save roll).`, 'win'); return; }
+  const own = ownEnd(gkSide);
+  const lane = laneOf(shotFromHex[0], parseInt(shotFromHex.slice(1)));
+  let target;
+  if(lane.length===2){
+    // §8: rank the two candidate hexes empty, then a defender's hex, then an attacker's —
+    // landing on an attacker would otherwise hand the shooting side a free uncontested chance.
+    const cands = [REBOUND_HEX[own].Top, REBOUND_HEX[own].Bottom];
+    const occ = occupiedHexes(null);
+    function rank(h){
+      if(!occ.has(h)) return 0;
+      for(const side of ['A','B']) for(const u2 in S.pos[side]) if(S.pos[side][u2]===h) return side===gkSide?1:2;
+      return 0;
+    }
+    target = cands.slice().sort((h1,h2)=>rank(h1)-rank(h2))[0];
+  } else {
+    target = REBOUND_HEX[own][lane[0]];
+  }
+  let claimedSide=null, claimedUnit=null;
+  for(const side of ['A','B']) for(const [u,h] of Object.entries(S.pos[side])) if(h===target){ claimedSide=side; claimedUnit=u; }
+  if(claimedSide){ S.ball={side:claimedSide, unit:claimedUnit, hex:target}; log(`Save parried to ${target} — straight to ${unitName(claimedSide,claimedUnit)}.`, 'info'); }
+  else { S.ball={side:null,unit:null,hex:target}; log(`Save parried out to ${target} — loose ball, up for grabs.`, 'info'); }
+}
+async function goalScored(scoringSide){
+  // A goal fully resets the pitch via a fresh kickoff draft (possibly awaiting real clicks
+  // from the human) — anything still mid-flight from the turn that just ended (e.g. a Full
+  // Press activation with units left to process) must stop rather than act against the
+  // now-completely-different, post-restart board. See the S.goalJustScored checks in
+  // runCpuTurn()'s loop.
+  S.goalJustScored = true;
+  const concedingSide = scoringSide==='A'?'B':'A';
+  await goalRestart(concedingSide);
+  UI = {phase:'idle', clickableHexes:new Set(), highlightHexes:new Map(), selectableUnits:new Set(), selectedUnit:null, infoSide:null, infoUnit:null};
+  renderAll();
+  setTimeout(()=>{ endTurn(); }, 200);
+}
+async function humanTackle(unit){
+  ensureHumanTurnCtx();
+  humanTurnCtx.acted++; humanTurnCtx.actedUnits.add(unit);
+  await doTackle('A', unit, 'B', 0);
+  checkNoOverlap();
+  afterHumanAct(unit);
+}
+function afterHumanAct(unit){
+  UI.selectedUnit=null;
+  setTimeout(()=>{ beginHumanActivationPhase(); }, 350);
+}
+
+/* ============================== CPU TURN ============================== */
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+async function runCpuTurn(){
+  UI.phase='cpu';
+  setPrompt('CPU is thinking…');
+  renderActionButtons([]);
+  await sleep(400);
+  // choose a card: prefer one that activates the ball-carrier or a useful group; occasional Full Press
+  let cardIdx = 0, best=-1;
+  const scored = S.handCmd.B.map((c,i)=>{
+    if(c==='Counter') return -1;
+    const {units} = cardOptions('B', c);
+    let score = units.length;
+    if(S.ball.side==='B' && units.includes(S.ball.unit)) score += 5;
+    if(c==='FullPress') score += (S.ball.side==='B' ? 3 : -2);
+    if(c==='KeepersCall') score -= 3;
+    return score;
+  });
+  scored.forEach((sc,i)=>{ if(sc>best){best=sc;cardIdx=i;} });
+  if(best<0){ // only counters left -> cycle
+    const c = S.handCmd.B.splice(0,1)[0];
+    S.cmdDiscard.B.push(c); S.handCmd.B.push(drawCmd('B'));
+    log('CPU cycles a card.', 'info');
+    renderAll();
+    await sleep(300);
+    endTurn();
+    return;
+  }
+  const card = S.handCmd.B.splice(cardIdx,1)[0];
+  S.cmdDiscard.B.push(card);
+  if(card==='FullPress') S.debt.B = 2;
+  if(card==='KeepersCall') S.handCmd.B.push(drawCmd('B'));
+  const {units, fallback} = cardOptions('B', card);
+  let activated = units;
+  if(fallback){
+    // pick the unit closest to being useful: ball carrier if any, else most advanced
+    let pick = (S.ball.side==='B') ? S.ball.unit : units.slice().sort((a,b)=>rankDist(S.pos.B[a],attEnd('B'))-rankDist(S.pos.B[b],attEnd('B')))[0];
+    activated = [pick];
+  }
+  // Marshalled (Gaffer): same effect as the human side's applyMarshalled, adapted for
+  // this array-based CPU activation list - the CPU's own per-turn loop below just
+  // processes every entry in `activated` once each, so appending the extra teammate
+  // here is sufficient on its own, no separate maxActs bump needed the way the human
+  // side's canStillAct() gating requires.
+  if(activated.some(u=>unitStats('B',u).sig==='marshalled' && u in S.pos.B) && !S.sigUsed.B.SW){
+    const candidates = Object.keys(S.pos.B).filter(u=>u!=='GK' && !activated.includes(u));
+    if(candidates.length){
+      const end = attEnd('B');
+      candidates.sort((a,b)=>rankDist(S.pos.B[a],end)-rankDist(S.pos.B[b],end));
+      const chosen = candidates[0];
+      S.sigUsed.B.SW = true;
+      activated = activated.concat([chosen]);
+      log(`CPU's SW uses Marshalled — CPU's ${unitStats('B',chosen).role} may also act this turn, once per match.`, 'card-line');
+    }
+  }
+  log(`CPU plays ${CARD_LABEL[card]} — activates ${activated.map(u=>unitStats('B',u).role).join(', ')}.`, 'info');
+  setPrompt(`CPU plays ${CARD_LABEL[card]}…`);
+  renderAll();
+  await sleep(350);
+
+  const maxActs = card==='FullPress' ? 2 : 1;
+  let actsUsed = 0; const actedUnits = new Set();
+  // order: ball carrier first if present, then defenders adjacent to human carrier, then others
+  const order = activated.slice().sort((a,b)=>{
+    const aCarry = S.ball.side==='B'&&S.ball.unit===a, bCarry = S.ball.side==='B'&&S.ball.unit===b;
+    if(aCarry!==bCarry) return aCarry?-1:1;
+    return 0;
+  });
+  for(const unit of order){
+    if(!(unit in S.pos.B)) continue;
+    // Visible per-unit progress — without this, the prompt sits on one static line for the
+    // whole CPU turn (worst case: 5 units under Full Press, several seconds), which reads
+    // as a frozen page even when everything is resolving normally underneath it.
+    setPrompt(`CPU is moving its ${unitStats('B',unit).role}…`);
+    renderAll();
+    await cpuHandleUnit(unit, {maxActs, actsUsedRef:v=>{ if(v!==undefined) actsUsed=v; return actsUsed; }, actedUnits});
+    if(S.goalJustScored) return; // pitch was fully reset by a goal mid-activation — goalScored() already owns ending this turn
+    await sleep(250);
+  }
+  setPrompt('CPU ends its turn…');
+  renderAll();
+  await sleep(300);
+  endTurn();
+}
+
+async function cpuHandleUnit(unit, ctx){
+  const isCarrier = S.ball.side==='B' && S.ball.unit===unit;
+  const kickoffBound = S.kickoffTaker && S.kickoffTaker.side==='B' && S.kickoffTaker.unit===unit;
+  if(isCarrier){
+    if(kickoffBound){ await cpuKickoffRelease(unit); return; }
+    await cpuMoveCarrierAndAct(unit, ctx);
+  } else if(S.ball.side===null){
+    cpuChaseLooseBall(unit);
+  } else if(isAdjacentToOppCarrier('B',unit)){
+    await cpuDefend(unit, ctx);
+  } else {
+    cpuReposition(unit);
+  }
+}
+function cpuChaseLooseBall(unit){
+  if(tryClaimLooseBall('B', unit, S.pos.B[unit])) return;
+  const legal = legalReach('B', unit, 0);
+  const looseHex = S.ball.hex;
+  if(legal.has(looseHex)){
+    S.pos.B[unit] = looseHex;
+    tryClaimLooseBall('B', unit, looseHex);
+    checkNoOverlap();
+    return;
+  }
+  const looseNeighbors = new Set(neighbors(looseHex));
+  const closer = [...legal.keys()].find(h=>looseNeighbors.has(h));
+  if(closer){ S.pos.B[unit] = closer; checkNoOverlap(); }
+}
+async function cpuKickoffRelease(unit){
+  const start = S.pos.B[unit];
+  let best=null,bestD=Infinity;
+  for(const [u,h] of Object.entries(S.pos.B)){
+    if(u===unit) continue;
+    const [d,] = straightLine(start,h);
+    if(d===null || d>unitStats('B',unit).prange || d===0) continue;
+    if(d<bestD){bestD=d;best={u,h};}
+  }
+  releaseKickoffIfNeeded('B',unit);
+  if(!best){ log('CPU has no legal kickoff pass target (unexpected).', 'info'); return; }
+  const [d,mids] = straightLine(start,best.h);
+  const contestedBy=[];
+  for(const h of mids.concat([best.h])) for(const [u,uh] of Object.entries(S.pos.A)) if(adjacent(uh,h)) contestedBy.push(u);
+  if(contestedBy.length===0){
+    S.ball={side:'B',unit:best.u,hex:best.h};
+    log(`CPU kicks off: Pass to ${unitStats('B',best.u).role}.`, 'info');
+  } else {
+    const {win} = contest('B', unitStats('B',unit).control, 'A', unitStats('A',contestedBy[0]).tackle, 'Kickoff Pass vs Zone of Control', false);
+    if(win) S.ball={side:'B',unit:best.u,hex:best.h};
+    else S.ball={side:'A',unit:contestedBy[0],hex:S.pos.A[contestedBy[0]]};
+  }
+}
+async function cpuMoveCarrierAndAct(unit, ctx){
+  const legal = legalReach('B',unit,tryReadsGame('B',unit),tryPlayingOutMove('B',unit));
+  const end = attEnd('B');
+  let dest = S.pos.B[unit], bestScore = rankDist(dest,end);
+  for(const [h,] of legal){ const sc = rankDist(h,end); if(sc<bestScore){bestScore=sc;dest=h;} }
+  const path = legal.get(dest).path;
+  const oppZoc = enemyZoc('B');
+  let firstIdx=-1;
+  for(let i=1;i<path.length;i++) if(oppZoc.has(path[i])){firstIdx=i;break;}
+  if(firstIdx>=0 && tryBigMoveBypass('B', unit)){
+    S.pos.B[unit] = dest; S.ball.hex = dest;
+  } else if(firstIdx>=0){
+    const contestedHex = path[firstIdx], prevHex=path[firstIdx-1];
+    S.pos.B[unit] = contestedHex;
+    const defender = Object.entries(S.pos.A).find(([u,h])=>adjacent(h,contestedHex));
+    const defUnit = defender?defender[0]:'SW';
+    const reaction = await maybeCounterWindow('A','B',{carrierHex:contestedHex, allowForceTackle:true, label:`carry into your Zone of Control with its ${unitStats('B',unit).role}`});
+    if(reaction.forcedTackle){
+      const tackleUnit = reaction.forcedUnit || defUnit;
+      await doTackle('A', tackleUnit, 'B', reaction.extraDefDie);
+      checkNoOverlap();
+      return;
+    }
+    const {win} = contest('B', unitStats('B',unit).control, 'A', unitStats('A',defUnit).tackle+(reaction.extraDefDie||0), `Dribble Challenge: CPU ${unitStats('B',unit).role} vs ${unitStats('A',defUnit).role}`, false);
+    if(win){ S.pos.B[unit]=dest; S.ball.hex=dest; }
+    else { S.pos.B[unit]=contestedHex; S.ball={side:null,unit:null,hex:prevHex}; checkNoOverlap(); return; }
+  } else {
+    S.pos.B[unit] = dest; S.ball.hex = dest;
+  }
+  checkNoOverlap();
+  await sleep(150);
+  // Act: shoot if in range, else pass forward, else hold (canShoot itself now also
+  // checks Out of Nowhere's no-Shot-this-activation flag, reset at the top of this
+  // side's own next turn in nextTurnStart).
+  if(canShoot('B',unit) && Math.random()<0.85){ await cpuShoot(unit); return; }
+  if(await cpuTryBounceNet(unit)) return;
+  const passed = await cpuTryPass(unit);
+  if(!passed) await cpuTryBouncePass(unit);
+}
+async function cpuShoot(unit){
+  const gkEntry = Object.entries(S.pos.A).find(([u])=>isGoalkeeperRole('A',u));
+  if(!gkZoneOccupied('A')){
+    S.score.B++; log(`GOAL! Open net — CPU's ${unitStats('B',unit).role} scores. ${S.score.A}-${S.score.B}`, 'goal');
+    renderAll(); await sleep(400); await goalScored('B'); return;
+  }
+  const gkUnit = gkEntry[0];
+  const reaction = await maybeCounterWindow('A','B',{carrierHex:null, allowForceTackle:false, label:`shoot with its ${unitStats('B',unit).role}`});
+  const A = rollDice(S,'B',unitStats('B',unit).shot,true);
+  const D = rollDice(S,'A',saveStat('A',gkUnit)+(reaction.extraDefDie||0),false);
+  if(A.hits<=D.hits) maybeUseClinical('B', unit, A, D);
+  if(A.hits<=D.hits) maybeUseMainCharacter('B', unit, A, D);
+  maybeUseShotStopper('A', gkUnit, D, A);
+  const win = A.hits>D.hits;
+  showDice(`Shot: CPU ${A.hits} vs You Save ${D.hits}`, A, D);
+  log(`Shot: CPU ${A.hits} vs You Save ${D.hits} → ${win?'GOAL!':'SAVED'}`, win?'goal':'win');
+  if(win){ S.score.B++; renderAll(); await sleep(400); await goalScored('B'); return; }
+  resolveSave('A', gkUnit, D, S.pos.B[unit]);
+  renderAll();
+}
+async function cpuTryPass(unit){
+  // Returns true if the CPU attempted SOME action here (found and either completed or
+  // contested a pass), false if it genuinely found nothing and is just holding - callers
+  // (cpuMoveCarrierAndAct) use this to decide whether a bounce-pass fallback is worth
+  // trying, not whether the pass itself succeeded (a lost contest still counts as "acted").
+  const start = S.pos.B[unit];
+  const teammates = Object.keys(S.pos.B).filter(u=>u!==unit);
+  let best=null,bestScore=Infinity;
+  for(const u of teammates){
+    const h = S.pos.B[u];
+    const [d,] = straightLine(start,h);
+    if(d===null||d===0||d>unitStats('B',unit).prange) continue;
+    const sc = rankDist(h, attEnd('B'));
+    if(sc<bestScore){bestScore=sc;best={u,h};}
+  }
+  if(!best || bestScore >= rankDist(start, attEnd('B'))+0.5){ return false; } // holding is fine
+  const [d,mids] = straightLine(start,best.h);
+  const contestedBy=[];
+  for(const h of mids.concat([best.h])) for(const [u,uh] of Object.entries(S.pos.A)) if(adjacent(uh,h)) contestedBy.push(u);
+  if(contestedBy.length===0 || maybeUseVision('B', unit)){
+    S.ball={side:'B',unit:best.u,hex:best.h};
+    log(`CPU passes to ${unitStats('B',best.u).role} at ${best.h}.`, 'info');
+    return true;
+  }
+  const reaction = await maybeCounterWindow('A','B',{carrierHex:S.pos.A[contestedBy[0]], allowForceTackle:false, label:'attempt a contested Pass'});
+  const {win} = contest('B', unitStats('B',unit).control, 'A', unitStats('A',contestedBy[0]).tackle+(reaction.extraDefDie||0), `CPU Pass vs Zone of Control`, false);
+  if(win) S.ball={side:'B',unit:best.u,hex:best.h};
+  else S.ball={side:'A',unit:contestedBy[0],hex:S.pos.A[contestedBy[0]]};
+  return true;
+}
+// CPU bounce-pass policy (2026-09-22 port) - deliberately simpler than the Python drivers'
+// tuned rank_dist-discount blend between straight and bent lines (this build's CPU is
+// already documented as "sound but not optimal tactics," not a from-scratch AI needing to
+// play both sides). cpuTryBounceNet checked whenever a direct Shot wasn't already taken -
+// a genuine bonus chance a limited Shot Range would have missed, budgeted against Pass
+// Range instead (mirrors try_bounce_shot's own can_shoot/att_end guards). cpuTryBouncePass
+// is only reached once a normal straight pass has already come up empty (cpuTryPass
+// returned false) - a real fallback here, unlike the Python drivers' blended ranking.
+async function cpuTryBounceNet(unit){
+  if(unitStats('B',unit).srange===null) return false; // GK is never a scoring threat, same guard canShoot uses
+  const end = attEnd('B');
+  const opt = bouncePassOptions('B', unit).find(o=>o.kind==='net' && o.end===end);
+  if(!opt) return false;
+  log(`${unitName('B',unit)} ${describeBounceOutcome('B',opt)}`, 'info');
+  await cpuShoot(unit);
+  return true;
+}
+async function cpuTryBouncePass(unit){
+  const end = attEnd('B');
+  const options = bouncePassOptions('B', unit).filter(o=>o.kind==='teammate'||o.kind==='loose');
+  if(!options.length) return false;
+  options.sort((a,b)=>{
+    if((a.kind==='teammate')!==(b.kind==='teammate')) return a.kind==='teammate'?-1:1;
+    return rankDist(a.endHex,end)-rankDist(b.endHex,end);
+  });
+  resolveBounceCompletion('B', unit, options[0]);
+  return true;
+}
+async function cpuDefend(unit, ctx){
+  // consider a Tackle if odds are reasonable, else hold position (avoid sealing last gap accidentally by not moving)
+  const carrierUnit = S.ball.unit, carrierSide='A';
+  const oddsOk = unitStats('B',unit).tackle >= unitStats('A',carrierUnit).control - 2;
+  if(Math.random() < (oddsOk?0.6:0.25)){
+    await doTackle('B', unit, 'A', 0);
+    checkNoOverlap();
+  }
+}
+function cpuReposition(unit){
+  const legal = legalReach('B',unit,0);
+  const carrierHex = S.ball.hex;
+  let best = S.pos.B[unit], bestScore = -Infinity;
+  for(const [h,] of legal){
+    if(carrierHex && wouldSealLastGap('A', carrierHex, h)) continue;
+    const distToCarrier = carrierHex ? (adjacent(h,carrierHex)?0:1) : 2;
+    const sc = -distToCarrier - rankDist(h, S.ball.side==='B'?attEnd('B'):ownEnd('B'))*0.1;
+    if(sc>bestScore){bestScore=sc;best=h;}
+  }
+  S.pos.B[unit] = best;
+  checkNoOverlap();
+}
+
+/* ============================== BOOTSTRAP ============================== */
+document.getElementById('newMatchBtn').onclick = ()=>{
+  showModal(`<h3>Start a new match?</h3><p>Current progress will be lost.</p><div class="row">
+    <button class="act" id="confirmNewBtn">Start new match</button>
+    <button class="act secondary" id="cancelNewBtn">Cancel</button></div>`);
+  document.getElementById('confirmNewBtn').onclick = ()=>{ closeModal(); clearSave(); startMatch(); };
+  document.getElementById('cancelNewBtn').onclick = closeModal;
+};
+
+const saved = loadGame();
+if(saved && !saved.matchOver){
+  S = saved;
+  UI = {phase:'idle', clickableHexes:new Set(), highlightHexes:new Map(), selectableUnits:new Set(), selectedUnit:null, infoSide:null, infoUnit:null};
+  renderAll();
+  setPrompt('Match resumed.');
+  renderActionButtons([{text:'Continue', onClick:()=>{ nextTurnStart(); }}]);
+} else {
+  startMatch();
+}
+
+})();
+</script>
+
+</body></html>
