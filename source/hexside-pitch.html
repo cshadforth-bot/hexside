@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexside Match Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2420; --paper:#faf8f3; --pitch-green:#e7f0ea; --line:#8a8f86;
+    --cmd-navy:#25334d; --ochre:#b5842a; --lane-top:#d7ebe0; --lane-seam:#f3e6cd; --lane-bottom:#dbdfe8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#e9e5d8;font-family:'IBM Plex Sans',sans-serif;color:var(--ink)}
+  .toolbar{background:var(--ink);color:#fff;padding:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+  .sheet{width:11.69in;height:8.27in;background:var(--paper);margin:20px auto;box-shadow:0 2px 16px rgba(0,0,0,.15);position:relative;display:flex;align-items:center;justify-content:center}
+  figure{margin:0}
+  @media print{
+    @page{ size: A4 landscape; margin: 0; }
+    .toolbar{display:none}
+    .sheet{box-shadow:none;margin:0}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">Hexside · Match Pitch — print landscape, 100% scale (no "fit to page")</div>
+<div class="sheet"><figure id="pitch"></figure></div>
+
+<script>
+const COLS = "ABCDEFGHIJK";
+function isShort(col){ return COLS.indexOf(col) % 2 === 1; }
+// Short columns run rows 0-6: the 5 original full hexes (1-5) plus a half-height cap at
+// row 0 and row 6 that squares the column off flush with its tall neighbors instead of
+// leaving the top/bottom edge recessed by half a hex. Tall columns are unchanged (1-6).
+function minRow(col){ return isShort(col) ? 0 : 1; }
+function maxRow(col){ return 6; }
+function rowsInCol(col){ return maxRow(col) - minRow(col) + 1; }
+// Flat-top hexes, R = center-to-vertex radius. For these to actually tessellate:
+// row spacing (within one column) = R*sqrt(3); a short column nests between its tall
+// neighbors by offsetting half that. dY returns this in units of R (see center()).
+const ROWSTEP = Math.sqrt(3);
+function dY(col,row){ return row * ROWSTEP + (isShort(col) ? ROWSTEP/2 : 0); }
+function el(tag, attrs, parent){
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function hexPoints(cx, cy, R){
+  // Flat-top: vertices at 30/90/150/210/270/330 degrees, not 0/60/... (which draws a
+  // pointy-top hex instead - the orientation this board's column-offset math needs).
+  const pts = [];
+  for (let i=0;i<6;i++){
+    const a = Math.PI/180 * (60*i + 30);
+    pts.push([cx + R*0.98*Math.sin(a), cy - R*0.98*Math.cos(a)]);
+  }
+  return pts.map(p=>p.join(',')).join(' ');
+}
+function hexHalfPoints(cx, cy, R, half){
+  // Top or bottom half of a flat-top hex, split exactly at its own vertical center -
+  // which is exactly where the left (270deg) and right (90deg) vertices already sit,
+  // so the split needs no new intersection math, just picking 4 of the 6 vertices.
+  const angles = half === 'top' ? [330,30,90,270] : [210,150,90,270];
+  return angles.map(a => {
+    const rad = Math.PI/180 * a;
+    return [cx + R*0.98*Math.sin(rad), cy - R*0.98*Math.cos(rad)].join(',');
+  }).join(' ');
+}
+function capPoints(cx, R, half, flushOuterY, flushInnerY){
+  // Row 0/row 6 caps need their outer edge (facing the tall neighbors) to land exactly on
+  // those hexes' own shrunk edge, and their inner edge (facing their own column's first/
+  // last full hex) to land on THAT hex's own shrunk edge. hexHalfPoints can't guarantee
+  // either: its 90/270deg ("point") vertices aren't moved by the shrink factor in Y at all
+  // (cos(90deg)=0), while its 330/30/210/150deg ("flat edge") vertices are (cos(30deg)!=0)
+  // - so a naive half-hex undershoots the true flush line by a small but clearly visible
+  // amount (confirmed empirically: adjacent tall/cap top edges differ by ~0.6px, reading as
+  // a zigzag along what's supposed to be one dead-straight line). Taking each neighbor's
+  // own already-correct edge Y in directly, rather than re-deriving it from this hex's own
+  // center, guarantees an exact match on both edges - this is no longer a simple rotation
+  // of hexPoints' vertex angles, so it's built explicitly instead.
+  const outerHalf = R*0.98, innerHalf = R*0.98*0.5;
+  const pts = half === 'bottom'
+    ? [[cx-outerHalf,flushOuterY],[cx+outerHalf,flushOuterY],[cx+innerHalf,flushInnerY],[cx-innerHalf,flushInnerY]]
+    : [[cx-innerHalf,flushInnerY],[cx+innerHalf,flushInnerY],[cx+outerHalf,flushOuterY],[cx-outerHalf,flushOuterY]];
+  return pts.map(p=>p.join(',')).join(' ');
+}
+function hexClipPoints(cx, cy, R, side){
+  // Column A/K's own outer point cut into a flat vertical edge, so the pitch's left/right
+  // sides read as straight lines the same way the top/bottom do (via hexHalfPoints above).
+  // 'left' drops the left (270deg) point, replacing it with the straight edge between the
+  // upper-left (330deg) and lower-left (210deg) vertices - those two already share the
+  // same x, so (exactly like hexHalfPoints) this needs no new intersection math, just a
+  // 5-of-6 vertex list. 'right' is the mirror, dropping the right (90deg) point instead.
+  const angles = side === 'left' ? [30,90,150,210,330] : [30,150,210,270,330];
+  return angles.map(a => {
+    const rad = Math.PI/180 * a;
+    return [cx + R*0.98*Math.sin(rad), cy - R*0.98*Math.cos(rad)].join(',');
+  }).join(' ');
+}
+function hexRectPoints(cx, cy, R){
+  // Both points clipped instead of just one - the Net hexes' own outer edge (away from
+  // the pitch) gets the same flat treatment as their inner edge (already flush against
+  // column A/K, see hexClipPoints), so what's left is a plain axis-aligned rectangle:
+  // upper-right/lower-right/lower-left/upper-left, the 4 vertices hexClipPoints already
+  // keeps in common for its two sides, with neither point vertex included.
+  const angles = [30,150,210,330];
+  return angles.map(a => {
+    const rad = Math.PI/180 * a;
+    return [cx + R*0.98*Math.sin(rad), cy - R*0.98*Math.cos(rad)].join(',');
+  }).join(' ');
+}
+function laneOf(col,row){
+  // 'Seam' is a diagram-only third fill for the 5 seam-row hexes that belong to both
+  // real lanes at once (row 3 of a short column) - see the rulebook §4.
+  if (isShort(col) && row===3) return 'Seam';
+  if (isShort(col)) return row<=2?'Top':'Bottom';
+  return row<=3?'Top':'Bottom';
+}
+const LANE_FILL = {Top:'var(--lane-top)', Bottom:'var(--lane-bottom)'};
+// Goalkeeper Zone: 3 hexes per end - the 2-hex goal box plus one bordering seam-column
+// hex. Drawn instead of the normal lane fill for these 6 hexes (not layered on top),
+// shaded grey and outlined uniformly across all 3 - the zone is one rule regardless of
+// which lane each hex sits in underneath.
+const GK_ZONE = {A:['A3','A4','B3'], K:['K3','K4','J3']};
+const GK_ZONE_SET = new Set([...GK_ZONE.A, ...GK_ZONE.K]);
+
+function drawPitch(svg, R, ox, oy, opts){
+  opts = opts||{};
+  const cols = opts.cols || COLS.split('');
+  function center(col,row){
+    const x = ox + COLS.indexOf(col) * R * 1.5;
+    const y = oy + dY(col,row) * R;
+    return {x,y};
+  }
+  // The Y a tall column's own top/bottom edge actually renders at, after shrink - what
+  // every row-0/row-6 cap's outer edge must match exactly (see capPoints above). Same for
+  // every tall column, so computed once here rather than per-hex.
+  const flushTopY = center('A',1).y - R*0.98*Math.cos(Math.PI/6);
+  const flushBottomY = center('A',6).y + R*0.98*Math.cos(Math.PI/6);
+  for (const col of cols){
+    for (let row=minRow(col); row<=maxRow(col); row++){
+      const {x,y} = center(col,row);
+      const h = col + row;
+      // A short column's row 0/row 6 is a half-height cap, not a full hex - flush with the
+      // tall columns' own top/bottom edge (see minRow/maxRow above) AND with its own
+      // column's first/last full hex - see capPoints for why this needs explicit flush-Y
+      // coordinates rather than a plain hexHalfPoints half-hex.
+      const isCap = isShort(col) && (row===minRow(col) || row===maxRow(col));
+      const capHalf = row===minRow(col) ? 'bottom' : 'top';
+      // Column A/K's own outer point is cut flat too, mirroring the caps' flush treatment
+      // on the sides instead of top/bottom - see hexClipPoints. Never both at once: A/K are
+      // always tall columns, so they never have a cap row.
+      const edgeClip = col==='A' ? 'left' : (col==='K' ? 'right' : null);
+      let shapePoints;
+      if (isCap){
+        const flushOuterY = capHalf==='bottom' ? flushTopY : flushBottomY;
+        const flushInnerY = capHalf==='bottom'
+          ? center(col,1).y - R*0.98*Math.cos(Math.PI/6)
+          : center(col,maxRow(col)-1).y + R*0.98*Math.cos(Math.PI/6);
+        shapePoints = capPoints(x, R, capHalf, flushOuterY, flushInnerY);
+      } else {
+        shapePoints = edgeClip ? hexClipPoints(x,y,R,edgeClip) : hexPoints(x,y,R);
+      }
+      if (isCap){
+        el('polygon',{points:shapePoints, fill:LANE_FILL[laneOf(col,row)], stroke:'var(--line)','stroke-width':0.6}, svg);
+      } else if (GK_ZONE_SET.has(h)){
+        el('polygon',{points:shapePoints, fill:'#9a9d99', 'fill-opacity':0.45, stroke:'var(--cmd-navy)','stroke-width':2.2}, svg);
+      } else {
+        const lane = laneOf(col,row);
+        if (lane === 'Seam'){
+          el('polygon',{points:hexHalfPoints(x,y,R,'top'), fill:LANE_FILL.Top, stroke:'var(--line)','stroke-width':0.6}, svg);
+          el('polygon',{points:hexHalfPoints(x,y,R,'bottom'), fill:LANE_FILL.Bottom, stroke:'var(--line)','stroke-width':0.6}, svg);
+          el('polygon',{points:hexPoints(x,y,R), fill:'none', stroke:'var(--line)','stroke-width':0.6}, svg);
+        } else {
+          el('polygon',{points:shapePoints, fill:LANE_FILL[lane], stroke:'var(--line)','stroke-width':0.6}, svg);
+        }
+      }
+      // A row-6 cap's visible area is its upper half, so the usual downward label offset
+      // would land outside it - mirror the offset upward for that one case only.
+      const labelY = (isCap && capHalf==='top') ? y-R*0.30 : y+R*0.55;
+      el('text',{x:x-R*0.42, y:labelY, 'text-anchor':'start','font-size':R*0.22,'font-family':'IBM Plex Mono, monospace',fill:'#7a8078'},svg).textContent = col+row;
+    }
+  }
+  // Kickoff center spot - thematic only, not a rule of its own - a small solid dot on
+  // F3, the same way a real pitch marks its center spot.
+  if (cols.includes('F')){
+    const {x,y} = center('F',3);
+    el('circle',{cx:x,cy:y,r:R*0.12,fill:'var(--cmd-navy)'},svg);
+  }
+  // Thirds: heavier dashed dividers through the CENTER of the seam columns D and H,
+  // not between columns - D and H each still belong to their own Third, but a
+  // Third-2 (or matching Zone) card can also activate a unit standing there. Overshoots
+  // the actual flush pitch edge (flushTopY/flushBottomY, not a hand-tuned oy-relative
+  // guess) by the same amount on both ends, so the dashed line extends equally far past
+  // the top and the bottom - previously it didn't (a ~90px overshoot above, ~3px below).
+  const dividerOvershoot = R*0.9;
+  const y1 = flushTopY - dividerOvershoot, y2 = flushBottomY + dividerOvershoot;
+  for (const bcol of ['D','H']){
+    if (!cols.includes(bcol)) continue;
+    const xmid = ox + COLS.indexOf(bcol) * R * 1.5;
+    el('line',{x1:xmid,y1,x2:xmid,y2, stroke:'var(--cmd-navy)','stroke-width':2.2,'stroke-dasharray':'9 6','stroke-opacity':0.6}, svg);
+  }
+  const THIRDS = [{n:1, cols:['A','B','C','D']}, {n:2, cols:['E','F','G']}, {n:3, cols:['H','I','J','K']}];
+  for (const t of THIRDS){
+    const present = t.cols.filter(c=>cols.includes(c)).map(c=>COLS.indexOf(c));
+    if (!present.length) continue;
+    const xmid = ox + (Math.min(...present)+Math.max(...present))/2 * R * 1.5;
+    // Sits just above the divider lines' own top (y1, just fixed above) rather than an
+    // oy-relative guess - previously the two were only coincidentally close, and drifted
+    // apart (a visible ~53px gap) once y1 moved to the actual flush pitch edge instead of
+    // its own old, unrelated hand-tuned constant.
+    el('text',{x:xmid, y:y1 - R*0.25, 'text-anchor':'middle','font-size':R*0.32,'font-weight':700,'font-family':'IBM Plex Mono, monospace',fill:'var(--cmd-navy)'},svg).textContent = 'THIRD ' + t.n;
+  }
+  // Goalkeeper Zone and goal box are both drawn in the main hex loop above now (grey +
+  // outlined, replacing the lane fill for those 6 hexes) - see GK_ZONE_SET.
+  // Kickoff exclusion zone
+  if (cols.includes('F')){
+    const zone = ['F3','E3','E4','F2','F4','G3','G4'].filter(h=>cols.includes(h[0]));
+    for (const h of zone){
+      const c=h[0], r=parseInt(h.slice(1));
+      const {x,y} = center(c,r);
+      el('polygon',{points:hexPoints(x,y,R), fill:'none', stroke:'var(--ochre)','stroke-width':2.5,'stroke-dasharray':'6 4'}, svg);
+    }
+  }
+  // Net: three off-board hexes just beyond each goal box - purely the Shot's target
+  // (§4/§8), never a playable hex. Sits one hex-step outside column A / column K, at
+  // the half-row offset a short column would use there.
+  const defs = el('defs',{},svg);
+  const meshPat = el('pattern',{id:'netMesh',width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'}, defs);
+  el('line',{x1:0,y1:0,x2:0,y2:5,stroke:'var(--line)','stroke-width':1}, meshPat);
+  el('line',{x1:0,y1:0,x2:5,y2:0,stroke:'var(--line)','stroke-width':1}, meshPat);
+  // Slid in from the old one-hex-step gap to sit flush against column A/K's own new cut
+  // edge (see edgeClip above) - each net hex is a plain rectangle (hexRectPoints), both
+  // points clipped rather than just the pitch-facing one, so its outer edge (the true
+  // edge of the board) reads as a straight vertical line too, the same as its inner edge.
+  function netCenters(side){
+    const x = side === 'A' ? ox - R*0.98 : ox + (COLS.length-1)*R*1.5 + R*0.98;
+    return [2,3,4].map(row => ({x, y: oy + (row*ROWSTEP + ROWSTEP/2) * R}));
+  }
+  for (const side of ['A','K']){
+    if (!cols.includes(side)) continue;
+    for (const {x,y} of netCenters(side)){
+      el('polygon',{points:hexRectPoints(x,y,R), fill:'url(#netMesh)', stroke:'var(--line)','stroke-width':0.7,'stroke-dasharray':'3 2'}, svg);
+    }
+  }
+  // Lane edge labels - approximate band centers, same spirit as the Third labels above.
+  // Anchored to the actual net rectangle's own edge (netCenters/hexRectPoints above) plus
+  // a fixed gap, the same formula mirrored on both sides - previously the two sides used
+  // unrelated hand-tuned offsets (2.4R left, 3.9R right) left over from before the net was
+  // repositioned, so "TOP"/"BOTTOM" sat closer to the pitch on the left than the right.
+  const LANES = [{name:'TOP', y: oy + 2*ROWSTEP*R}, {name:'BOTTOM', y: oy + 5*ROWSTEP*R}];
+  const netHalfWidth = R*0.98*0.5, labelGap = R*0.9;
+  if (cols.includes('A')){
+    const lx = netCenters('A')[0].x - netHalfWidth - labelGap;
+    for (const l of LANES) el('text',{x:lx,y:l.y,'text-anchor':'middle','font-size':R*0.26,'font-weight':600,'font-family':'IBM Plex Mono, monospace',fill:'var(--cmd-navy)'},svg).textContent = l.name;
+  }
+  if (cols.includes('K')){
+    const lx = netCenters('K')[0].x + netHalfWidth + labelGap;
+    for (const l of LANES) el('text',{x:lx,y:l.y,'text-anchor':'middle','font-size':R*0.26,'font-weight':600,'font-family':'IBM Plex Mono, monospace',fill:'var(--cmd-navy)'},svg).textContent = l.name;
+  }
+  return center;
+}
+
+(function(){
+  const fig = document.getElementById('pitch');
+  const svg = el('svg',{},fig);
+  // slotLabel reserves room for the TOP/BOTTOM labels sitting just past the Net on
+  // either side (net half-width + a fixed gap, ~2.4R from each side's own net center,
+  // now identical on both sides - see the LANES block in drawPitch), plus headroom for
+  // the label text's own half-width past its center anchor (text-anchor:middle).
+  const R = 34, slotLabel = R*3.4, slotNet = R*1.5;
+  const ox = slotLabel + slotNet, oy = R*2.0;
+  const width = ox + 10*R*1.5 + slotNet + slotLabel;
+  const height = oy*2 + 6*ROWSTEP*R;
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  // Fit to the actual A4-landscape sheet (11.69in x 8.27in, matching .sheet's own size),
+  // scaled up as large as it'll go without overflowing either dimension, not just given a
+  // fixed height and left to derive whatever width that implies - the old fixed-7.6in-tall
+  // version came out 13.1in wide, wider than the 11.69in sheet itself (a real overflow,
+  // confirmed by measuring the rendered SVG against the sheet), because this diagram's
+  // shape is wide enough that height was never the binding constraint.
+  const pageW = 11.69, pageH = 8.27, pageMargin = 0.35;
+  const scale = Math.min((pageW-2*pageMargin)/width, (pageH-2*pageMargin)/height);
+  svg.setAttribute('height', (height*scale).toFixed(2)+'in');
+  svg.setAttribute('width', (width*scale).toFixed(2)+'in');
+  drawPitch(svg, R, ox, oy);
+})();
+</script>
+</body>
+</html>

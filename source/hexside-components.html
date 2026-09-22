@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexside Components</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2420; --paper:#faf8f3; --paper-2:#f1ede2; --muted:#6b7268;
+    --pitch-green:#2f6b4f; --cmd-navy:#25334d; --ochre:#b5842a;
+    --yellow-card:#e8c547; --red-card:#a4372f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.5}
+  .wrap{max-width:760px;margin:0 auto;padding:48px 28px 100px}
+  h1{font-family:'Fraunces',serif;font-weight:700;font-size:2.2rem;margin:0 0 4px}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ochre);font-weight:600}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;margin:2.2em 0 .3em;border-bottom:2px solid var(--pitch-green);padding-bottom:.25em}
+  .deck{margin-bottom:1.6em}
+  .deck-head{display:flex;justify-content:space-between;align-items:baseline}
+  .deck-note{font-size:.85rem;color:var(--muted);margin:.3em 0 .8em}
+  .subgroup{font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:.8em 0 .3em}
+  .row{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #eee;font-size:.92rem}
+  .swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+  .row .n{margin-left:auto;font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:.85rem}
+  #totals{display:flex;gap:14px;flex-wrap:wrap;margin:1.6em 0}
+  .total-pill{background:var(--paper-2);border-radius:10px;padding:14px 20px;text-align:center;flex:1;min-width:120px}
+  .total-pill .n{display:block;font-family:'Fraunces',serif;font-weight:700;font-size:1.7rem;color:var(--pitch-green)}
+  .total-pill .lbl{font-size:.78rem;color:var(--muted)}
+  .extras h2{margin-top:2.6em}
+  @media print{ @page{ size: A4; margin: 0.6in; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="kicker">Reference</div>
+<h1>Hexside Components</h1>
+<p style="color:var(--muted)">Every physical piece needed for a full prototype, by deck. See Rulebook §3.</p>
+
+<div id="totals"></div>
+<div id="root"></div>
+<div class="extras"><h2>Non-Card Components</h2><div id="extras-root"></div></div>
+</div>
+
+<script>
+function row(label, count, color, note){
+  return `<div class="row"><span class="swatch" style="background:${color}"></span><span>${label}</span>${note?`<span style="color:var(--muted);font-size:.82rem">${note}</span>`:''}<span class="n">${count}</span></div>`;
+}
+function subgroup(label){ return `<div class="subgroup">${label}</div>`; }
+function deckSection(title, total, color, body, note){
+  return `<div class="deck"><div class="deck-head"><h2 style="margin:0;border:none;padding:0">${title}</h2><span style="font-family:'IBM Plex Mono',monospace;color:${color};font-weight:600">${total}</span></div>${note?`<div class="deck-note">${note}</div>`:''}${body}</div>`;
+}
+const laneColor = l => l==='Top' ? '#3a7a58' : '#2a5540';
+
+// Command Deck
+let commandBody = '';
+commandBody += subgroup('Zone cards — 1 each, one per Third x Lane');
+[1,2,3].forEach(t => ['Top','Bottom'].forEach(l => commandBody += row(`Zone — T${t} / ${l}`, 1, laneColor(l))));
+commandBody += subgroup('Lane cards — 5 each');
+['Top','Bottom'].forEach(l => commandBody += row(`Lane — ${l}`, 5, laneColor(l)));
+commandBody += subgroup('Third cards — 2 each');
+[1,2,3].forEach(t => commandBody += row(`Third — ${t}`, 2, '#2f6b4f'));
+commandBody += subgroup('Special activations');
+commandBody += row('Tactical Free', 6, 'var(--cmd-navy)');
+commandBody += row('Full Press', 3, 'var(--cmd-navy)');
+commandBody += row('Keeper&rsquo;s Call', 2, 'var(--cmd-navy)');
+commandBody += row('Counter', 3, 'var(--cmd-navy)');
+
+// Player Roster
+let playerBody = '';
+[['Goalkeeper','GK'],['Sweeper','SW'],['Wingback','WB'],['Playmaker','PM'],['Poacher','PO']].forEach(([n,pos]) => {
+  playerBody += row(`${n} <span style="color:var(--muted);font-weight:400">(${pos})</span>`, 1, '#2f6b4f');
+});
+
+// Tactic Deck
+let tacticBody = '';
+tacticBody += subgroup('Attack — 2 each');
+['Through Ball','Nutmeg','Step-Over','Curl Shot','One-Two','Backheel','Long Ball','Composure'].forEach(t => {
+  tacticBody += row(t, 2, '#3a7a58');
+});
+tacticBody += subgroup('Defense — 2 each');
+['Strong Tackle','Last-Ditch Block','Jockey','Press'].forEach(t => {
+  tacticBody += row(t, 2, '#25334d');
+});
+tacticBody += subgroup('Risk — 2 each');
+tacticBody += row('Foul', 2, '#7a6a54');
+
+// Discipline Deck
+let discBody = '';
+discBody += row('Warning', 2, '#d8d2c2');
+discBody += row('Clean Challenge', 6, '#5aa07e');
+discBody += row('Advantage / Play On', 1, '#2f6b4f');
+discBody += row('Yellow Card', 2, 'var(--yellow-card)');
+discBody += row('Red Card', 1, 'var(--red-card)');
+
+// Reference
+let refBody = '';
+refBody += row('Dice Reference', 1, 'var(--cmd-navy)');
+refBody += row('Zone Map', 1, 'var(--cmd-navy)');
+
+document.getElementById('root').innerHTML =
+  deckSection('Command Deck', 36, 'var(--cmd-navy)', commandBody,
+    '&times;2 — print this deck twice, one private set per side (72 physical cards). Hands are hidden, so a shared deck can&rsquo;t work.') +
+  deckSection('Player Roster', 5, '#2f6b4f', playerBody,
+    'Both sides use this same roster in the current draft. Print a second copy if each side wants their own set at the table.') +
+  deckSection('Tactic Deck', 26, 'var(--ochre)', tacticBody,
+    '&times;2 — same reason as the Command Deck: Tactic hands are private too (52 physical cards).') +
+  deckSection('Discipline Deck', 12, 'var(--cmd-navy)', discBody,
+    'One shared deck (6 base + 6 Clean Challenge), shuffled and returned to after every single draw — Discipline draws are public and immediate, so there&rsquo;s nothing to keep hidden, and no deck-memory between draws. Standard Tackle and Strong Tackle both draw from the full 12; a Foul redraws past any Clean Challenge (§12).') +
+  deckSection('Reference Cards', 2, 'var(--cmd-navy)', refBody, '');
+
+const grandTotal = 36*2 + 5 + 26*2 + 12 + 2;
+document.getElementById('totals').innerHTML = `
+  <div class="total-pill"><span class="n">${grandTotal}</span><span class="lbl">physical cards (Command &amp; Tactic &times;2)</span></div>
+  <div class="total-pill"><span class="n">1</span><span class="lbl">board sheet</span></div>
+  <div class="total-pill"><span class="n">8</span><span class="lbl">d6 dice, 2 colors</span></div>
+  <div class="total-pill"><span class="n">16</span><span class="lbl">tokens</span></div>
+`;
+
+document.getElementById('extras-root').innerHTML =
+  row('Match Pitch board (11 columns, tall 6-hex / short 5-hex+2-cap)', 1, '#2f6b4f') +
+  row('Standard six-sided dice, 2 colors (4 Attack, 4 Defense)', 8, 'var(--muted)') +
+  row('Unit tokens, two-tone (5 per side)', 10, 'var(--muted)') +
+  row('Ball tokens, carried &amp; loose (Rulebook &sect;8)', 2, 'var(--muted)') +
+  row('Yellow Card markers (Rulebook &sect;12)', 4, 'var(--yellow-card)') +
+  row('Pencil + any scrap of paper, to tally the turns', 1, 'var(--muted)');
+</script>
+</body>
+</html>

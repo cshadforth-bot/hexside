@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexside Rulebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2420; --paper:#faf8f3; --paper-2:#f1ede2; --muted:#6b7268;
+    --pitch-green:#2f6b4f; --pitch-green-2:#3d8062; --pitch-green-3:#5aa07e;
+    --cmd-navy:#25334d; --ochre:#b5842a; --lane-top:#3a7a58; --lane-bottom:#2a5540;
+    --yellow-card:#e8c547; --red-card:#a4372f; --card-face:#ffffff; --rule:#d8d2c2;
+    --accent:#b5842a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;line-height:1.55;font-size:15.5px}
+  .wrap{max-width:840px;margin:0 auto;padding:0 28px 120px}
+  h1,h2,h3{font-family:'Fraunces',ui-serif,Georgia,serif;font-weight:600;line-height:1.15;text-wrap:balance;color:var(--ink)}
+  h1{font-size:2.6rem;font-weight:700;margin:0 0 4px}
+  h2{font-size:1.6rem;margin:2.6em 0 .6em;border-bottom:2px solid var(--pitch-green);padding-bottom:.3em}
+  h3{font-size:1.15rem;margin:1.8em 0 .5em;color:var(--pitch-green)}
+  .num{color:var(--ochre);font-variant-numeric:tabular-nums;margin-right:.35em}
+  p{margin:0 0 1em}
+  a{color:var(--pitch-green-2)}
+  strong{color:var(--ink)}
+  em{color:var(--muted)}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ochre);font-weight:600}
+  .subtitle{color:var(--muted);font-size:1.05rem;margin:6px 0 2.2em}
+  header.cover{padding:64px 0 20px;border-bottom:3px solid var(--ink)}
+  .cover-meta{display:flex;gap:18px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted);margin-top:18px;flex-wrap:wrap}
+  .cover-meta span{background:var(--paper-2);border-radius:4px;padding:3px 9px}
+  nav.toc{background:var(--paper-2);border-radius:10px;padding:22px 26px;margin:2.4em 0}
+  nav.toc h2{margin-top:0;border:none;padding:0;font-size:1.2rem}
+  nav.toc ol{list-style:none;columns:2;column-gap:32px;padding-left:0;margin:0;font-size:.92rem}
+  nav.toc li{margin-bottom:.4em;break-inside:avoid}
+  nav.toc a{color:var(--ink);text-decoration:none}
+  nav.toc a:hover{color:var(--pitch-green-2)}
+  section{scroll-margin-top:20px}
+  .table-wrap{overflow-x:auto;margin:1.2em 0}
+  table{border-collapse:collapse;width:100%;font-size:.92rem}
+  caption{caption-side:top;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.5em}
+  th,td{border:1px solid var(--rule);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--pitch-green);color:#fff;font-weight:600;font-size:.85rem}
+  tbody tr:nth-child(even){background:var(--paper-2)}
+  .steps-num{padding-left:1.3em}
+  .steps-num li{margin-bottom:.55em}
+  .callout{background:var(--paper-2);border-left:4px solid var(--ochre);border-radius:0 8px 8px 0;padding:14px 18px;margin:1.4em 0;font-size:.95rem}
+  .callout.note::before{content:"On the table";display:block;font-family:'IBM Plex Mono',monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ochre);margin-bottom:.4em}
+  figure{margin:1.6em 0;text-align:center;break-inside:avoid}
+  figcaption{font-size:.85rem;color:var(--muted);margin-top:.6em;text-align:left}
+  .worked{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:20px 24px;margin:1.4em 0}
+  .worked h3{margin-top:0}
+  .worked .setup{font-style:normal;color:var(--muted);margin-bottom:1em}
+  .worked ol{padding-left:1.2em}
+  .worked .result{background:var(--paper-2);border-radius:6px;padding:10px 14px;margin-top:1em;font-size:.92rem}
+  .worked .result::before{content:"Result — ";font-weight:600;color:var(--pitch-green)}
+  .badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;background:var(--cmd-navy);color:#fff;border-radius:4px;padding:2px 8px;margin-right:6px}
+  .badge.tac{background:var(--ochre)}
+  .glossary dt{font-weight:600;color:var(--pitch-green);margin-top:1em}
+  .glossary dd{margin:.2em 0 0}
+  footer.book{margin-top:4em;padding-top:1.4em;border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem}
+  ::selection{background:var(--ochre);color:#fff}
+  @media print{ @page{ size: A4; margin: 0.6in; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="cover">
+  <div class="kicker">Rulebook</div>
+  <h1>Hexside</h1>
+  <div class="subtitle">A five-a-side football game of hexes, commands, and colours</div>
+  <div class="cover-meta">
+    <span>Draft v0.3.1 (prototype)</span>
+    <span>Includes worked, diagrammed examples of every action</span>
+  </div>
+</header>
+
+<nav class="toc">
+<h2>Contents</h2>
+<ol>
+<li><a href="#s1">1. What This Is</a></li>
+<li><a href="#s2">2. Objective</a></li>
+<li><a href="#s3">3. Components</a></li>
+<li><a href="#s4">4. The Pitch</a></li>
+<li><a href="#s5">5. Setup</a></li>
+<li><a href="#s6">6. The Command Deck &amp; Your Hand</a></li>
+<li><a href="#s6ex">6.5 Worked Example: Full Press &amp; Hand Size</a></li>
+<li><a href="#s7">7. Turn Sequence</a></li>
+<li><a href="#s8">8. Actions &amp; Dice</a></li>
+<li><a href="#s8ex">8.5 Worked Examples</a></li>
+<li><a href="#s9">9. Zone of Control</a></li>
+<li><a href="#s10">10. Reactions</a></li>
+<li><a href="#s11">11. Tactic Cards &amp; Flair Points</a></li>
+<li><a href="#s11ex">11.5 Worked Examples: Flair &amp; Tactics</a></li>
+<li><a href="#s12">12. Fouls &amp; Discipline</a></li>
+<li><a href="#s12ex">12.5 Worked Example: Discipline</a></li>
+<li><a href="#s13">13. Set Pieces</a></li>
+<li><a href="#s14">14. The Player Roster</a></li>
+<li><a href="#s15">15. Winning</a></li>
+<li><a href="#s16">16. Ideas for Later</a></li>
+<li><a href="#s17">17. Prototype Build Guide</a></li>
+<li><a href="#s18">18. Glossary</a></li>
+</ol>
+</nav>
+
+<section id="s1">
+<h2><span class="num">1.</span> What This Is</h2>
+<p>Hexside is a two-player tactical board game. Five outfield-scale figures a side, a hexagonal pitch, and a hand of Command Cards that decide which of your players you're even allowed to move this turn — the same tension that makes <em>Commands &amp; Colors</em> work on a battlefield, reskinned for a football pitch. You don't control your whole team every turn. You control what the card in your hand lets you control, and reading the game is deciding which card to hold and which to spend.</p>
+<p>This draft is written to be playtested with home-printed components: standard playing-card stock, a hex grid you can draw or print, and eight ordinary six-sided dice in two colors — attacker and defender roll at the same time, and four dice alone isn't enough to do that.</p>
+<p>Two ways to play sit inside this one rulebook: the <strong>Base Game</strong> (everything here except the Tactic Deck, §11) and the <strong>Advanced Game</strong> (Base Game plus that deck). At this stage they share every rule, including the Player Roster's numbers — see §14 for why, and for what's likely to change once the Tactic Deck gets its own pass. New to Hexside, or teaching someone who is: start with the Base Game.</p>
+<div class="callout note"><strong>What the Base Game actually leaves out.</strong> §11 is the only section you can skip outright. Everything else here is real Base Game rules — but a handful of passages describe things only the Tactic Deck makes possible, and they're not called out individually where they occur: Flair Points still bank but have nothing to spend on (§11); the Resolution Sequence's four card windows mostly sit empty, collapsing three of its six printed steps to almost-never (§7); two of the twelve Discipline cards land as pure nothing, on top of the six that already do (§12); and Set Pieces (§13) never trigger at all, since only the Foul Tactic Card creates one. None of it is a mistake — it's everything that removing one deck (§11) ripples out to once you follow it all the way through, and each spot above says so in place. Skip straight to §14 for the one concrete difference that remains: the Player Roster.</div>
+</section>
+
+<section id="s2">
+<h2><span class="num">2.</span> Objective</h2>
+<p>Score more goals than your opponent before the match clock runs out. A match is 24 turns per side (48 turns total) at standard length — track it with a pencil and any scrap of paper (see §3), or agree a shorter length for faster playtests (12 or 16 a side).</p>
+</section>
+
+<section id="s3">
+<h2><span class="num">3.</span> Components</h2>
+<h3>To print</h3>
+<ul>
+  <li>Command Deck — 36 cards, <strong>printed twice</strong> (72 physical cards): each side shuffles, draws, and holds its own hidden hand from a private deck — one shared 36-card pool can't do that.</li>
+  <li>Player Roster — 5 cards (one roster; both sides use identical rosters in this draft — print a second set if each side wants their own copy at the table)</li>
+  <li>Character Skins (optional, §14) — 12 cards, <strong>printed twice</strong> (24 physical cards): each side picks independently and in secret, including both sides wanting the same character at once, so one shared set can't cover every combination</li>
+  <li>Tactic Deck — 26 cards, <strong>printed twice</strong> (52 physical cards) — same reason as the Command Deck: Tactic hands are private too (§5).</li>
+  <li>Discipline Deck — 12 cards (6 base + 6 Clean Challenge, §12), one shared deck, shuffled and returned to after every single draw so no draw is ever affected by what came before — Discipline draws are public and immediate, so there's nothing to keep hidden and no need to duplicate it.</li>
+  <li>1 Dice Reference card, 1 Zone Map reference card</li>
+  <li>Token Sheet — 10 player tokens (5 per side), 2 ball tokens (carried / loose, §8), and 4 Yellow Card markers (§12), printable in place of physical pieces</li>
+</ul>
+<h3>To supply yourself</h3>
+<ul>
+  <li>A hex pitch, 11 columns (A–K) — tall columns six hexes, short columns five full hexes plus a half-height cap at each end — see the printable Match Pitch sheet</li>
+  <li>8 standard six-sided dice — 4 of one color for Attack, 4 of another for Defense, so both sides can roll at once</li>
+  <li>5 small tokens per side (10 total) to mark your five players on the board, and 2 for the ball (carried / loose) — print the Token Sheet above, or substitute coins, buttons, painted cubes, anything two-tone</li>
+  <li>A pencil and any scrap of paper, to tally the turns</li>
+</ul>
+</section>
+
+<section id="s4">
+<h2><span class="num">4.</span> The Pitch</h2>
+<p>The pitch is 11 columns of flat-top hexes, lettered A–K along its length, laid out in the classic interlocking hex-board pattern: columns A, C, E, G, I, K stand six hexes tall (rows 1–6); columns B, D, F, H, J nest between them, five full hexes tall (rows 1–5), offset by half a hex — plus a half-height cap hex at row 0 and row 6 that squares each one off flush with its tall neighbors. Without the caps, that half-hex offset would leave the pitch's top and bottom edges zigzagging; with them, both edges read as straight lines all the way across. A cap hex behaves as an ordinary hex for every rule in this book — movement, adjacency, Pass/Shot range, kickoff placement, sin-bin re-entry — only its shape on the printed diagrams is half-height. The pitch's left and right sides get the same tidying treatment, purely on paper: every hex in the outermost columns (A and K) is drawn with its own outer point trimmed to a flat edge instead of the usual six-sided point, so those sides read as clean vertical lines too, and the Net beyond them is trimmed and shifted in to sit flush against the new edge. This doesn't add, remove, or resize any hex — column A and column K are still ordinary 6-hex columns, addressed exactly as before; only how the outermost hex in each row is drawn changes. Each hex is addressed by column letter + its position within that column, top to bottom (e.g. "A4", "G3", "B0").</p>
+<figure id="pitch-figure"></figure>
+<p>The pitch is divided two ways at once, and every Command Card refers to one of these divisions:</p>
+<h3>Thirds (across the length — attacking depth)</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Third</th><th>Columns</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>Third 1</td><td>A–D</td><td>Team A's goal end</td></tr>
+<tr><td>Third 2</td><td>E–G</td><td>Midfield</td></tr>
+<tr><td>Third 3</td><td>H–K</td><td>Team B's goal end</td></tr>
+</tbody></table></div>
+<p>Columns D and H are the <strong>seam columns</strong> — the frontmost column of Third 1 and Third 3 respectively, sitting right against the Third 2 boundary. They still belong to their own Third for every other purpose (goal-end labeling, halftime, §15), but for Command Card activation a unit standing on one also counts as though it were one column further in: a Third-2 Command Card reaches column D and column H in addition to its own E–G, and Third 2's own Zone card on that lane reaches it too. It's the same "boundary counts for either side" idea a seam row (below) uses across the other axis, just applied to Thirds instead of Lanes.</p>
+<h3>Lanes (across the width — attacking channel)</h3>
+<p><strong>Top</strong> — upper band of every column. <strong>Bottom</strong> — lower band of every column. The dividing line runs exactly through the board's physical center.</p>
+<p>A tall column (A, C, E, G, I, K; 6 hexes) splits a clean 3 / 3 across Top / Bottom — the centerline falls squarely between rows 3 and 4, so every hex in a tall column belongs to exactly one lane. A short column (B, D, F, H, J; 7 hexes counting its two half-height caps) splits the same clean 3 / 3 around its own middle hex — row 3 — which sits <strong>exactly on</strong> the centerline rather than to one side of it, so it belongs to <strong>both</strong> lanes at once. This is a <strong>seam row</strong>, the width-wise twin of the seam columns below: a hex that's reachable by either side's Lane or Zone card, the same "on the boundary, not tied to one side of it" idea, just running the other way across the board. There are exactly five seam-row hexes: B3, D3, F3, H3, J3.</p>
+<p>A <strong>Zone</strong> is one Third × one Lane (six total: e.g. "Third 1 / Top"). Zones are the finest thing a Command Card can name, and every one now gets its own card — see §6.</p>
+<p><strong>The goal box, a.k.a. the Goalkeeper Zone:</strong> three hexes per end — the two hexes in column A (A3, A4) plus one bordering seam-column hex, B3, adjacent to both; K3, K4, and J3 for Team B. The two terms name the same area — this is the goalkeeper's box, not the scoring target itself (see The Net, below, and §8 for what a Shot actually has to reach). Column A is tall, so A3/A4 sit squarely on the lane boundary without being seam-row hexes themselves: A3 is Top, A4 is Bottom, one hex in each lane rather than a single lane's pair. B3/J3 <em>are</em> seam-row hexes, reachable by either lane's cards, same as anywhere else on the pitch. This is the area real five-a-side reserves for the goalkeeper alone: <strong>the Goalkeeper may never move outside its own zone</strong>, full stop, whether it's simply repositioning or happens to end up as the ball-carrier itself — and <strong>no opposing unit may ever enter it</strong> either, the same no-entry principle the Net already applies to everyone. A side's own outfield units may still stand inside their own zone freely; only the opponent's zone, at the end a side is attacking, is off-limits to it. It's also the area a Save-rebound must land <em>outside</em> of to be genuinely contestable — see §8. See §5 for how this plays out at setup.</p>
+<p><strong>The Net:</strong> three hexes sit immediately beyond each goal box — beyond A3/A4 on Team A's end, beyond K3/K4 on Team B's. Column A is tall, so A3 and A4 sit at what the interlocking pattern treats as whole-number row positions; the three hexes that naturally touch that pair — following the same offset the B/D/F… columns already use — sit at half-positions either side, giving exactly three hexes rather than two: one touching A3 only, one touching both A3 and A4, one touching A4 only. Same mirrored shape beyond K3/K4. The net is not part of the playable pitch: no unit, including either Goalkeeper, may ever move into, occupy, or be activated onto a net hex. It exists purely as the target a Shot has to reach — see §8.</p>
+<p><strong>Kickoff spot:</strong> F3 — dead center of the whole pitch, lengthwise and widthwise both. F is a short column, so F3 is one of the five seam-row hexes above: it belongs to both Top and Bottom, not tucked into either one. The kicking side places whichever unit it names as kickoff-taker directly on F3 (§5) — the Forward by default, but any outfield unit may take the role instead, and the Goalkeeper only if nothing else is left.</p>
+
+<h3>Straight lines</h3>
+<p>Pass, Shot, Pass Range, and Shot Range all measure distance <strong>straight-line, in hexes</strong> (§8) — and on an interlocking board with alternating tall and short columns, "straight" isn't just up/down and left/right. A hex has six straight neighbors, along three axes:</p>
+<ul>
+<li>Straight along a column — up or down, staying on the same letter (2 directions).</li>
+<li>Two diagonal axes, each stepping through the alternating columns on a consistent slant, as far as you like (4 directions total).</li>
+</ul>
+<p>Any single step to a directly touching hex counts automatically — there's no ambiguity at range 1, in any of the six directions. A diagonal stays straight for as long as you keep stepping the same way.</p>
+<p>There's a fourth case, unique to this board's interlocking layout: a horizontal band between two hexes with the same row number, in columns of the same parity — both tall, or both short. Because short columns nest exactly between their tall neighbors, matching-parity hexes at the same row sit at the exact same height no matter how many columns apart, and the columns in between just contribute a shared edge to that line rather than a hex center. This is the same geometry that makes Lanes read as clean bands across the whole pitch — see the figure below, B5 to F5 through D5.</p>
+<figure id="line-figure"></figure>
+<p>What doesn't work: a same-row pair of <strong>mismatched</strong> parity. B5 and E5 share the row number "5," but B is a short column and E is a tall one, so they aren't actually at the same height — there's no straight line between them at all, regardless of distance.</p>
+</section>
+
+<section id="s5">
+<h2><span class="num">5.</span> Setup</h2>
+<ol class="steps-num">
+  <li>Winner of a coin flip chooses ends or kickoff. The side with kickoff moves first.</li>
+  <li>Each side fields <strong>5 units</strong>: 1 Goalkeeper, 2 Defenders, 1 Midfielder, 1 Forward — see the Player Roster (§14) for who's who. Before placing anyone, each side may independently swap in a <strong>Character Skin</strong> for any of its 5 slots (§14) — optional, hidden from the opponent like a hand of cards, and entirely separate from the placement draft below.</li>
+  <li>Formation: your Goalkeeper takes either hex of your own goal box (A3/A4 or K3/K4) — and stays confined to its own three-hex Goalkeeper Zone (§4) for the rest of the match, not just at setup: it may never move outside it, by any means, for any reason. Your own half is the five columns behind your own goal (A–E if you defend the A end, G–K if you defend the K end — this follows whichever end you're currently defending, the same way Thirds do at halftime, §15), but the two Defenders and the other two outfield units don't get the same reach within it. Your <strong>two Defenders</strong> (Sweeper, Wingback) are <strong>confined to your own defensive third</strong> — A–D or H–K, four columns, not five. Your <strong>Midfielder and Forward may range across the full own half</strong>, including the one extra column your Defenders don't get: E if you defend the A end, G if you defend the K end — the single column your own half shares with Third 2 (Midfield). Column F itself is the halfway line: it belongs to neither side's setup, reserved for the kickoff. Placement is a <strong>draft, not a simultaneous choice</strong>: name <strong>any one of your units</strong> as your kickoff-taker — normally one of the four outfield units, not necessarily the Forward — and that unit stands on the kickoff spot (F3) with the ball, in possession (§8), before anything else is placed. Your Goalkeeper may not be the kickoff-taker unless it's the only unit you have left; if so, it takes the spot and its own-box requirement is waived for that restart alone. From there the two sides alternate, one outfield unit at a time, placing whichever of their remaining units they choose onto any hex legal for <em>that unit's own role</em> — non-kicking side first, then the kicking side, back and forth until both sides are fully deployed. The kicking side's own first placement in that alternation carries one further requirement on top of its own role's range: it <strong>must land within the taker's Pass Range of F3</strong>, guaranteeing the taker's mandatory Pass (§8) a legal target the instant it's needed — a kickoff can never be left with nobody to pass to. On the rare occasion these two requirements collide — only possible with the Poacher (Pass Range 1) taking the kickoff and no Midfielder available to fill this slot instead, since no hex in either defensive third is within Pass Range 1 of F3 — the Pass Range guarantee wins: a kickoff that can never be passed is worse than a Defender briefly standing forward of its own third for one restart. Every other placement, for both sides, is otherwise free choice within that unit's own role restriction, made in full view of everything already on the board, so it's a live tactical read of your opponent's shape, not a blind reveal. Before the kick, the <strong>non-kicking side must clear the 7-hex kickoff exclusion zone</strong> around F3 (§8); the kicking side is exempt, so their own units, including the kickoff-taker on the spot, may sit inside it.</li>
+  <li>Shuffle the Command Deck, Tactic Deck, and Discipline Deck separately. Each side draws a hand of <strong>5 Command Cards</strong> and <strong>3 Tactic Cards</strong>. Keep hands hidden from your opponent. Base Game (§1): there's no Tactic Deck, so skip that shuffle and that half of the draw — deal 5 Command Cards each and nothing else.</li>
+</ol>
+<figure id="formation-figure"></figure>
+</section>
+
+<section id="s6">
+<h2><span class="num">6.</span> The Command Deck &amp; Your Hand</h2>
+<p>Everything you do on your turn traces back to one card. Your hand holds 5 Command Cards; you play exactly one per turn, then draw back up to 5 at the end of your turn (reshuffle the discard pile when the draw pile runs out).</p>
+<p><strong>The ball-carrier is always activatable.</strong> Whenever your side holds the ball, the unit carrying it is always includable in that turn's activation, regardless of what the played Command Card would otherwise cover — on top of whatever it normally activates, the same way a Zone card's own fallback adds a unit rather than replacing the card's real effect. This re-checks continuously through the turn, not just once when the card is played: if possession changes hands mid-turn — a Pass, the free follow-up Pass after a won Tackle, a won Dribble Challenge carrying into a new hex — whichever unit ends up holding the ball becomes activatable itself from that moment on, even if the card's own zone, lane, or third never covered it. Activatable only ever means it may Move, though — the turn's one Act (Pass, Shot, or Tackle) is still spent the instant the first eligible unit uses it, and stays spent for everyone else unless Full Press paid for a second (see Full Press, above): a new carrier picking up mid-turn can reposition itself, but can't also Shoot or Pass again on its own unless that second Act was bought. Thematically: it would be silly for the ball-carrier to have to stand still while it's the one holding the ball. This only ever applies on your own turn with your own ball-carrier — it grants nothing on defense, and it doesn't touch Dribble Challenges, Tackles, or any other unit's activation, which stay exactly as card-dependent as ever. It also folds in the kickoff-taker as a special case: from the moment a unit takes the kickoff spot with the ball (§5), it's simply the ball-carrier, and this rule already covers it — see §8's kickoff paragraph. Once the taker's mandatory Pass lands, the receiving unit is itself immediately activatable under this same rule, free to move further that same turn even though the card never named it — it just can't Act again without Full Press.</p>
+<p><strong>Cycling a card.</strong> Instead of playing a Command Card, you may discard any one card from your hand face-down and draw a replacement — no units activate, move, or act this turn. This is always legal, not just when your hand is unplayable: a Zone card for a zone that's empty, a Counter you'd rather not hold, whatever's dead weight this turn. The cost is real and self-limiting — you get none of your team's usual activation that turn, so cycling repeatedly just hands your opponent a free run of the pitch. It's also the escape from the one true deadlock: Counters are never played on your own turn (§10), and while a 5-card hand can hold at most 3 of the deck's 3 Counters (always leaving 2 playable cards), a hand thinned by Full Press can shrink to 3 — on rare occasions all 3 of those could be Counters, and cycling is then your only legal move.</p>
+<p>A Command Card <strong>activates</strong> a set of your units — meaning only those units may move or act this turn. Units not activated stand still. This is the whole engine of the game: you are always choosing between narrow, reliable activation (a single Zone) and broad, risky activation (Full Press) — and reading your hand against your opponent's is most of the skill.</p>
+<div class="table-wrap"><table>
+<caption>The 36 cards</caption>
+<thead><tr><th>Card</th><th>Count</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td><strong>Zone</strong> — Third 1 / Top</td><td>1</td><td>Activate every one of your units currently standing in Third 1/Top. If you have <strong>no units there</strong>, activate 1 unit of your choice instead, anywhere on the pitch.</td></tr>
+<tr><td><strong>Zone</strong> — Third 1 / Bottom</td><td>1</td><td>Activate every one of your units currently standing in Third 1/Bottom. If you have <strong>no units there</strong>, activate 1 unit of your choice instead, anywhere on the pitch.</td></tr>
+<tr><td><strong>Zone</strong> — Third 2 / Top</td><td>1</td><td>Activate every one of your units currently standing in Third 2/Top. Also reaches the Top half of columns D and H (Third 1 and Third 3's seam columns, §4). If you have <strong>no units there</strong>, activate 1 unit of your choice instead, anywhere on the pitch.</td></tr>
+<tr><td><strong>Zone</strong> — Third 2 / Bottom</td><td>1</td><td>Activate every one of your units currently standing in Third 2/Bottom. Also reaches the Bottom half of columns D and H (Third 1 and Third 3's seam columns, §4). If you have <strong>no units there</strong>, activate 1 unit of your choice instead, anywhere on the pitch.</td></tr>
+<tr><td><strong>Zone</strong> — Third 3 / Top</td><td>1</td><td>Activate every one of your units currently standing in Third 3/Top. If you have <strong>no units there</strong>, activate 1 unit of your choice instead, anywhere on the pitch.</td></tr>
+<tr><td><strong>Zone</strong> — Third 3 / Bottom</td><td>1</td><td>Activate every one of your units currently standing in Third 3/Bottom. If you have <strong>no units there</strong>, activate 1 unit of your choice instead, anywhere on the pitch.</td></tr>
+<tr><td><strong>Lane</strong> — Top / Bottom</td><td>10 (5 each)</td><td>Activate every one of your units currently in that lane, across all three thirds. A seam-row hex (§4) counts for either Lane card.</td></tr>
+<tr><td><strong>Third</strong> — 1 / 2 / 3</td><td>6 (2 each)</td><td>Activate every one of your units currently in that third, across all three lanes. A Third-2 card also reaches columns D and H (Third 1 and Third 3's seam columns, §4) — Third-1 and Third-3 already cover them as part of their own A–D and H–K, so nothing changes there.</td></tr>
+<tr><td><strong>Tactical Free</strong></td><td>6</td><td>Activate any 2 of your units, anywhere on the pitch.</td></tr>
+<tr><td><strong>Full Press</strong></td><td>3</td><td>Activate all 5 of your units, and this turn you may Act with two different activated units instead of the usual one — eligibility is checked separately for each, so a unit that only starts carrying the ball because the first one's Act just passed it there still qualifies for the second (a deliberate Pass-then-Shot or Tackle-then-Pass combo). At the end of this turn, discard your next 2 card draws unseen (you play your next turn with a thinner hand).</td></tr>
+<tr><td><strong>Keeper's Call</strong></td><td>2</td><td>Activate your Goalkeeper only — they move (within their own Goalkeeper Zone, §4) and Act exactly like any other activated unit (§7), just alone; Pass is the only Act that makes sense for them in practice, but nothing stops a Shot if one's somehow legal. Whether or not they do anything at all, draw one extra card this turn regardless — the guaranteed payoff that makes this never a wasted draw: a Tactic Card in the Advanced Game, or a Command Card in the Base Game, which has no Tactic Deck to draw into (§1).</td></tr>
+<tr><td><strong>Counter</strong></td><td>3</td><td>Not played on your own turn. Hold it — see §10, Reactions.</td></tr>
+</tbody>
+</table></div>
+<p>Every Zone is now its own card, one per Third × Lane, rather than the paired-up "Zone Pair" mechanism an earlier draft used — with only two lanes, pairing the two zones in a Third would just duplicate the Third card below it, so there's nothing left to pair. Each Zone card carries the same "no units there? activate 1 of your choice" fallback the old Zone Pairs did — with six, bigger zones instead of nine, narrower ones, going empty should already be rarer than before, and the fallback is there for the times it still happens. Lane and Third cards trade precision for reach instead of carrying a fallback of their own — covering a whole lane or third across all three thirds or lanes is already broad enough that going empty is a genuinely rare board state, not a routine one. Full Press is the one card that buys more than movement — a second Act, not just five bodies on the board — which is what makes a thinner hand next turn worth risking. Counter is defense you bank instead of spending. The seam columns (§4) layer on top of all this rather than replacing it: D and H each get extra reach from Third 2's own Zone cards, on whichever lane a unit there actually stands in — closing the gap a unit parked right on a Third boundary would otherwise fall into. The seam <em>row</em> (§4) does the same job across the other axis: a unit on B3, D3, F3, H3, or J3 answers to either Lane card and either of its Third's two Zone cards, since it belongs to both lanes at once.</p>
+<p>An earlier draft of this deck also carried <strong>Target Player</strong> — a standalone card that activated any one unit, anywhere, precisely to cover the case a Zone card whiffed entirely. The fallback above does the same job more reliably: it lives on the card that would otherwise be dead, rather than asking you to also be holding a separate, rarer card at the right moment — which, in practice, is exactly the turn you're least likely to be holding it. Target Player has been retired; nothing replaces its two slots.</p>
+<h3 id="s6ex">6.5 Worked Example: Full Press &amp; Hand Size</h3>
+<p>"Discard your next 2 card draws unseen" means exactly that: your next 2 end-of-turn draws still happen — the deck ticks over as normal — but each one goes straight to the discard pile unseen, instead of into your hand. It's a fixed, two-turn dip, not an ongoing tax; it pays itself off on its own. Starting from a full hand of 5:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Turn</th><th>Hand at start</th><th>You play</th><th>End-of-turn draw</th><th>Hand after</th></tr></thead>
+<tbody>
+<tr><td>N (Full Press)</td><td>5</td><td>Full Press</td><td>Discard 1 of 2, unseen</td><td>4</td></tr>
+<tr><td>N+1</td><td>4</td><td>any card</td><td>Discard 2 of 2, unseen</td><td>3</td></tr>
+<tr><td>N+2</td><td>3</td><td>any card</td><td>Normal — draw back up to 5</td><td>5</td></tr>
+<tr><td>N+3</td><td>5</td><td colspan="3">Back to normal</td></tr>
+</tbody>
+</table></div>
+<p>The low point is 3 cards, reached right before you play on turn N+2 — and it snaps straight back to 5 that same turn, since "draw back up to 5" pulls in as many cards as it takes to close the gap, not just one. It doesn't compound on its own: the debt is fixed at 2 draws per Full Press played. The one way it stacks is choosing to play Full Press again before the first debt clears — then the two 2-draw windows overlap, and you owe more before either resolves. That only happens if you deliberately play it twice in quick succession; it isn't sprung on you.</p>
+</section>
+
+<section id="s7">
+<h2><span class="num">7.</span> Turn Sequence</h2>
+<p>Each turn, in order:</p>
+<ol class="steps-num">
+  <li><strong>Play a Command Card</strong> from your hand, face up — or, instead, cycle one dead card for a fresh draw and skip straight to step 6 (§6). Either way exactly one card leaves your hand this way per turn.</li>
+  <li><strong>Activate</strong>: name which units the card authorizes (per §6), if you played one. Only activated units may act this turn.</li>
+  <li><strong>Move</strong>: each activated unit may move up to its <strong>Pace</strong> in hexes (see Player Roster for Pace ratings). Each hex holds at most one unit — you may never move into or through a hex already occupied by another unit, teammate or opponent; path around it instead. Moving the <strong>ball-carrier</strong> adjacent to, or through a hex adjacent to, an opposing unit triggers a <strong>Dribble Challenge</strong> — see §9 — resolved immediately using the <strong>Resolution Sequence</strong> below. A Dribble Challenge is a cost of movement, not the turn's one action: win it, and the carrier may keep moving with any Pace it has left, then still Act normally afterward. A defending side's own Move can also never fully surround the opposing ball-carrier — see §9's escape-hex rule.</li>
+  <li><strong>Act</strong> (optional, once per turn, by any one activated unit that is carrying the ball or adjacent to an opposing ball-carrier — or by any two <em>different</em> such units, if this turn's Command Card was <strong>Full Press</strong>, eligibility checked separately for each in the order they act, so a unit that only starts carrying the ball because the first one's Act just passed it there still qualifies for the second): Pass, Shot, or Tackle, resolved using the <strong>Resolution Sequence</strong> below, once per acting unit. See §8.</li>
+  <li><strong>Discipline check</strong>, if triggered (fouls, tackles gone wrong — see §12).</li>
+  <li><strong>Draw back up</strong> to 5 Command Cards and top up your Tactic hand to 3, if below.</li>
+  <li>Turn passes to your opponent.</li>
+</ol>
+<h3>The Resolution Sequence</h3>
+<p>Every contested roll in the game — a Dribble Challenge triggered in step 3, or the Act taken in step 4 — resolves through the same six steps:</p>
+<ol class="steps-num">
+  <li><strong>Tactic Card</strong> (optional, active player): play one Tactic Card to modify the action before anything is rolled — Through Ball, One-Two, Curl Shot, and most of the deck live here. Pay its Flair cost from your banked Flair Points if it has one. Some cards (Through Ball) remove the need to roll at all — skip straight to step 6.</li>
+  <li><strong>Opponent's Reaction</strong> (optional): the opponent may discard a held Counter card here, or play a Tactic Card explicitly timed as a reaction (<strong>Press</strong> or <strong>Foul</strong> here; <strong>Jockey</strong> is timed even earlier, against the Move step itself) — see §10.</li>
+  <li><strong>Roll</strong>: dice per §8.</li>
+  <li><strong>Post-Roll Tactic Card</strong> (optional, active player): play one Tactic Card that responds to the roll just made — currently <strong>Step-Over</strong> (reroll) and <strong>Nutmeg</strong> (a Flair symbol in the roll wins outright).</li>
+  <li><strong>Opponent's Post-Roll Reaction</strong> (optional): the opponent may play <strong>Last-Ditch Block</strong> here, canceling a Success after seeing the roll — this is why it's worded "playable as a Counter" despite being a Tactic Card, not the Counter Command Card.</li>
+  <li><strong>Apply the result.</strong></li>
+</ol>
+<p>Each side may play at most one Tactic Card in step 1 and one in step 4 per Resolution Sequence — not one per turn overall, so a Dribble Challenge and the Act that follows it each get their own budget, and so do a Full Press turn's two separate Acts.</p>
+<p><strong>In the Base Game</strong> (§1), this collapses to three steps almost every time: <strong>Roll → the opponent may spend a Counter → Apply the result.</strong> Steps 1 and 5 are always empty (no Tactic Deck to fill them); step 2 is otherwise empty too except for a held Counter, and step 4 stays empty except for a once-a-match Signature ability (Last Man, Clinical — §14). Read the six-step version once for how it generalizes to the Advanced Game; expect to run the three-step version in practice.</p>
+</section>
+
+<section id="s8">
+<h2><span class="num">8.</span> Actions &amp; Dice</h2>
+<p>Every action below — Pass, Bounce Pass, Dribble Challenge, Shot, Tackle — gets a full worked example in §8.5, along with Kickoff and Loose Ball.</p>
+<h3>Ball &amp; Possession</h3>
+<p>The ball is its own token, separate from any unit — but while a unit has possession, the ball sits on that unit's hex and moves with it automatically as part of normal movement (§7, step 3). There's nothing extra to track while a team is just carrying and running.</p>
+<div class="callout note">Use two ball markers, not one — a plain "Ball" token and a distinct ochre-rimmed "Loose Ball" token (Token Sheet, §3). The token itself shows the state, so you never have to read position or peek under a piece to tell them apart: the plain token sits on top of its carrier's unit token, centered; the ochre one sits alone on a hex — genuinely alone, since a hex that already holds a unit is never left loose (§8's Save-retention and rebound rules both resolve straight to possession when that happens) — when the ball is loose there. No stacking-order judgment calls, no peeking.</div>
+<p>The ball becomes <strong>loose</strong> — sitting on a hex with no unit in possession — after:</p>
+<ul>
+<li>A <strong>Save without a Flair</strong> on the roll (§8's Save-retention rule: a Flair among the Save dice means the Goalkeeper holds on outright instead, and the ball never goes loose at all) — the shot is parried out to a loose hex just <strong>outside the Goalkeeper Zone</strong>, on whichever side matches the shot's own Lane. Never inside the zone itself — the opponent could never physically reach in there to contest it, the same reason a lost Dribble Challenge spills the ball a hex back rather than under the winning tackler;</li>
+<li>A <strong>lost Dribble Challenge</strong> (a heavy touch — the ball spills onto the hex the carrier just moved from, genuinely up for grabs by either side — see below);</li>
+<li>A <strong>Pass to open ground</strong> (a clearance — no teammate waiting at the far end, so the ball simply becomes loose there instead of being received — see Pass, below).</li>
+</ul>
+<p>A unit <strong>claims</strong> a loose ball simply by being activated while standing on its hex — no roll, no separate action needed. That covers two cases: a unit that moves onto the loose ball's hex this turn, and one that's already sitting there when the ball goes loose (a Goalkeeper right after their own Save, for instance). Either way, it still needs a Command Card that activates that specific unit on your turn — a unit merely standing near a loose ball on the opponent's turn doesn't claim anything. Moving onto a loose ball's hex never triggers a Dribble Challenge, even if that hex sits inside an opposing unit's Zone of Control: the moving unit isn't carrying the ball yet — it only gains possession on arrival, by the claim rule above, not by dribbling through anything (§9's trigger is a unit already carrying the ball as it moves, which this isn't).</p>
+<p><strong>Restarts.</strong> Kickoff happens at match start (§5), after every goal, for the side that conceded, and at halftime (§15) — same procedure each time: both sides set up fresh via the kickoff-placement draft (§5) — Goalkeepers into their own boxes, the kicking side's named taker onto F3 with the ball, then both sides alternate placing one remaining outfield unit at a time, non-kicking side first — before normal play resumes. This is a full reset, not just the kickoff-taker and ball — wherever every unit on each side ended up during the previous passage of play, both sides draft their shape anew rather than returning to any particular previous arrangement. Every time, the non-kicking side must clear the center circle first — the 7 hexes F3 and its six neighbors: E3, E4, F2, F4, G3, and G4 — so none of its placements may land there in the first place. Any of its units already caught inside it from before the restart are moved by their controller to the nearest hex outside the circle (their choice among ties) before the kick.</p>
+<p>A kickoff is never held hostage by a bad hand. This used to need its own exception; it doesn't anymore, because §6's <strong>ball-carrier-is-always-activatable</strong> rule already covers it — the kickoff-taker is just the ball-carrier from the moment it's placed on F3, so any card you play that turn authorizes it regardless of zone, lane, or third. The old probability worth knowing anyway, since it's a decent measure of how often a hand would otherwise have gone nowhere near F3: with 36 Command Cards split across zones, about 1 in 3000 hands draws none of the 27 cards that would reach F3 on their own — all six Zone cards (each already carries its own fallback, §6), <strong>both</strong> Lane cards (F3 is a seam-row hex, §4 — it belongs to Top and Bottom at once, so Lane-Top and Lane-Bottom both reach it directly, not just one the way a single Lane-Center card used to), Third-2, Tactical Free, and Full Press. (This figure moved twice on 2026-09-22 and has now landed back on its original value: trimming Zone from 2 copies to 1 first shrank the "reaches F3" pool to 25 - see the superseded roughly-1-in-800 figure in that day's changelog - but the same-day revision that moved Lane up to 5 copies each while reverting Third and Tactical Free to their original counts brought the pool back to exactly 27, coincidentally identical to the pre-reallocation number despite the underlying Zone/Lane counts both having permanently changed.) Rarer even than the old figure, and moot regardless either way: the restart is never blocked, and neither is the kickoff-taker's own first move — only what the <em>rest of your team</em> does that turn still depends on your hand.</p>
+<p><strong>The kickoff is a pass, not a dribble.</strong> Real football won't let the kicker touch the ball twice in a row at a kickoff — someone else has to touch it first. Hexside makes that the whole shape of the restart: the kickoff-taker's entire activation, the turn it's placed on F3 with the ball, is a single <strong>Pass to a teammate within Pass Range</strong> (§8) — straight from F3, no Move first, and never a Clearance to open ground the way an ordinary Pass could be. It can't Shoot, Tackle, or dribble a single hex forward under its own power; the ball simply has to go to someone else before anything else happens. The instant that Pass resolves — successfully or not, contested or not — the obligation is discharged for good, and the receiving unit (or, if it's intercepted, whichever defender just won it) is now just the ball-carrier, free to Move, Dribble, Pass, or Shoot exactly like any other turn from here — including dribbling straight past a defender itself on a later activation. The kickoff-taker doesn't get a second touch even then: this restriction is spent the moment it passes, not renewed if the ball happens to come straight back to it. Placing at least one teammate within Pass Range of F3 isn't just good practice — §5's kickoff-placement draft makes it mandatory: the kicking side's first placement after the taker must land within the taker's own Pass Range, guaranteeing this Pass a legal target every single time. So there's no bad-hand exception needed here the way §6's ball-carrier-is-always-activatable rule covers your Command Cards — the setup rule already closes that gap before the whistle ever blows.</p>
+<h3>Dice</h3>
+<p>Hexside uses eight ordinary d6s — four of one color, four of another, so attacker and defender can roll simultaneously without either side seeing the other's result first — read off a symbol table instead of pips. Two dice types:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Roll</th><th>Attack die</th><th>Defense die</th></tr></thead>
+<tbody>
+<tr><td>1–2</td><td>Blank</td><td>Blank</td></tr>
+<tr><td>3–4</td><td>Flair (bank 1 Flair Point)</td><td>Flair (bank 1 Flair Point)</td></tr>
+<tr><td>5–6</td><td>Goal / Success</td><td>Save / Stop</td></tr>
+</tbody>
+</table></div>
+<p><em>Attack die used for:</em> Shots, Passes into contest, Dribble attempts, and the tackling unit's own Tackle stat in a Tackle Challenge. <em>Defense die used for:</em> Saves, contested Control — including the ball-carrier's side of a Tackle Challenge, which rolls Control as Defense against the tackler's Attack (§8).</p>
+<p>The number of dice you roll equals the relevant stat on your Player Card (0–5, see §14). Compare net Goal/Success symbols against net Save/Stop symbols; the attacker needs strictly more to succeed — <strong>ties go to the defender</strong>. Bring more dice than you strictly need, not just enough.</p>
+<h3>Pass</h3>
+<p>Legal to a <strong>teammate</strong>, or to any <strong>empty hex</strong> (a clearance — see below), within the passer's <strong>Pass Range</strong> stat, counted in hexes, straight-line, in any direction. No roll needed if <strong>no hex along that straight line</strong> — the destination or any hex the line passes through along the way — sits in an opposing unit's Zone of Control. If any of them does, roll your passer's Control dice as Attack against the intercepting unit's Control dice as Defense; with more than one opposing Zone of Control on the line, use whichever defender you like, one contest for the whole pass. A failed contested Pass turns the ball over on the spot — it goes to <strong>the intercepting unit's own hex</strong>, not the pass's original destination, even when that unit was only defending because its Zone of Control reached the destination from a hex away. This is what Long Ball (§11) means by "ignoring intervening Zones of Control": without it, a pass flying straight over a defender's head is just as contestable as one landing next to them, which is the point — thematically, the ball doesn't get a free pass through a player's reach just because it isn't stopping there.</p>
+<p><strong>Clearance</strong> — a Pass to an empty hex instead of a teammate — works exactly the same way, legal and (un)contested by the identical rule above. The only difference is what's waiting at the far end: nobody. Whether it goes through clean or survives a contested roll, there's no teammate there to receive it, so the ball simply becomes <strong>loose</strong> on whichever hex it actually lands on (Ball &amp; Possession, above) — genuinely up for grabs, not automatically yours just because you're the one who sent it there. This is the release valve for a unit holding the ball under pressure with no safe pass to a teammate and no dribble it wants to risk: clear it into ground that's actually clear of opposing Zones of Control, and both sides have to go win it back, rather than the carrier being forced into a Tackle or a bad Dribble Challenge it doesn't want.</p>
+<h3>Bounce Pass</h3>
+<p>A Pass may be played off the pitch's own boundary instead of straight at a teammate — bounced off a <strong>side wall</strong> (the long top/bottom edges) or a <strong>back wall</strong> (behind either net), continuing in a new direction from there. Declare which wall before rolling anything: the ball travels in a straight line to that wall, reflects once, then continues in its new direction to wherever it actually ends up — and <strong>both legs together</strong> count against the passer's ordinary Pass Range, the same way a straight Pass counts every hex it crosses. A bounce pass reflects <strong>at most once</strong> — if the new line would run into a second wall before the Pass Range is spent, the ball simply stops there instead of bouncing again.</p>
+<p>What a straight line becomes when it reflects depends only on which of the two wall types it hits, not on the unit, the side, or anything else about the pass itself:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Travelling...</th><th>Off a side wall (top/bottom)</th><th>Off a back wall (behind a net)</th></tr></thead>
+<tbody>
+<tr><td>Straight across the pitch's width</td><td>Bounces straight back, same column</td><td>Never reaches one — runs parallel to it</td></tr>
+<tr><td>Straight down the pitch's length</td><td>Never reaches one — runs parallel to it</td><td>Bounces straight back, same row</td></tr>
+<tr><td>On a diagonal</td><td>Becomes the <em>other</em> diagonal</td><td>Becomes the <em>other</em> diagonal</td></tr>
+</tbody>
+</table></div>
+<p>One exception, and it's a real one: <strong>A3, A4, K3, and K4 — the two goal-mouth hexes at either end — have no wall at all</strong>, on any line. A pass reaching one of them, from any direction, keeps going straight through into the <strong>Net</strong> instead of bouncing — and resolves exactly like a <strong>Shot</strong> (above): Save-contested the normal way, using the passer's own Shot stat, and still budgeted against Pass Range, never Shot Range. This is the one way a Pass can put the ball in the net itself, rather than just moving it toward a teammate who might.</p>
+<p>Away from the goal mouth, a bounce pass doesn't need a teammate waiting at the far end to be legal the way a straight Pass effectively does — the whole bent line is committed to the instant it's declared, and resolves wherever it actually lands: on a teammate, it's a completed pass exactly as normal; on an empty hex, the ball goes loose there, exactly as a Clearance would; on an opposing unit, that side simply has the ball there instead. None of this is contested along the way, at either leg — like Long Ball (§11), a bounce pass ignores intervening Zones of Control entirely once it's declared. That's the trade: a straight Pass can be intercepted anywhere along its line but always finds its intended teammate if it isn't; a bounce pass can never be intercepted in transit, but the passer only finds out where it actually ends up after committing to the wall.</p>
+<h3>Dribble Challenge</h3>
+<p>Triggered when your activated unit, carrying the ball, tries to move through an opposing unit's Zone of Control (§9). Resolved via the Resolution Sequence in §7: roll your Control (Attack) vs their Tackle (Defense). Win, and you carry straight through — the ball moves with you, and if your Pace allows it, movement continues. Lose, and it's a heavy touch: your unit's own movement still ends on the contested hex, but the ball spills loose one hex back, on the hex it just moved from — not the same hex the carrier ends up standing on. That's deliberate: a loose ball sitting under the very unit that just lost it would simply be reclaimed automatically next activation, so keeping the ball off the carrier's own hex is what actually makes it contestable rather than a guaranteed bounce either way — whoever gets a unit activated onto that hex first, per the normal claim rule, keeps it. Either way, this doesn't spend the turn's one Act — a unit that wins a Dribble Challenge can still Pass, Shoot, or Tackle afterward.</p>
+<h3>Shot</h3>
+<p>Legal only from a hex within your <strong>Shot Range</strong> stat, straight-line, of a hex in the <strong>opposing net</strong> (§4) — not the goal box itself. The box is where the goalkeeper stands; the net is what the shot actually has to reach. If the opposing side's <strong>Goalkeeper Zone</strong> (§4) has no <strong>goalkeeper-role unit</strong> standing in it — the real Goalkeeper, or its Emergency deputy (§12) — the Shot is an <strong>automatic goal, no roll needed</strong> — an open net is an open net, whether or not an outfield teammate also happens to be standing in the zone at the time (legal — see §4 — but it doesn't change this). With the Goalkeeper confined to its zone and every opponent barred from entering it, this now only ever happens when a side's Goalkeeper has been sent off or sin-binned with nobody yet standing in to cover (§12) — never from a keeper simply being drawn out of position, since it physically can't be. This includes a sin-binned Goalkeeper specifically: an outfield unit parked in the zone while its own keeper serves a sin-bin never gets to roll Save in the keeper's place — it can only ever add the reactivated-defender bonus die below to a <em>real</em> goalkeeper-role unit's own roll, never stand in for one outright. Otherwise the sin-bin would cost nothing whenever a side had a spare defender to spot it, which defeats the point of it being a real, temporary gap in the defense.</p>
+<p>Otherwise, roll your Shot stat (Attack) vs the goalkeeper's Save stat (Defense) — the attacker needs strictly more Success symbols than the defender's Stop symbols; anything short of that, including a flat 0–0 with no Stops rolled at all, is a <strong>Save</strong>. An outfield defender standing in the goal box may add 1 Defense die to the keeper's roll, but only if they were named by their own side's Command Card on that side's <strong>most recently completed turn</strong> — reactivated, not just present. A defender merely parked there, without being reactivated since, does not count. In practice this makes the extra die a recurring cost, not a one-time setup: holding it available means spending your side's entire turn's activation on that one defender, every turn you want the bonus live, rather than moving your other four units. If the Goalkeeper hasn't used its once-per-match <strong>Shot-Stopper</strong> signature yet, it may reroll one Blank die from its own Save roll, free — worth using on any Save roll that isn't already settled in the defense's favor, since it can still turn a losing roll into a won one, and even when it can't, the rerolled die still counts toward the retention check below.</p>
+<p><strong>Save-retention.</strong> A Flair among the Goalkeeper's own Save dice — the Shot-Stopper reroll included — means the Goalkeeper holds on to the ball outright: no rebound, nothing loose, nothing for the attacking side to chase. This happens often for a specialist: rolling Save 3, at least one Flair shows up roughly 70% of the time. An Emergency deputy, on a flat Save 1, only holds on about a third as often — a real, stat-driven gap between a real Goalkeeper and a stand-in, with no new number needed to produce it. Without a Flair, the shot is genuinely parried: the ball spills loose one hex <strong>outside the Goalkeeper Zone</strong> — never inside it, since the opponent could never legally reach in there to contest it — on whichever seam-column hex matches the shot's own Lane (§4): the Top-side hex if the shot came from a hex in the Top lane, the Bottom-side hex if Bottom. A shot taken from a seam-row hex itself (F3 foremost among them) belongs to both lanes at once, so neither side is automatically correct; rank the two candidate hexes empty, then a defender's hex, then an attacker's hex — landing on an attacker is otherwise a free, uncontested chance handed straight to the shooting side off their own save — and take the best-ranked one, defending side's choice on a tie. Whichever unit, if any, already stands on the resolved hex receives the ball immediately, exactly as if it had just been passed there; an empty hex is genuinely loose, claimed the normal way (Ball &amp; Possession, above) by whichever side gets a unit there first. Consistent with real five-a-side, Hexside has no headers and no mechanic plays the ball above shoulder height — every Shot and Pass is a struck or driven ball along the ground.</p>
+<p><strong>Through on Goal.</strong> If the shooting unit itself won the <strong>Dribble Challenge</strong> that carried it into this shooting position, earlier in this same activation, its Shot gets <strong>+1 Attack die</strong>. This is the mirror image of the box-defender bonus just above it: where a defender's continued presence in the goal box helps the Save, the defender that shooter just beat being out of the picture helps the Shot — the same "bodies near the play matter" principle, pointed the other way. It's also the payoff for a promise §8/§9 already made: winning a Dribble Challenge was always built not to spend the turn's one Act specifically so the winner "can still Pass, Shoot, or Tackle afterward" — beating your man and shooting has been legal since the beginning, this is what finally rewards doing it, the way a real breakaway chance actually plays better than the same shot taken from a standing start under pressure. The bonus belongs to that one unit and that one Shot only: win the challenge, pass to a teammate instead, and the teammate shoots at its own normal dice, nothing carried over. Winning a second, third, or further Dribble Challenge in the same activation (§9: free passage for the rest of it once the first is won) doesn't stack a second die either — one clean look is all it's for.</p>
+<h3>Tackle</h3>
+<p>An activated unit adjacent to an opposing unit holding the ball may attempt a Tackle instead of moving further. The tackler rolls Tackle as Attack; the ball-carrier rolls Control as Defense — labels for this roll only, not for who's "attacking" in the football sense. Win, and possession changes — the tackler may immediately <strong>Pass to a teammate within Pass Range as a free follow-up</strong>, not spending the turn's one Act (contested as normal if the target hex sits in an opposing Zone of Control). This applies to any won <strong>Tackle Challenge</strong>, however it was triggered — a standard Tackle, or one forced via Counter, Last Man, or Press (§10, §14, §11) — not just a Tackle taken as your own Act; without it, the winning side could do nothing but hand the ball straight back to a retaliatory Tackle the moment the opponent's turn came around. Lose, and it costs the tackling side <strong>1 Flair Point</strong>, if they have one banked — deducted immediately, on top of the spent action. This applies to any lost Tackle Challenge, however it was triggered, the same way the won case above does. It's a small tax on throwing a challenge in, not a stoppage: with no Flair banked, there's nothing to lose beyond the action itself, so it never blocks a side from tackling — it just makes doing it recklessly, over and over, cost something. In addition, a lost Tackle Challenge draws from Discipline (§12) for the tackling unit, on top of the Flair cost above — a mistimed challenge carries real physical risk whether or not any Flair was there to lose. A standard lost Tackle draws once from the 12-card <strong>Discipline Deck</strong> — 6 in 12 come back <strong>Clean Challenge</strong>, no effect either way — reflecting that most failed challenges are exactly that: a fair attempt that simply didn't come off, not misconduct. A lost <strong>Strong Tackle</strong> is judged more harshly not through a different deck, but through commitment: it draws from that same deck <strong>twice</strong>, applying both cards — it carries the same Clean Challenge chance as a standing Tackle on each individual draw, but risks it twice over, so a genuinely harmless one is still very possible, and so is drawing two real cards back to back (§11). Either way, this is <strong>not</strong> a Foul: play doesn't stop and there's no Free Kick, because nothing here is a stoppage the referee actually blew a whistle for — it's the physical risk of throwing a leg in, logged against the tackler exactly the way a Yellow or Red would be, while the ball simply stays exactly where §8 already says it stays. A Foul, in the full sense — stoppage, Free Kick, falling back, the lot — only ever comes from the Foul Tactic Card (§11, §12); a lost Tackle Challenge, however reckless, never stops play on its own.</p>
+
+<h3 id="s8ex">8.5 Worked Examples</h3>
+<p>One concrete walkthrough for each action, on real hex addresses, with real roster stats, dice rolled all the way through to a result.</p>
+
+<div class="worked">
+<h3>Kickoff</h3>
+<p class="setup">Team A won the coin flip and takes kickoff. They name their Poacher as kickoff-taker (§5); it stands on F3 with the ball, and its entire activation this turn is a single Pass — no Move first, no Clearance, no Shot or Tackle (§8). Their Playmaker is Team A's next pick in the kickoff-placement draft (§5) and lands at E4 — one of F3's six neighbors, and inside the tinted kickoff exclusion zone, which is legal here: the zone only restricts the <em>non-kicking</em> side, so the kicking side is free to stack support right up against its own taker, and E4 stays behind the halfway column rather than crossing into Team B's half. It's also within the Poacher's Pass Range 1 — not a coincidence: §5 requires Team A's first free placement to land somewhere the taker can legally reach, and E4 is exactly that.</p>
+<figure id="ex-kickoff-figure"></figure>
+<ol>
+<li>Team A's opening hand includes a Zone — Third 2/Top card — F3 is a seam-row hex (§4), so it answers to either of Third 2's Zone cards; this one reaches it directly, no kickoff exception even needed.</li>
+<li>Activate the Poacher (and anyone else standing in Third 2/Top).</li>
+<li>Act: Pass F3 → E4, straight from the kickoff spot — the Poacher never moves. Distance 1, well within Pass Range. Neither F3 nor E4 sits in an opposing Zone of Control (Team B stayed clear of the whole exclusion zone) — no roll needed.</li>
+</ol>
+<div class="result">The Playmaker now holds the ball at E4, a full hex forward of the kickoff spot. The Poacher's kickoff obligation is discharged the moment that pass leaves its foot — the Poacher gets no second touch even if the ball comes straight back to it — and the Playmaker is simply the new ball-carrier from here, free to dribble, pass, or shoot on its own next activation like any other turn.</div>
+</div>
+
+<div class="worked">
+<h3>Pass (contested)</h3>
+<p class="setup">Team A's Sweeper (Control 5, Pass Range 2) is already standing with the ball at E4 — left there from an earlier turn, not moved there this one, so no Dribble Challenge is in play despite E4 sitting inside Team B's Wingback's Zone of Control at F4 (§9: the trigger is movement, not proximity). Team A's Poacher is open at G5 — two hexes away, exactly at Pass Range. But G5 is <em>also</em> one of the six hexes in the Wingback's Zone of Control, so the pass itself is contested.</p>
+<figure id="ex-pass-figure"></figure>
+<ol>
+<li>Pass Range check: E4 to G5 is 2 hexes — right at the Sweeper's Pass Range 2. Legal target, no margin to spare.</li>
+<li>G5 sits in Team B's Wingback's Zone of Control — roll a contest. Sweeper's Control (5 dice, Attack) vs Wingback's Control (5 dice, Defense).</li>
+<li>Attacker rolls five Attack dice: one Success, the rest Blank. Defender rolls five Defense dice: one Stop, one Flair banked for Team B, the rest Blank.</li>
+<li>1 Success vs 1 Stop is not strictly more — ties go to the defender, so the attacker needed to beat, not match, the Stop.</li>
+</ol>
+<div class="result">Pass fails. The ball turns over to the intercepting Wingback, on its own hex (F4) — not on G5, the pass's original target.</div>
+</div>
+
+<div class="worked">
+<h3>Bounce Pass</h3>
+<p class="setup">Team A's Wingback (Pass Range 3) is carrying the ball at C3, defending toward the K end, no safe straight pass open. It bounces one off the back wall behind Team A's own end instead — a diagonal, toward A2.</p>
+<figure id="ex-bounce-figure"></figure>
+<ol>
+<li>C3 to A2 is 2 hexes, diagonal, straight-line. A2 isn't a goal-mouth hex — only A3 and A4 are — so this is a genuine wall: the ball reflects instead of continuing into the Net.</li>
+<li>A diagonal becomes the other diagonal off either wall type — the same rule regardless of which one it actually hit. The new line runs from A2 to B1.</li>
+<li>A2 to B1 is 1 more hex. Total: 2 + 1 = 3, exactly the Wingback's Pass Range — no budget left, so the ball stops there rather than bouncing again.</li>
+</ol>
+<div class="result">Team A's Sweeper is waiting at B1 and receives it — a completed pass, exactly as if it had been a straight one, just bent around the wall instead of contested through a Zone of Control. Nothing along either leg could have intercepted it. Had nobody been standing at B1, the ball would simply have gone loose there instead, exactly like a Clearance.</div>
+</div>
+
+<div class="worked">
+<h3>Dribble Challenge</h3>
+<p class="setup">Team A's Poacher (Control 5) is carrying the ball at B3 and moves toward C3, adjacent to Team B's Sweeper's Zone of Control.</p>
+<figure id="ex-dribble-figure"></figure>
+<ol>
+<li>Moving into a hex adjacent to an opposing unit while carrying the ball triggers the Dribble Challenge — Poacher's Control (Attack) vs Sweeper's Tackle (Defense).</li>
+<li>Poacher rolls 5 Attack dice: one Success. Sweeper rolls 2 Defense dice (Sweeper Tackle 2): one Stop.</li>
+<li>1 vs 1 — ties go to the defender.</li>
+</ol>
+<div class="result">Dribble fails. The Poacher's own move still ends on C3, but the ball spills loose one hex back, onto B3 — not under the Poacher, and not under the Sweeper either. Genuinely up for grabs.</div>
+</div>
+
+<div class="worked">
+<h3>Shot &amp; Save</h3>
+<p class="setup">Team A's Poacher (Shot 5) stands at I2, three hexes from Team B's net (measured to the Net itself, one hex beyond the goal box — §4), well within Shot Range 4. Team B's Goalkeeper (Save 3) is home in the goal box at K4, Shot-Stopper not yet used this match.</p>
+<figure id="ex-shotsave-figure"></figure>
+<ol>
+<li>Goalkeeper Zone is occupied (Team B's Goalkeeper, confined there as always) — not an automatic goal. Roll Shot (5 dice, Attack) vs Save (3 dice, Defense).</li>
+<li>Attacker rolls 5 dice: two Successes. Defender rolls 3 dice: <strong>Stop, Stop, Blank</strong> — two Stops.</li>
+<li>2 vs 2 is not strictly more — a Save either way, but no Flair among those 3 dice yet.</li>
+<li>Shot-Stopper: reroll the Blank die, free. It comes up <strong>Flair</strong>.</li>
+</ol>
+<div class="result">Still no goal — 2 Stops either way, Shot-Stopper doesn't need to change that here. But the reroll's Flair means the Goalkeeper's Save roll now has one: it holds on to the ball outright. No rebound, nothing loose — Team B keeps possession at K4, free to build from there next turn.</div>
+</div>
+
+<div class="worked">
+<h3>Through on Goal</h3>
+<p class="setup">Team A's Playmaker (Control 4, Shot 4, Shot Range 3) stands at H3 with the ball. Team B's Wingback (Tackle 4) is at J3, its Zone of Control covering I3 — a hex exactly 3 hexes from Team B's net, right at the Playmaker's Shot Range. Team B's Goalkeeper (Save 3) is home in its Goalkeeper Zone at K4.</p>
+<figure id="ex-through-figure"></figure>
+<ol>
+<li>The Playmaker moves H3→I3, entering the Wingback's Zone of Control — Dribble Challenge: Control (4 dice, Attack) vs Tackle (4 dice, Defense).</li>
+<li>Attacker rolls 4 dice: two Successes. Defender rolls 4 dice: one Stop, the rest Blank. 2 vs 1 — the Playmaker wins, carrying straight through to I3.</li>
+<li><strong>Act: Shot, same activation.</strong> The Playmaker itself just won the Dribble Challenge that put it here — Through on Goal, +1 Attack die. Roll Shot (4+1=5 dice, Attack) vs Save (3 dice, Defense).</li>
+<li>Attacker rolls 5 dice: two Successes. Defender rolls 3 dice: one Stop. 2 vs 1 — strictly more.</li>
+</ol>
+<div class="result">Goal. Without the bonus die this exact roll (drop the fifth attack die) would very plausibly have come back level or worse — Through on Goal is what turns "beat your man" into a genuinely better chance, not just a change of address for the ball.</div>
+</div>
+
+<div class="worked">
+<h3>Tackle</h3>
+<p class="setup">Team B's Sweeper (Tackle 3) is adjacent to Team A's Poacher (Control 5), who is carrying the ball at C3.</p>
+<figure id="ex-tackle-figure"></figure>
+<ol>
+<li>Sweeper's Act: Tackle. Roll Tackle (3 dice, Attack) vs Poacher's Control (5 dice, Defense).</li>
+<li>Attacker rolls 3 dice: one Success, the rest Blank. Defender rolls 5 dice: one Stop.</li>
+<li>1 vs 1 — ties go to the defender.</li>
+</ol>
+<div class="result">The tackle fails. Per §8, nothing changes on the pitch — the Poacher keeps the ball at C3, and there's no stoppage or Free Kick, since a lost Tackle Challenge is never a full Foul. It still draws once from the 12-card Discipline Deck for the Sweeper, though (§12) — on top of the usual 1 Flair, if Team B had one banked; 6 times in 12 that draw does nothing at all. Had the Sweeper won instead, they wouldn't just be left holding the ball at C3 for the Poacher to tackle straight back next turn — a won Tackle Challenge grants a free follow-up Pass, letting them move it on to a teammate the same turn.</div>
+</div>
+
+<div class="worked">
+<h3>Loose Ball</h3>
+<p class="setup">Team B's Goalkeeper has just made a Save at K4 against a shot from I2 (Top lane) — Shot-Stopper already used earlier this match, and no Flair came up on the 3-dice Save roll (Stop, Stop, Blank).</p>
+<figure id="ex-loose-figure"></figure>
+<ol>
+<li>No Flair on the roll, so it's not a clean catch — Save-retention doesn't apply, and the ball spills instead (§8).</li>
+<li>The shot came from a Top-lane hex, so the rebound lands on the K end's Top-side hex, J2 — one hex outside the Goalkeeper Zone, not K3 or K4.</li>
+<li>J2 is currently empty. A unit claims a loose ball simply by being activated while standing on its hex — no roll needed.</li>
+</ol>
+<div class="result">The ball sits loose at J2, genuinely open to either side — unlike the Goalkeeper Zone itself, both teams can legally reach it. Whichever side next activates a unit onto J2 keeps it.</div>
+</div>
+</section>
+
+<section id="s9">
+<h2><span class="num">9.</span> Zone of Control</h2>
+<p>Every unit projects a Zone of Control into its six adjacent hexes. This only threatens the ball-carrier: an opposing unit carrying the ball that moves into an adjacent hex, or through one to keep moving, triggers a Dribble Challenge (§8) the first time it does so per activation, resolved on the spot via the Resolution Sequence in §7. A unit without the ball moves through freely — there's nothing to dribble past. Ball-carriers may still choose to stop just outside a Zone of Control to avoid the challenge entirely — often the correct, patient play.</p>
+<p>The trigger is movement, not proximity. A ball-carrier that's already standing in an opposing Zone of Control — left there from an earlier turn, say — doesn't retrigger anything by simply staying put and Passing or Shooting from where it stands. Nothing challenges a unit that didn't move.</p>
+<p>"The first time it does so per activation" is doing real work here, on purpose: a fast unit that wins its one Dribble Challenge can carry straight through every further Zone of Control in the same activation, untouched. That's deliberate, not an oversight — it's the payoff for winning the challenge at all, and it's what makes a high-Pace unit's breakaway actually feel like one, rather than a fresh coin-flip at every step.</p>
+<p><strong>No side may seal every route out.</strong> When resolving your own Move step, you may never voluntarily move a unit into a hex adjacent to the opposing ball-carrier if doing so would leave <em>every</em> hex adjacent to that carrier occupied — by any unit, either side. At least one hex next to the ball-carrier must always stay open. Press as tightly as you like right up to that point; only the move that would close the last gap is illegal, and only for the side making it — a ball-carrier that dribbles itself into a fully boxed hex has no one to blame but its own move. This targets a specific failure mode found in playtesting: a ball-carrier surrounded on every side, with no legal Pass, Dribble, or Tackle able to change anything, is a dead position, not a genuine contest. It rarely comes up outside a determined double- or triple-team, so ordinary pressing is untouched by it.</p>
+</section>
+
+<section id="s10">
+<h2><span class="num">10.</span> Reactions</h2>
+<p>A <strong>Counter</strong> card is never played on your own turn. Instead, hold it in hand, and when your opponent enters step 2 of the Resolution Sequence (§7) — after they've committed to an action and any pre-roll Tactic Card, but before the dice are rolled — you may discard your Counter to do one of:</p>
+<ul>
+<li>Force a Tackle Challenge immediately, using a unit that would otherwise not be activated (as long as it's adjacent to the ball-carrier), or</li>
+<li>Add 1 Defense die to whatever roll is about to happen.</li>
+</ul>
+<p>You may hold at most 3 Counter cards at once (natural hand cap, since only 3 exist per side).</p>
+<p>Four Tactic Cards behave like Counters without being one — none of them spend from your Counter hand or compete with an actual Counter card, and all are paid for with Flair instead. Two are played in this same pre-roll window (step 2): Press forces its own Tackle Challenge the same way a discarded Counter does, using a unit that wasn't otherwise activated; Foul instantly stops an opposing Dribble Challenge or Pass in progress. Jockey is played earlier still, during the opponent's own Move step (§7) rather than any Resolution Sequence window: the instant an opposing unit is activated to move, if you have a unit adjacent to it, discard Jockey to reduce that unit's Pace by 1 for this move only — no roll, no Discipline risk, and unlike Press or Foul it doesn't stop anything outright, just slows it down. Last-Ditch Block is the odd one out of the four, played in the equivalent post-roll window instead (Resolution Sequence step 5) — it's explicitly worded "playable as a Counter" for that reason.</p>
+<p>If a Counter-forced Tackle Challenge succeeds: it resolves as its own complete Resolution Sequence, in full, before the original action ever reaches its own step 3. If it takes the ball, the original action is cancelled outright — there's no longer a legal basis for it, and any Flair already spent on its own pre-roll Tactic Card is not refunded. The original unit's one Act for the turn is still used up, even though nothing came of it; that's the real cost of committing into a Counter. The unit that won the Tackle Challenge gets the same free follow-up Pass any won Tackle Challenge does (§8) — it just doesn't spend an Act either way, since it was never activated to have one. If the forced Tackle instead fails, the original action proceeds to its own Roll (step 3) exactly as if nothing had happened.</p>
+</section>
+
+<section id="s11">
+<h2><span class="num">11.</span> Tactic Cards &amp; Flair Points</h2>
+<p>Flair Points are a shared bank per side, earned from Flair symbols rolled during the match (cap 5, banked points don't expire at end of turn). Spend them to play Tactic Cards — one pre-roll and one post-roll per Resolution Sequence (§7), per side.</p>
+<p><strong>In the Base Game</strong> (§1), Flair Points still bank exactly as above — the dice don't change between tiers — and a lost Tackle Challenge still docks 1 as normal (§8); there's simply no Tactic Deck to spend the bank on, so it climbs, caps at 5, and never does anything. Harmless, not a bug: it's the literal reading of "everything except the Tactic Deck" (§1) once you look at what else in the rules happens to touch Flair.</p>
+<p><strong>Cycling a Tactic Card.</strong> Once per turn, for 1 Flair, you may discard any one Tactic Card from your hand face-down and draw a replacement — separate from, and not competing with, your Command Card play or Cycle (§6); do it on top of whatever else you do this turn. A full Tactic hand otherwise only turns over by being played, so three cards not worth their cost this match can otherwise sit dead for the rest of it; this is the release valve, the same way Command Card cycling is for a dead Command hand, just paid for in Flair instead of your turn's activation, since a Tactic Card was never your one action to begin with.</p>
+<div class="table-wrap"><table>
+<caption>The 26 cards</caption>
+<thead><tr><th>Card</th><th>Copies</th><th>Cost</th><th>Tag</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td><span class="badge tac">Attack</span> Through Ball</td><td>2</td><td>1</td><td>Attack</td><td>A pass this turn ignores one defending unit's Zone of Control.</td></tr>
+<tr><td>Nutmeg</td><td>2</td><td>2</td><td>Attack</td><td>In a Dribble Challenge, rolling at least 1 Flair symbol wins the challenge outright, regardless of net Success/Stop.</td></tr>
+<tr><td>Step-Over</td><td>2</td><td>1</td><td>Attack</td><td>Reroll up to 2 dice in a Dribble Challenge.</td></tr>
+<tr><td>Curl Shot</td><td>2</td><td>2</td><td>Attack</td><td>+1 Attack die to a Shot.</td></tr>
+<tr><td>One-Two</td><td>2</td><td>1</td><td>Attack</td><td>Pass to an adjacent teammate and immediately get it back — both legs uncontested regardless of Zone of Control, since it's an instant give-and-go, not a considered pass. This unit ends up with the ball again, placed in any unoccupied hex adjacent to that teammate, for free. A placement, not a path move: it doesn't need a clear route and doesn't trigger a Dribble Challenge along the way.</td></tr>
+<tr><td>Backheel</td><td>2</td><td>1</td><td>Attack</td><td>Pass to an adjacent teammate for free — doesn't use your one action for the turn.</td></tr>
+<tr><td>Long Ball</td><td>2</td><td>2</td><td>Attack</td><td>Pass may target any unit up to 3 zones away along a straight lane, ignoring the passer's Pass Range and any Zone of Control the line merely passes through. The destination's own Zone of Control, if the receiver is marked there, still contests it as normal.</td></tr>
+<tr><td>Composure</td><td>2</td><td>1</td><td>Attack</td><td>Reroll up to 1 die from a Shot you've just taken — the same post-roll timing as Step-Over (Resolution Sequence step 4), redirected from Dribble Challenges to Shots. Replaces the earlier Advantage Play card, whose own trigger — reacting to a Foul, itself already a reaction — sat outside the normal Resolution Sequence entirely and fired only about once in every nineteen matches where it was even eligible.</td></tr>
+<tr><td><span class="badge tac" style="background:var(--cmd-navy)">Defense</span> Strong Tackle</td><td>2</td><td>0</td><td>Defense</td><td>+1 Attack die to a Tackle (the tackler rolls Attack per §8). Free to play — the cost is what happens if it goes wrong. A standard lost Tackle draws once from the 12-card Discipline Deck (§8); a lost Strong Tackle draws from the same deck <strong>twice</strong> instead, applying both cards, on top of the usual 1 Flair — the extra die is bought with double exposure to a real card, not a harsher deck. A successful Strong Tackle carries no such risk. Renamed from Slide Tackle — real five-a-side football doesn't allow sliding tackles, so the card kept its exact mechanics under a name that doesn't describe an illegal challenge.</td></tr>
+<tr><td>Last-Ditch Block</td><td>2</td><td>2</td><td>Defense</td><td>Playable as a Counter. Cancel one Success symbol from an incoming Shot or Pass roll.</td></tr>
+<tr><td>Jockey</td><td>2</td><td>1</td><td>Defense</td><td>Reaction. The instant an opposing unit is activated to move, if you have a unit adjacent to it, discard Jockey to reduce that unit's Pace by 1 for this move only — no roll, no Discipline risk. Doesn't stop the move or contest anything outright; it just costs the mover a hex of reach, timed against the Move step itself rather than a Resolution Sequence window (§10). Replaces the earlier Offside Trap card, whose own trigger — a defending side's entire back line pushed fully out of its own Third, with a Pass landing precisely on the seam column — turned out too narrow to arise in normal play.</td></tr>
+<tr><td>Press</td><td>2</td><td>1</td><td>Defense</td><td>Force an immediate Tackle Challenge against an adjacent opponent, using a unit that wasn't activated this turn.</td></tr>
+<tr><td><span class="badge tac" style="background:#7a6a54">Risk</span> Foul</td><td>2</td><td>0</td><td>Risk</td><td>Instantly stop an opposing Dribble Challenge or Pass in progress, if you have a unit adjacent to the ball-carrier. Draw from the Discipline Deck, redrawing past any Clean Challenge — a called Foul always lands a real card (§12).</td></tr>
+</tbody>
+</table></div>
+<p>26 cards total. "Tag" is a design note for future faction variants, not a rule in this draft — every card is usable regardless of tag.</p>
+
+<h3 id="s11ex">11.5 Worked Examples: Flair &amp; Tactics</h3>
+<div class="worked">
+<h3>Backheel, a free pass</h3>
+<p class="setup">Team A's Sweeper, activated by a Third-1 Command Card, is carrying the ball at C2, adjacent to the Playmaker at C3. Rather than spend the turn's one action on that pass, Team A plays Backheel (cost 1) to make it for free instead.</p>
+<figure id="ex-backheel-figure"></figure>
+<div class="result">The Sweeper passes to the Playmaker without spending the turn's Act — the Sweeper (or another activated unit) can still Pass, Shoot, or Tackle this turn.</div>
+</div>
+<div class="worked">
+<h3>Long Ball, a diagonal pass through F3</h3>
+<p class="setup">Team A's Playmaker, at B5, wants to reach a teammate at I2 — 7 hexes away on a genuine diagonal (§4), well beyond any Pass Range stat in the roster, passing directly through F3 among the hexes along the way.</p>
+<figure id="ex-longball-figure"></figure>
+<ol>
+<li>Play Long Ball (cost 2): ignores Pass Range entirely, and ignores intervening Zones of Control — but not the destination's own Zone of Control, if any.</li>
+</ol>
+<div class="result">The pass reaches I2 regardless of distance, uncontested by anything it merely flew over — only a Zone of Control sitting on I2 itself would still contest it.</div>
+</div>
+
+<div class="worked">
+<h3>Through Ball, ignoring one Zone of Control</h3>
+<p class="setup">Team A's Sweeper, carrying the ball at B3, wants to pass to the Wingback at D3 — 2 hexes, straight through C3. Team B's Poacher stands at C4, its Zone of Control covering C3 (adjacent), so the pass would normally be contested.</p>
+<figure id="ex-throughball-figure"></figure>
+<ol>
+<li>Play Through Ball (cost 1): the pass ignores C3's Zone of Control specifically, for this one pass.</li>
+</ol>
+<div class="result">The pass reaches D3 uncontested, no roll needed — the Poacher's Zone of Control on C3 simply doesn't apply this time. Only a Zone of Control sitting on D3 itself, the destination, could still have contested it.</div>
+</div>
+
+<div class="worked">
+<h3>Nutmeg, a Flair wins outright</h3>
+<p class="setup">Team A's Poacher, carrying the ball, moves G1 → H1, adjacent to Team B's Wingback's Zone of Control at H2. Poacher's Control (5 dice) vs Wingback's Tackle (4 dice): the Poacher rolls two Blanks, two Flair, one Success — 1 Success. The Wingback rolls two Stops — 1 vs 2 would lose outright.</p>
+<figure id="ex-nutmeg-figure"></figure>
+<ol>
+<li>Play Nutmeg (cost 2): at least 1 Flair symbol in the Poacher's own roll wins the Dribble Challenge outright, net Success/Stop no longer relevant.</li>
+</ol>
+<div class="result">The Poacher carries straight through to H1 despite losing 1-2 on Success/Stop alone — the two Flair symbols in its roll were enough. Had it rolled zero Flair, Nutmeg would have had nothing to work with and the normal result would stand.</div>
+</div>
+
+<div class="worked">
+<h3>Step-Over, rerolling a losing Dribble Challenge</h3>
+<p class="setup">Team A's Playmaker, carrying the ball, moves D4 → E4, adjacent to Team B's Sweeper's Zone of Control at E5. Playmaker's Control (4 dice) vs Sweeper's Tackle (3 dice): the Playmaker rolls one Success, the Sweeper rolls one Stop — 1 vs 1, ties go to the defender, the Dribble Challenge is currently lost.</p>
+<figure id="ex-stepover-figure"></figure>
+<ol>
+<li>Play Step-Over (cost 1): reroll up to 2 of the Playmaker's own dice.</li>
+<li>Reroll 2 dice: one comes back Success. The Playmaker's total rises to 2 Successes against the Sweeper's 1 Stop.</li>
+</ol>
+<div class="result">2 vs 1 — strictly more. The Playmaker now wins the Dribble Challenge it was about to lose, carrying straight through to E4 with the ball.</div>
+</div>
+
+<div class="worked">
+<h3>Curl Shot, the extra die that converts</h3>
+<p class="setup">Team A's Playmaker (Shot 4, Shot Range 3) stands at I2 — 3 hexes from Team B's net, right at the edge of its Shot Range. Team B's Goalkeeper (Save 3) is home at K4.</p>
+<figure id="ex-curlshot-figure"></figure>
+<ol>
+<li>Play Curl Shot (cost 2): +1 Attack die to this Shot — Playmaker rolls 4+1=5 dice instead of 4.</li>
+<li>Attacker rolls 5 dice: two Successes. Defender rolls 3 dice: one Stop. 2 vs 1 — strictly more.</li>
+</ol>
+<div class="result">Goal. At the Playmaker's own Shot 4, that same roll (drop the fifth die) would very plausibly have come back level instead — Curl Shot is what turns a hex right at the edge of Shot Range into a genuinely live chance.</div>
+</div>
+
+<div class="worked">
+<h3>One-Two, an instant give-and-go</h3>
+<p class="setup">Team A's Sweeper, carrying the ball at D2, is adjacent to the Playmaker at D3.</p>
+<figure id="ex-onetwo-figure"></figure>
+<ol>
+<li>Play One-Two (cost 1): pass to the Playmaker and immediately get it back, both legs uncontested regardless of any Zone of Control, no Dribble Challenge either way.</li>
+<li>The Sweeper is placed in any unoccupied hex adjacent to the Playmaker's D3, for free — it picks C3.</li>
+</ol>
+<div class="result">The Sweeper ends up back in possession at C3 instead of D2 — a full hex of uncontested repositioning around the Playmaker, for the cost of 1 Flair and no roll at all.</div>
+</div>
+
+<div class="worked">
+<h3>Composure, rerolling a Shot just taken</h3>
+<p class="setup">Team A's Playmaker (Shot 4) shoots from H3 — 3 hexes from Team B's net, exactly at Shot Range 3. Attacker rolls 4 dice: one Success, one Blank, two Flair. Defender (Goalkeeper, Save 3) rolls 3 dice: one Stop. 1 vs 1 — not strictly more, currently a Save.</p>
+<figure id="ex-composure-figure"></figure>
+<ol>
+<li>Play Composure (cost 1): reroll up to 1 die from this Shot. Reroll the Blank.</li>
+<li>The rerolled die comes back Success. The Playmaker's total rises to 2 Successes against the Goalkeeper's 1 Stop.</li>
+</ol>
+<div class="result">2 vs 1 — strictly more. Goal, from a roll that was a Save the instant before Composure touched it.</div>
+</div>
+
+<div class="worked">
+<h3>Strong Tackle, the double-draw risk</h3>
+<p class="setup">Team B's Sweeper is adjacent to Team A's Poacher (Control 5), who is carrying the ball at C3.</p>
+<figure id="ex-strongtackle-figure"></figure>
+<ol>
+<li>Play Strong Tackle (free): +1 Attack die to the Tackle — Sweeper rolls Tackle 3+1=4 dice instead of 3.</li>
+<li>Attacker rolls 4 dice: one Success, the rest Blank. Defender (Poacher's Control) rolls 5 dice: one Stop. 1 vs 1 — ties go to the defender. The tackle fails.</li>
+</ol>
+<div class="result">The Poacher keeps the ball at C3, exactly as any lost Tackle Challenge resolves — but because this was a Strong Tackle, the Sweeper draws from the 12-card Discipline Deck <strong>twice</strong> instead of once, applying both cards in sequence (§12). The extra Attack die was bought with double exposure to a real card, and this time it didn't even pay off.</div>
+</div>
+
+<div class="worked">
+<h3>Last-Ditch Block, cancelling a winning Shot</h3>
+<p class="setup">Team A's Poacher (Shot 5) shoots from I2 — 3 hexes from Team B's net, well inside Shot Range 4. Attacker rolls 5 dice: three Successes. Defender (Goalkeeper, Save 3) rolls 3 dice: two Stops. 3 vs 2 — strictly more, currently a goal.</p>
+<figure id="ex-lastditch-figure"></figure>
+<ol>
+<li>Team B plays Last-Ditch Block (cost 2, playable as a Counter): cancel one Success from the incoming Shot roll. 3 Successes becomes 2.</li>
+</ol>
+<div class="result">2 vs 2 is no longer strictly more — the goal is cancelled outright, and the Shot resolves as a Save instead: ball parried per §8's Save-retention rule, exactly as if the roll had come back 2-2 in the first place.</div>
+</div>
+
+<div class="worked">
+<h3>Jockey, slowing a move before it starts</h3>
+<p class="setup">Team A's Playmaker (Pace 4) is about to be activated to move from D3. Team B's Sweeper is adjacent, at C3.</p>
+<figure id="ex-jockey-figure"></figure>
+<ol>
+<li>The instant the Playmaker is activated to move, Team B discards Jockey (cost 1): the Playmaker's Pace drops by 1 for this move only, no roll, no Discipline risk.</li>
+</ol>
+<div class="result">The Playmaker moves with Pace 3 instead of 4 this activation — a full hex less reach, timed against the Move step itself rather than any Resolution Sequence window. Its Pace is back to 4 next time it's activated.</div>
+</div>
+
+<div class="worked">
+<h3>Press, forcing a Tackle from a fresh unit</h3>
+<p class="setup">Team A's Poacher is carrying the ball at C3. Team B's Wingback, standing adjacent at D3, wasn't activated by Team B's Command Card this turn.</p>
+<figure id="ex-press-figure"></figure>
+<ol>
+<li>Team B discards Press (cost 1): force an immediate Tackle Challenge using the Wingback, even though it wasn't otherwise activated. Roll Tackle (4 dice, Attack) vs Control (5 dice, Defense).</li>
+</ol>
+<div class="result">Whatever the roll decides, Team B got a Tackle attempt in from a unit its own hand never actually reached this turn — the cost is the Flair spent, not an activation, since Press supplies one on the spot.</div>
+</div>
+
+<div class="worked">
+<h3>Foul, stopping a Dribble Challenge dead</h3>
+<p class="setup">Team A's Poacher, carrying the ball, moves B3 → C3. Team B's Sweeper stands adjacent at D3 — normally this would trigger a Dribble Challenge, Control vs Tackle.</p>
+<figure id="ex-foul-figure"></figure>
+<ol>
+<li>Instead of contesting it, Team B discards Foul (free): instantly stop the Dribble Challenge in progress. No roll at all.</li>
+<li>Draw from the 12-card Discipline Deck for the Sweeper, redrawing past any Clean Challenge — a called Foul always lands a real card (§12).</li>
+</ol>
+<div class="result">Play stops. The Poacher's move still ends on C3, but nothing was ever rolled — Foul answers the Dribble Challenge with a stoppage instead of a contest, at the cost of a guaranteed real card from the Discipline Deck.</div>
+</div>
+</section>
+
+<section id="s12">
+<h2><span class="num">12.</span> Fouls &amp; Discipline</h2>
+<p>Every Discipline draw — a Foul, a lost Tackle, a lost Strong Tackle — comes from the same single 12-card Discipline Deck:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Card</th><th>Count</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td>Warning</td><td>2</td><td>Nothing happens. Play on from a free kick at the spot of the foul.</td></tr>
+<tr><td>Advantage / Play On</td><td>1</td><td>The fouled side may ignore the stoppage and continue with the ball, in addition to the free kick being available next stoppage.</td></tr>
+<tr><td>Yellow Card</td><td>2</td><td>A real, felt sin-bin: the offending unit is pulled off the pitch immediately and misses its own side's next turn entirely, then returns at the start of the turn after that — at a touchline hex (its column's own first row, or its own last row) inside its own half, on top of a permanent Pace −1 for the rest of the match. A unit already carrying a Yellow that draws a second becomes a Red (see below) instead of a second sin-bin trip.</td></tr>
+<tr><td>Red Card</td><td>1</td><td>The offending unit is removed from the match. That side plays the remainder a unit down.</td></tr>
+<tr><td>Clean Challenge</td><td>6</td><td>No effect at all — "the challenge failed, but it wasn't misconduct." A live outcome on a standard Tackle or Strong Tackle draw; a Foul draws past it instead (see below).</td></tr>
+</tbody>
+</table></div>
+<p><strong>In the Base Game</strong> (§1), Warning and Advantage/Play On both have nothing to do — each describes playing on from a free kick, and a free kick only ever comes from the Foul Tactic Card (§11, §13), which doesn't exist there. That's 3 of 12 cards with no effect on top of Clean Challenge's 6, so a Base Game Discipline draw — always a standard lost Tackle, the only trigger it has — lands 9 in 12 nothing, 2 in 12 Yellow, 1 in 12 Red.</p>
+<p>What differs by trigger is only how many times you draw, and whether Clean Challenge is allowed to stand:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Trigger</th><th>Draws</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Standard lost Tackle (§8)</td><td>Once</td><td>Clean Challenge is a live result — 6 in 12 do nothing at all, 2 in 12 draw a Yellow, 1 in 12 an Advantage/Play On, 1 in 12 a Red.</td></tr>
+<tr><td>Lost Strong Tackle (§11)</td><td>Twice, apply both</td><td>Same deck, same odds, each of the two draws — Clean Challenge can land on either or both. The risk is the second draw itself, not a harsher deck: a genuinely harmless one is still very possible, but so is two real cards back to back.</td></tr>
+<tr><td>Foul Tactic Card (§11)</td><td>Once, redrawing past Clean Challenge</td><td>A called Foul is already an adjudicated stoppage, so it always lands a real card. Draw; if it's Clean Challenge, set it aside and draw again, repeating until a non-Clean card turns up. Among the four real outcomes the odds are 2 in 6 Warning, 1 in 6 Advantage, 2 in 6 Yellow, 1 in 6 Red — identical to the deck's own base ratio, just conditioned on landing a real card.</td></tr>
+</tbody>
+</table></div>
+<p>Physically, this is one 12-card deck, and every draw — Clean Challenges included, and every card set aside mid-redraw for a Foul — goes straight back into the deck before the next draw, not to a discard pile. Shuffle before you draw, every single time. That's deliberate: it keeps each draw a fresh, fully independent one at the odds above, so a run of Clean Challenges never makes the next draw's Yellow or Red any more or less likely, and there's nothing to card-count. Drawing a Yellow twice over on one lost Strong Tackle is a genuine, if rarer now, way to go straight from no card to a Red on a single mistimed challenge.</p>
+<div class="callout note">A Yellow Card now has a visible sign of its own — the carded unit's token comes off the board entirely for its side's next turn, sin-bin style, before it goes back on. Still tuck a small yellow marker (Token Sheet, §3) against that unit's token once it returns, for the permanent Pace −1 that has no other visible sign and lasts the rest of the match. If that same unit draws a second Yellow, it becomes a Red instead: take the marker back off, and take the unit's own token off the board for good — a Red Card needs no marker of its own, since the empty hex says everything.</div>
+
+<p><strong>Yellow Card sin-bin.</strong> The instant a first Yellow lands (§12, above), the offending unit comes off the pitch right away — it misses its own side's next turn completely, unable to be activated, moved, or counted for anything, then re-enters at the start of the turn after that on a touchline hex (its own column's first row, or its own last row) inside its own half, at its controller's choice among the legal options. The Goalkeeper is not exempt: if it's the one carded, its zone (§4) sits genuinely empty for that one turn — a real, earned risk, not something Emergency Goalkeeper (below) covers, since that rule only ever answers a full send-off, never a temporary sin-bin. It returns to its own Goalkeeper Zone specifically, not a touchline hex, the moment its turn comes back around.</p>
+
+<p><strong>Emergency Goalkeeper.</strong> If the Goalkeeper itself is sent off (a direct Red, or a second Yellow), its side immediately names one remaining outfield unit as emergency keeper, placed in any free hex of its own Goalkeeper Zone (§4) — no activation needed, right away, the same instant the Goalkeeper leaves. The side chooses which unit, the same way it chooses a kickoff-taker (§5). That unit keeps its own stats and Signature for absolutely everything else it does for the rest of the match — Pace, Control, Tackle, its own Shot if it ever gets forward again — but while it's the one covering the goal, it's confined to the Goalkeeper Zone exactly as a real Goalkeeper is, uses a flat <strong>Save 1</strong> against any Shot it faces, not the specialist's Save 3, and never gains Shot-Stopper. The assignment is permanent: once made, it doesn't move to a different unit later, even if that first deputy is itself later sent off (at which point the side names a second deputy the same way). Without this, a sent-off Goalkeeper leaves the net open for the rest of the match with no way back — decisive on its own, and not the kind of swing a single card draw should get to cause outright.</p>
+
+<h3 id="s12ex">12.5 Worked Example: Discipline</h3>
+<div class="worked">
+<h3>One Foul, four possible draws</h3>
+<p class="setup">Team B's Sweeper commits a Foul via the Foul Tactic Card on Team A's Playmaker. Stop play, shuffle the 12-card Discipline Deck, and draw — redrawing past any Clean Challenge until a real card turns up. Here's what each of the four possible outcomes actually does, and how likely each is once Clean Challenge is filtered out:</p>
+<ul>
+<li><strong>Warning</strong> — 2 in 6 — nothing happens to the Sweeper. Play restarts from a free kick at the spot of the foul — the most common, most boring outcome.</li>
+<li><strong>Advantage</strong> — 1 in 6 — Team A may ignore the stoppage and play on with the ball immediately, and the free kick is still available at the next stoppage.</li>
+<li><strong>Yellow Card</strong> — 2 in 6 — the Sweeper's Pace drops by 1 for the rest of the match, <strong>and it goes to the sin-bin immediately</strong> (§12): off the pitch for the rest of its own side's next turn, then back automatically. If they already had a Yellow, this becomes a Red instead — no sin-bin, straight off for good.</li>
+<li><strong>Red Card</strong> — 1 in 6 — the Sweeper is removed from the match entirely. Team B plays the remainder a unit down — the harshest outcome, and rare for a reason.</li>
+</ul>
+<div class="result">Same 2:1:2:1 ratio as the full deck's four real cards, just conditioned on landing one — Warning and Yellow Card are twice as likely as Advantage or Red, and Clean Challenge itself never survives to be the answer here.</div>
+</div>
+
+<div class="worked">
+<h3>A mistimed Strong Tackle, two draws deep</h3>
+<p class="setup">Team B's Wingback plays Strong Tackle against Team A's Poacher, who's carrying the ball. The roll fails.</p>
+<ol>
+<li>No stoppage, no Free Kick — the ball simply stays with the Poacher, exactly as any lost Tackle Challenge resolves (§8). The Wingback loses 1 Flair, if Team B had one banked.</li>
+<li>Because this was a Strong Tackle, shuffle the full 12-card Discipline Deck and draw twice, applying both cards to the Wingback in sequence — Clean Challenge is a live result on either draw, exactly as it would be for a standard Tackle.</li>
+</ol>
+<div class="result">First draw: Yellow Card — Wingback's Pace drops by 1, and it's sent to the sin-bin. Second draw, an instant later: another Yellow Card — since the Wingback already has one this match, it becomes a Red instead, superseding the sin-bin trip that was just about to start (a unit that's off for good was never really going to serve a temporary spell off first). One failed tackle, and Team B is down to four units, having never stopped play at all.</div>
+</div>
+
+<div class="worked">
+<h3>A standard Tackle</h3>
+<p class="setup">Team A's Sweeper attempts a standard Tackle (no Strong Tackle played) against Team B's Playmaker. The roll fails.</p>
+<ol>
+<li>No stoppage, no Free Kick — the Playmaker keeps the ball, exactly as any lost Tackle Challenge resolves (§8). The Sweeper loses 1 Flair, if Team A had one banked.</li>
+<li>Because this was a standard Tackle, shuffle the 12-card Discipline Deck and draw once.</li>
+</ol>
+<div class="result">Clean Challenge — a fair attempt that simply didn't come off. No card, no effect, nothing else happens, and the deck goes straight back to shuffled for whatever gets drawn next. Had the same roll come from a Strong Tackle instead, this would simply have been one of the two draws, with a second still to come. Had it come from a Foul, this exact draw would have been set aside and redrawn until a real card turned up instead.</div>
+</div>
+</section>
+
+<section id="s13">
+<h2><span class="num">13.</span> Set Pieces</h2>
+<p>Kept deliberately simple for this draft:</p>
+<p><strong>Free Kick:</strong> ball placed at the foul spot — the ball-carrier's hex at the moment the Foul Tactic Card was played (§11) — the only thing that ever calls a Foul (§8). If within Third 1 or Third 3 on the attacking side, a direct Shot is permitted. Otherwise it's indirect — must be Passed before a Shot may be taken. Advanced Game only: the Base Game has no Foul Tactic Card, so this section never triggers there.</p>
+<p><strong>Falling back.</strong> Before the kick, the side that committed the Foul must clear every hex adjacent to the foul spot — any of their units caught there are moved by their controller to the nearest hex outside that ring (their choice among ties), the same fall-back principle as the kickoff center circle (§8). The Goalkeeper is exempt: it may stay in its own goal box regardless of adjacency.</p>
+<p>The ball never leaves the pitch in this draft — there's no out-of-bounds check on any Pass, Dribble, or Shot, so Corners and Throw-Ins don't come up. See §16 for that as a future module.</p>
+</section>
+
+<section id="s14">
+<h2><span class="num">14.</span> The Player Roster</h2>
+<p>See the printed Player Roster for full cards. Reference:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Position</th><th>Pace</th><th>Shot</th><th>Control</th><th>Range (Pass/Shot)</th><th>Tackle</th><th>Signature</th></tr></thead>
+<tbody>
+<tr><td>Goalkeeper</td><td>3</td><td>0 / Save 3</td><td>2</td><td>2 / —</td><td>2</td><td><strong>Shot-Stopper</strong> — once per match, reroll one Blank die on your Save roll, free. Can turn a losing Save into a won one outright, and even when it doesn't, the rerolled die still counts toward the Save-retention check below (§8).</td></tr>
+<tr><td>Sweeper (Defender)</td><td>4</td><td>3</td><td>5</td><td>2 / 2</td><td>3</td><td><strong>Overlap</strong> — once per turn, when activated by a Lane or Third card, may move 1 extra hex if it ends in Third 2 (midfield) — a supporting run, not a run all the way into the scoring third; overshooting into the attacking third means the Sweeper checks itself and the extra hex is skipped. Resolved as part of that unit's normal Move step (§7 step 3), not a separate action.</td></tr>
+<tr><td>Wingback (Defender)</td><td>3</td><td>3</td><td>5</td><td>3 / 2</td><td>4</td><td><strong>Last Man</strong> — once per match, this unit (always the Wingback itself, not any other otherwise-unactivated unit the way a discarded Counter can) may make a free Tackle Challenge against an adjacent ball-carrier without spending a Counter card, timed exactly like a Counter's forced-Tackle option (§10, Resolution Sequence step 2).</td></tr>
+<tr><td>Playmaker (Midfielder)</td><td>4</td><td>4</td><td>4</td><td>4 / 3</td><td>2</td><td><strong>Vision</strong> — once per match, this unit's passes ignore one opposing Zone of Control; declare it when the Pass itself is declared (§7 step 4), skipping the contested roll entirely, the same way Through Ball does (§11).</td></tr>
+<tr><td>Poacher (Forward)</td><td>5</td><td>5</td><td>5</td><td>1 / 4</td><td>2</td><td><strong>Clinical</strong> — once per match, reroll one Blank die on a Shot; played in the post-roll window (Resolution Sequence step 4), in addition to — not instead of — any post-roll Tactic Card.</td></tr>
+</tbody>
+</table></div>
+<p><strong>Range</strong> is written <strong>Pass / Shot</strong> — two separate stats sharing one column, since both cap a straight-line hex distance the same way but for different actions (§8). <strong>Pass Range</strong> caps how far a unit can Pass; the Playmaker is the roster's only real distributor, the Poacher barely passes at all, which is the point. <strong>Shot Range</strong> caps how far a unit's Shot can reach the net (§4) — deliberately narrow-banded (2–4) so it sharpens the roster's identities without overshadowing the Shot stat itself as the main measure of finishing quality: only the Poacher can threaten from the maximum distance, while both Defenders need to be almost on top of the net to get a shot away at all.</p>
+<p>Pace is deliberately uneven again: Goalkeeper and Wingback 3, Sweeper and Playmaker 4, Poacher 5. An earlier draft had flattened everyone to Pace 3, after playtesting found the pitch too slow to cross with a flat Pace 2 across the board — but with the board itself now smaller (§4) and every position moving freely, a flat pace made the roster feel uniform in a way that undersold real football, where a stay-at-home defender and a Goalkeeper are rarely the quickest players on the pitch, and a poacher's whole game is built on getting somewhere before the defense does. Splitting Pace back out restores that identity without reopening the original too-slow problem, since the pitch itself already does the work the flat Pace 3 used to. The Sweeper and Wingback swapped which one of them carries the higher number in a later pass — see below. Every position then moved <strong>+1 again</strong> in a later pass (Goalkeeper and Wingback 2→3, Sweeper and Playmaker 3→4, Poacher 4→5), once a direct n=1000-vs-n=1000 comparison found it raised goals/match 2.667→2.956 (+11%, via more shots taken rather than either contest getting easier — shot conversion, tackle win rate, and dribble win rate all stayed close to flat) at the cost of an already-high red-card rate climbing further (sent-off/match 0.75→0.83, more mobility meaning more contests meaning more Discipline draws). It also nudged the roster's balance the right way without anyone touching Control or Tackle again: Poacher's goal share fell from 55.6% to 49.5% while the Sweeper and Wingback both picked up share, since a flat +1 is a proportionally bigger boost to the slower positions than to the Poacher. The relative spread argued for above is unchanged — only the absolute numbers moved.</p>
+<p>Shot has now been raised twice. The first pass put it <strong>+1 across every outfield position</strong> from the roster's original numbers (Sweeper and Wingback 1→2, Playmaker 2→3, Poacher 3→4; the Goalkeeper's Shot stays 0 — it isn't a scoring threat), after playtesting kept finding the same shape: sides could reliably fight their way to a shooting position, but the shot itself lost to the Goalkeeper's Save far more often than it should have, especially for anyone who wasn't the Poacher. A second pass went <strong>+1 again</strong> for every outfield position (2→3, 2→3, 3→4, 4→5), once a larger playtesting batch confirmed that shots/match had plateaued even after every other lever — the bottleneck had moved from "can a side reach a shooting position" to "does the shot itself pay off once taken." Shot was the cleanest stat to raise again: it's the only dice-count stat in the game used purely by an attacker and never as anyone's defensive dice in any other Challenge, so unlike Control (below) it costs nothing on defense. Neither pass touched Save, so a Goalkeeper is still the best defensive stat on the roster.</p>
+<p>Control has moved three times, for three different reasons. The first pass brought the Playmaker up (3→4) after playtesting found a fact that only showed up at real batch volume: Control, not Shot, is what actually decides <em>who gets to shoot in the first place</em>, since it's the die a ball-carrier rolls to win a Dribble Challenge and reach Shot Range at all — a position with a strong Shot stat but a middling Control stat can end up barely shooting in practice, however good it looks on the card. A second pass, once the Base Game's Tactic Deck was removed entirely (see below), raised the Sweeper, Wingback, and Poacher by <strong>+2 each</strong> (2→4, 3→5, 3→5) to replace what Nutmeg and Step-Over — both Tactic Cards that rescue a losing Dribble Challenge — had been doing for those three positions' own dribble survival; removing the deck without some compensation measurably flattened the game (goals/match 1.90→1.68 at N=200, driven almost entirely by dribble win rate falling 55.4%→44.3%). The Playmaker was deliberately left out of this second pass: an earlier flat +1-for-everyone version recovered the missing scoring just as well, but made the Playmaker's existing dominance <em>worse</em>, not better (its own share of the team's shots rose from 70.6% to 75.7%) — which surfaced a separate, useful finding not yet fully resolved: the Playmaker's advantage was never really about holding the roster's single highest Control number on its own, it was substantially about opportunity too — which position's starting spot and formation role puts it on the ball most often in the first place. Weighting the second pass toward the other three instead recovered most of the missing scoring (goals/match back to roughly 1.85–1.95, dribble win rate back to 53–56% across repeated N=200 runs) while pulling the Playmaker's own share down toward two-thirds of the team's shots or less — the best result on both fronts of everything tested. The net shape at the time: the Wingback and Poacher (5 each) held the roster's highest Control, ahead of the Playmaker and Sweeper (4 each) — a genuine reordering from the roster's original shape (a third pass, below, later brought the Sweeper up to that same 5). And because Control also defends a Tackle Challenge (it's the ball-carrier's own die when someone tries to dispossess them), this is a real cost as well as a benefit, not a free lunch: Tackle win rate fell further as a result (25.9% with the Tactic Deck simply removed and no retune, down to roughly 19–20% here) — Zone of Control and the escape-hex rule (§9) were already doing most of defense's real work rather than tackling, which is the only reason this reads as an acceptable trade rather than a broken one. A third pass followed once Counter (§10) was actually implemented in the test drivers — previously the Base Game's only remaining reaction, never modeled at all — and a fresh batch found dribble win rate at just 48.4%, below the 53–56% the second pass above had been measured against. That target was always provisional: it came from a driver later found to be missing Counter and three other fixes, so it moved once they landed. The same lever, extended: Sweeper up from 4 to 5, the last point of headroom left under the roster's own 0–5 ceiling (§8) — Wingback and Poacher were already there, with nowhere further to go without redefining that ceiling itself. Landed at dribble win rate 51.5%, still short of 53–56%, and Tackle win rate down again to 15.8% for the same reason as the second pass. Kept anyway, and left there: 48–52% is treated as the correct figure for this ruleset as it actually stands today, not a shortfall against a target measured on an earlier, less complete version of it.</p>
+<p>Pass Range moved alongside Control for the same two positions: Playmaker 3→4, Wingback effectively 2→3 (Sweeper and Poacher unchanged). The Playmaker's extra reach matches its own strong Control and its existing Vision Signature — it was already the roster's one real distributor, and this widens that lane further. The Wingback's extra reach came along with the rest of its new stat line in the swap below, not as an independent design choice.</p>
+<p>Tackle has now moved three times. The original change brought the Goalkeeper, Playmaker, and Poacher <strong>up from 1 to 2</strong>: at Tackle 1, three of the five positions were winning a standing Tackle Challenge against a typical Control-2 ball-carrier roughly 1 time in 7, and playtesting kept producing long runs where a Tackle simply never came off no matter who attempted it. That reasoning still holds for why those three sit at 2. The second change was the Sweeper and Wingback's full stat-line swap (below): the Sweeper had been the roster's one Tackle specialist at 3 while the Wingback held the middle at 2; the swap moved the Sweeper down to 2 and the Wingback up to 3, making the Wingback the specialist instead. A third pass, prompted by a direct question about a Poacher's actual odds dribbling past a Sweeper (roughly 65% at the numbers the second pass left behind — 5 Control dice against 2 Tackle dice — with the reverse, a Sweeper actively Tackling a Poacher, only about 11%), raised the Sweeper and Wingback again, <strong>+1 each</strong> (2→3, 3→4). Two things were tried and rejected first: cutting their Control by the same amount Tackle went up (keeping a "budget" roughly level) and a blanket cap on every dice-count stat at 4 — both made the roster's biggest existing problem worse, not better, by leaving the Playmaker's own numbers untouched while weakening everyone competing with it for the ball, which simply routed more of the team's scoring through the Playmaker rather than less. Raising Tackle in isolation, Control and everything else left alone, did the opposite: two N=200 batches (pooled N=400) measured tackle win rate 17.3%→18.5%, the Playmaker's goal share 51.6%→47.6% — below half, for the first time any change to this roster has managed it — and the Sweeper's own share up to 30.8%. The mechanism: winning more Tackle Challenges means the Sweeper and Wingback pick up the ball (and its free follow-up Pass) themselves more often, which turns out to move scoring away from the Playmaker more effectively than anything done to Control ever did. Real cost: goals/match fell from 2.15 to roughly 1.95, noisier between the two batches (2.06 and 1.84) than the win-rate or share numbers were. Tackle still isn't meant to be a reliable way to win the ball back on its own even at these numbers — Zone of Control and the escape-hex rule (§9) are still doing most of that work by design.</p>
+<p>Shot Range is <strong>up by 1 for every outfield position</strong> (Sweeper and Wingback 1→2, Playmaker 2→3, Poacher 3→4; the Goalkeeper has none, as before). This corrects a real gap between the printed rule and how distance was actually being measured: §8 is explicit that Shot Range has to reach <strong>the net</strong>, not the goal box — but the net sits one hex further out than the box on every line that reaches it (§4), and Shot Range was being checked against the box instead, one hex short of what the rule itself already said. The +1 restores the exact same practical shooting distances that were already in play before the fix (nothing about the roster's shape changes), while finally measuring what the rulebook always claimed it measured. It surfaced one genuine bonus along the way: because the net is forced into the same short-column offset as B, D, F, H, and J, a handful of hexes in those columns — directly in line with the net despite never having a straight line to the box itself — now open up as legitimate, if narrow, shooting angles that didn't exist under the old approximation. Nothing to rebalance around; just a real seam in the geometry the net's own shape was always going to create once measured properly.</p>
+<p>The Sweeper and Wingback had their <strong>entire stat lines swapped</strong> — Pace, Shot, Control, Pass Range, and Tackle all traded at once, purely for thematic reasons rather than a balance finding on its own. The Sweeper becomes the quicker, more progressive outlet who steps into the build-up (Pace 3 at the time of the swap itself, Shot 3 — Pace since raised to 4, see above) at the cost of its former standing-tackle specialism (Tackle down to 2 at the time of the swap itself — since raised back to 3, see above); the Wingback becomes the more physically committed, positionally disciplined defender (Tackle 3, Pass Range 3, and Control 3 at the time of the swap itself — Tackle since raised further to 4 and Control to 5, both above) at the cost of the pace it used to break forward with (Pace down to 2 at the time of the swap itself — since raised to 3, above). Their Signatures moved with them: <strong>Last Man</strong> (built around a big Tackle number) now belongs to the Wingback, and <strong>Overlap</strong> (built around bursting forward with Pace) now belongs to the Sweeper, so both abilities once again sit on the position whose stat line actually supports them.</p>
+
+<h3>One Roster, For Both Tiers, For Now</h3>
+<p>Hexside can be played two ways: the <strong>Base Game</strong> — everything in this rulebook except the Tactic Deck (§11) — or the <strong>Advanced Game</strong>, which adds that deck back in for players who want the extra layer of hand management and split-second reaction cards. Command Cards, dice, Discipline, the sin-bin, Goalkeeper confinement, Signatures — all of it is identical between the two. At this stage, so is the Player Roster above: rather than tune two rosters at once, the Advanced Game currently plays the exact same numbers as the Base Game, kept deliberately unified while the Base Game is validated on its own as a complete, standalone game first.</p>
+<p>This is very likely temporary, not a final call. The Control bump above exists specifically to replace what Nutmeg and Step-Over gave those three positions in the Advanced Game; stacking it <em>underneath</em> the full Tactic Deck — where Nutmeg and Step-Over are both still doing that same job on top — means the Advanced Game is likely to run hotter than its own earlier numbers did, not yet measured. Expect the two rosters to diverge again once the Tactic Deck itself gets tailored for Advanced play specifically, rather than just carried over unchanged from before this roster existed.</p>
+<p>The Wingback remains the roster's least-involved position in practice regardless of any of the above — that appears to be a separate issue (its starting position and role in the default formation, not its Control) and isn't something this roster resolves on its own.</p>
+
+<h3>Character Skins (Optional)</h3>
+<p>Hexside can also be played with <strong>Character Skins</strong> — twelve alternate Player Roster cards (<code>hexside-character-cards.html</code> / <code>.pdf</code>), amateur five-a-side archetypes rather than clean footballing roles. Before setup (§5), each side may independently swap in <strong>up to one alternate per slot</strong> — none, one, or all five — keeping the standard card for any slot it skips. Both sides choose in secret, the same way a hand of cards stays hidden, and neither side sees or has to match the other's picks before kickoff.</p>
+<p>Every skin keeps its slot's own role and formation restrictions (§5) unchanged. Each is built from exactly two ingredients: a small stat delta from that slot's standard line, kept inside the ranges already established above, and a themed <strong>replacement Signature</strong> that reuses the same once-per-match or once-per-turn slot the standard Signature already occupies — never a new mechanic layered on top. A side fielding "The Wall" instead of the standard Goalkeeper still has exactly one Goalkeeper Signature available per match; it just does something different.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Slot</th><th>Character</th><th>Replaces</th><th>Signature</th></tr></thead>
+<tbody>
+<tr><td>Goalkeeper</td><td>&ldquo;The Wall&rdquo;</td><td>Shot-Stopper</td><td><strong>Immovable</strong> — reroll up to 2 Blank Save dice (base: 1).</td></tr>
+<tr><td>Goalkeeper</td><td>&ldquo;Sunday Ederson&rdquo;</td><td>Shot-Stopper</td><td><strong>Playing Out</strong> — once/match, leaves its zone for one activation, then must get back next turn or draws a Yellow Card (§12).</td></tr>
+<tr><td>Sweeper</td><td>&ldquo;Big Dave&rdquo;</td><td>Overlap</td><td><strong>No Way Through</strong> — once/match, auto-win a Tackle, no roll — but draws Discipline twice regardless.</td></tr>
+<tr><td>Sweeper</td><td>&ldquo;Uncle Barry&rdquo;</td><td>Overlap</td><td><strong>Reads the Game</strong> — once/match, a free Jockey (§11) on an adjacent opponent's move — no Flair, no card.</td></tr>
+<tr><td>Sweeper</td><td>&ldquo;Gaffer&rdquo;</td><td>Overlap</td><td><strong>Marshalled</strong> — once/match, one other friendly unit may act as though also activated this turn.</td></tr>
+<tr><td>Wingback</td><td>&ldquo;The Engine&rdquo;</td><td>Last Man</td><td><strong>Gasser</strong> — standing &minus;1 Pace from the start of the second half.</td></tr>
+<tr><td>Wingback</td><td>&ldquo;Dodgy Knee&rdquo;</td><td>Last Man</td><td><strong>One More Run</strong> — once/match, ignore a Zone of Control — then &minus;1 Pace for the rest of that half.</td></tr>
+<tr><td>Playmaker</td><td>&ldquo;Roy&rdquo;</td><td>Vision</td><td><strong>Sees Red</strong> — once/match, +1 Attack die on a Tackle — but draws Discipline twice if it's lost.</td></tr>
+<tr><td>Playmaker</td><td>&ldquo;Magic&rdquo;</td><td>Vision</td><td><strong>Showman</strong> — once/match, the next Nutmeg or Step-Over costs 1 less Flair. Advanced Game only (§11) — the Base Game deals no Tactic Cards, so this never triggers there.</td></tr>
+<tr><td>Poacher</td><td>&ldquo;Flash&rdquo;</td><td>Clinical</td><td><strong>Out of Nowhere</strong> — once/match, ignore a Zone of Control — but can't Shoot that same activation.</td></tr>
+<tr><td>Poacher</td><td>&ldquo;Me!&rdquo;</td><td>Clinical</td><td><strong>Main Character</strong> — once/match, reroll <em>all</em> Blank dice on a Shot (Clinical rerolls only 1).</td></tr>
+<tr><td>Poacher</td><td>&ldquo;The Wardrobe&rdquo;</td><td>Clinical</td><td><strong>Immovable Object</strong> — once/match, cancel 1 attacker Success on an incoming Tackle Challenge.</td></tr>
+</tbody>
+</table></div>
+<p>Full flavor text and stat lines are on the printed cards. Nothing here changes how a slot drafts or moves (§5, §7&ndash;9) — only its numbers and its one Signature.</p>
+</section>
+
+<section id="s15">
+<h2><span class="num">15.</span> Winning</h2>
+<h3>Halftime</h3>
+<p>At the midpoint of the match — turn 12 a side for the standard 24, or the midpoint of whatever shorter length you've agreed — play stops and the two sides swap ends. Restart exactly as a normal kickoff (§5, §8): formations reset, the center circle clears, and the side that didn't take the opening kickoff takes this one. <strong>Third 1, Third 2, and Third 3 are fixed to their columns</strong> (A–D, E–G, H–K) for the whole match — halftime never renames them, and a Command Card naming a Third or Zone doesn't care which end anyone is currently defending. What changes at the swap is only which team defends which end: Third 1 becomes Team B's goal end instead of Team A's, and any rule phrased around <em>your own</em> third rather than a printed Third number — Free Kick's direct/indirect split (§13), for instance — follows the team, not the column: after the swap it means Third 1 for Team B, Third 3 for Team A.</p>
+<h3>Full Time</h3>
+<p>Most goals when the turn tally runs out (24 turns a side, or your agreed shorter length) wins. Level scores: play a sudden-death extra 4 turns each; still level, it's a draw — Hexside doesn't need penalties to be decided, but a Shoot-Out module is a natural first expansion (see §16).</p>
+</section>
+
+<section id="s16">
+<h2><span class="num">16.</span> Ideas for Later</h2>
+<p>Not needed to playtest v0.3.1:</p>
+<ul>
+<li>A Clock Deck replacing the flat turn count, so match length varies slightly game to game.</li>
+<li><strong>Asymmetric rosters</strong> (right now both sides use the same Player Roster). The Tactic Card table's <code>Tag</code> column is already seeded for this — a design note for future faction variants, not a rule in this draft. Directions: different Pace/Pass Range/Shot Range/Control/Tackle/Shot spreads per side (a high-press team vs. a low-block team); swapping 3–4 cards in each side's Tactic deck for faction-flavored ones (possession leans Nutmeg/Step-Over/One-Two, counter-attacking leans Press/Strong Tackle/Long Ball); different Signatures on the same positions, so a Playmaker isn't always Vision.</li>
+<li><strong>Weather</strong> — a Chalk Card drawn at kickoff. Wet pitch: −1 Control dice pool-wide, plus nastier Dribble Challenge spillage. Heavy/muddy pitch: −1 Pace pool-wide. Wind: affects Shot or Long Ball specifically, not everything uniformly.</li>
+<li>Penalty Shoot-Out module for level matches.</li>
+<li><strong>Out-of-bounds</strong> &amp; the set pieces that follow from it (Corner, Throw-In) — needs a rule for the ball actually leaving the pitch before either can trigger.</li>
+<li><strong>More Tactic Cards.</strong> A card that directly targets the stalling problem noted elsewhere in this draft — something that rewards patience for the trailing side specifically. "Killer Pass" — ignores Pass Range only, not Zone of Control, a cheaper narrower cousin of Long Ball. (No headers or aerial-play cards — that's a deliberate exclusion, not an oversight; see §8.)</li>
+</ul>
+</section>
+
+<section id="s17">
+<h2><span class="num">17.</span> Prototype Build Guide</h2>
+<p>For your first playtest:</p>
+<ol class="steps-num">
+  <li>Print the Command, Player, Tactic, and Discipline decks (card sheet, 11 pages total: 4 Command, 1 Player, 3 Tactic, 2 Discipline &amp; Reference, 1 Backs) on cardstock, or regular paper glued to spare playing cards for shuffle-feel. Print the <strong>4 Command pages and 3 Tactic pages twice each</strong> — one private deck per side, so both players can hold a hidden hand (§3). The Player, Discipline &amp; Reference, and Backs pages print once. The Backs sheet itself prints one design per deck, once each — reprint it as many times as that deck needs (36&times; for Command, for example, on top of the &times;2 above) if you want every card backed, or skip backs altogether for a first prototype.</li>
+  <li>Cut along the guides. A cutting mat and ruler beats scissors for straight edges the deck will hold up to.</li>
+  <li>Print the Match Pitch sheet — one landscape sheet, true to scale at 100% — and the Token Sheet for your player and ball tokens.</li>
+  <li>Grab 8 d6s (two colors, four each), and you have a full game.</li>
+</ol>
+<p>Playtest the core loop first — Command Card → activate → move → one action — before worrying about Tactic Cards, Fouls, or Set Pieces. Add those layers back in once the base turn feels right at your table. That first playtest already has a name: it's the <strong>Base Game</strong> (§1), a complete way to play in its own right rather than just a training step — the Player Roster above already reflects it. Skip printing the Tactic deck's 3 pages (and cut step 1's Command/Tactic total down to just the Command pages, doubled) if you're starting there. If the two tiers' rosters ever diverge again (§14), you'll need a second Player page carrying the Base Game's own numbers; right now the one page serves both.</p>
+</section>
+
+<section id="s18">
+<h2><span class="num">18.</span> Glossary</h2>
+<p>Every load-bearing term in one place, A–Z. This doesn't replace the sections it links to — it's for the moment mid-game where you remember a word but not which section defined it.</p>
+<dl class="glossary">
+<dt>Act</dt><dd>The one thing (Pass, Shot, or Tackle) an activated unit may do on a turn — once, by one unit, or by two different units on a Full Press turn. Optional; a unit that moves need not Act. See §7.</dd>
+<dt>Activate</dt><dd>What a Command Card does: names the set of your units allowed to move and/or Act this turn. Units not named stand still — except your ball-carrier, if you have the ball, which is always activatable regardless of what the card names. See §6.</dd>
+<dt>Attack die</dt><dd>One of the two d6 types. Faces: Blank / Flair / Goal-Success. Rolled by whichever side is attacking in a given contest — not always the side with the ball (a Tackle rolls the tackler's dice as Attack). See §8.</dd>
+<dt>Ball, carried</dt><dd>The ball is in a unit's possession and moves with it automatically. On the table: the "Ball" token sits on top of that unit's token. See §8.</dd>
+<dt>Ball, loose</dt><dd>The ball sits on a hex with no unit in possession — claimed by whichever side activates a unit onto (or already standing on) that hex next. On the table: the ochre-rimmed "Loose Ball" token. See §8.</dd>
+<dt>Bounce Pass</dt><dd>A Pass played off a side or back wall instead of straight at a teammate, reflecting once — both legs together count against Pass Range, and neither is contested by Zones of Control. A3/A4/K3/K4 have no wall at all: a line reaching one of them continues into the Net instead, resolved as a Shot. See §8.</dd>
+<dt>Character Skin</dt><dd>An optional alternate Player Roster card for one slot — same role and formation restrictions as the standard card it replaces, plus a small stat delta and a themed Signature. Up to one per slot, chosen independently and in secret by each side before setup. See §14.</dd>
+<dt>Clean Challenge</dt><dd>A no-effect Discipline card — 6 of the Discipline Deck's 12 — live on any standard Tackle or Strong Tackle draw: "the tackle failed, but it wasn't a foul." A Foul draws past it instead, redrawing until a real card comes up. See §8, §12.</dd>
+<dt>Clearance</dt><dd>A Pass to an empty hex instead of a teammate — same Pass Range, same contest rule, but nobody's there to receive it, so the ball becomes loose wherever it lands. See §8.</dd>
+<dt>Command Card</dt><dd>One of the <strong>36</strong> cards in your hand; playing one each turn is what activates your units. The whole engine of the game. See §6.</dd>
+<dt>Composure</dt><dd>An Attack Tactic Card, 1 Flair: reroll up to 1 die from a Shot just taken, the same post-roll timing as Step-Over. Replaces Advantage Play. See §11.</dd>
+<dt>Control</dt><dd>A Player Roster stat — the dice a unit rolls in a contested Pass or a Dribble Challenge. See §14.</dd>
+<dt>Counter</dt><dd>A Command Card that's never played on your own turn — held, then discarded on the opponent's turn to force a Tackle Challenge or add a Defense die. See §10.</dd>
+<dt>Cycling</dt><dd>Discarding a dead card for a fresh draw. For a Command Card, instead of playing one — no units activate, move, or act that turn (§6). For a Tactic Card, once per turn for 1 Flair, on top of whatever else you do (§11). Always legal, not just when your hand is unplayable.</dd>
+<dt>Defense die</dt><dd>The other d6 type. Faces: Blank / Flair / Save-Stop. Rolled by whichever side is defending in a given contest. See §8.</dd>
+<dt>Discipline Deck</dt><dd>The single 12-card deck every Discipline draw comes from — Warning&times;2, Advantage/Play On&times;1, Yellow Card&times;2, Red Card&times;1, Clean Challenge&times;6. Draw once for a standard lost Tackle, twice for a lost Strong Tackle, once (redrawing past Clean Challenge) for a Foul. Shuffled and returned to after every draw, so no draw is ever affected by what came before. See §8, §12.</dd>
+<dt>Dribble Challenge</dt><dd>The contest triggered when a ball-carrier moves into or through an opposing unit's Zone of Control. A cost of movement, not the turn's Act. Lose, and it's a heavy touch: the carrier's move still ends on the contested hex, but the ball itself drops one hex back, onto unoccupied ground either side can claim. See §8, §9.</dd>
+<dt>Emergency Goalkeeper</dt><dd>The outfield unit a side names to replace a sent-off Goalkeeper, placed in the goal box immediately, no activation needed. Keeps its own stats and Signature otherwise, but uses a flat Save 1 and never gains Shot-Stopper. Permanent once named. See §12.</dd>
+<dt>Escape hex</dt><dd>At least one hex adjacent to the ball-carrier that must always stay unoccupied — the defending side may never voluntarily close the last one with its own Move. Ordinary pressing is untouched; only total encirclement is illegal. See §9.</dd>
+<dt>Flair Point</dt><dd>A shared per-side resource (cap 5), banked from Flair symbols rolled and spent to play Tactic Cards. Also docked 1 automatically on a lost Tackle Challenge, if you have one to lose. See §8, §11.</dd>
+<dt>Foul</dt><dd>A stoppage for a Free Kick, drawing from the Discipline Deck (redrawing past any Clean Challenge, so it always lands a real card) — caused only by the Foul Tactic Card. A lost Tackle Challenge (Strong Tackle included) draws from Discipline too, but never stops play, so it's never itself a Foul. See §8, §12.</dd>
+<dt>Free Kick</dt><dd>The one Set Piece that exists in this draft — ball placed at the foul spot, direct or indirect depending on Third. See §13.</dd>
+<dt>Goal box</dt><dd>Same area as the Goalkeeper Zone — the two terms are interchangeable. See Goalkeeper Zone, §4.</dd>
+<dt>Goalkeeper Zone</dt><dd>Three hexes per end, a.k.a. "the goal box": the two goal-mouth hexes (A3/A4 or K3/K4, sitting squarely on the Top/Bottom boundary — A3 is Top, A4 is Bottom) plus one bordering seam-column hex (B3 or J3, itself a seam-row hex, reachable by either Lane card). The Goalkeeper (or its Emergency deputy) may never move outside its own zone; no opposing unit may ever enter it. Also the area a Save-rebound must land outside of to be genuinely contestable. See §4, §5, §8.</dd>
+<dt>Halftime</dt><dd>At the match's midpoint, both sides swap ends and restart exactly as a kickoff — the side that didn't open the match kicks off this one. See §15.</dd>
+<dt>Jockey</dt><dd>A Defense Tactic Card, 1 Flair: reduces an opposing unit's Pace by 1 for its current move only, if you have a unit adjacent to it the instant it's activated. No roll, no Discipline risk. Timed against the Move step itself, not a Resolution Sequence window. See §10, §11.</dd>
+<dt>Kickoff</dt><dd>The restart at match start, after every goal, and at halftime — the non-kicking side must clear the 7-hex center circle first. The taker's entire activation is a single Pass to a teammate within Pass Range, straight from F3 — no Move first, no Clearance, no Shot or Tackle — mirroring real football's rule against touching the ball twice in a row. See §5, §8, §15.</dd>
+<dt>Lane</dt><dd>One of two width-wise bands (Top / Bottom) a Command Card can name, split exactly on the board's physical centerline. See §4.</dd>
+<dt>Net</dt><dd>Three hexes beyond each goal box — the actual target a Shot has to reach. No-entry: no unit may ever occupy a net hex. See §4.</dd>
+<dt>Pace</dt><dd>A Player Roster stat — hexes a unit may move per turn. See §14.</dd>
+<dt>Pass Range</dt><dd>A Player Roster stat — maximum hex distance for a Pass, counted straight-line. Written as the first number of the roster's Range column. Shots use the separate Shot Range stat instead. See §14.</dd>
+<dt>Resolution Sequence</dt><dd>The shared six-step procedure every contested roll — a Dribble Challenge or an Act — resolves through: Tactic Card, opponent's Reaction, Roll, post-roll Tactic Card, opponent's post-roll Reaction, apply result. See §7.</dd>
+<dt>Save</dt><dd>Any Shot that doesn't beat the Goalkeeper's Defense roll — including a flat 0–0 tie. A Flair among the Save dice means the Goalkeeper holds on outright (Save-retention); otherwise the ball spills loose just outside the Goalkeeper Zone, not automatically anyone's. See §8.</dd>
+<dt>Seam column</dt><dd>Column D or column H — the frontmost column of Third 1 or Third 3, bordering Third 2. Stays in its own Third for every non-activation purpose, but a Third-2 Command Card (and Third 2's own Zone cards) can also activate units standing there. See §4, §6.</dd>
+<dt>Seam row</dt><dd>Row 3 of a short column (B3, D3, F3, H3, J3) — sits exactly on the Top/Bottom boundary, so it belongs to both lanes at once rather than one. Answers to either Lane card and either of its Third's two Zone cards. The width-wise twin of a seam column. See §4.</dd>
+<dt>Set Piece</dt><dd>A restart other than open play or kickoff. Only the Free Kick exists in this draft — the ball never leaves the pitch, so Corner and Throw-In don't come up. See §13, §16.</dd>
+<dt>Shot</dt><dd>The Act of attempting a goal from within Shot Range of the opposing net. Automatic if the opposing Goalkeeper Zone is empty of defenders; otherwise rolled, Shot vs. Save. See §8.</dd>
+<dt>Shot Range</dt><dd>A Player Roster stat — maximum hex distance for a Shot to reach the net, counted straight-line. Written as the second number of the roster's Range column. Separate from Pass Range. See §14.</dd>
+<dt>Signature</dt><dd>A roster position's unique ability — Shot-Stopper, Last Man, Overlap, Vision, Clinical for the standard five, or a themed replacement if a Character Skin is in use instead. Each has an explicit place in the turn sequence. See §14.</dd>
+<dt>Sin-bin</dt><dd>A first Yellow Card's immediate effect: the carded unit comes off the pitch for its side's next turn, then returns at a touchline hex. Stacks with the existing permanent Pace −1. See §12.</dd>
+<dt>Tackle</dt><dd>The Act of an activated unit, adjacent to an opposing ball-carrier, attempting to win the ball. A win grants a free follow-up Pass; a loss draws once from the Discipline Deck, on top of the usual 1-Flair cost. See §8.</dd>
+<dt>Tackle Challenge</dt><dd>The forced-contest mechanic behind a discarded Counter, the Last Man signature, and the Press Tactic Card — a Tackle attempted by a unit that wasn't (or couldn't be) otherwise activated. A win grants the same free follow-up Pass a standard Tackle does. See §10.</dd>
+<dt>Tactic Card</dt><dd>One of the 26 cards, paid for with Flair, that modify an action before or after it's rolled. See §11.</dd>
+<dt>Third</dt><dd>One of three length-wise bands (1 / 2 / 3) a Command Card can name; also the basis for the goal boxes and Free Kick's direct/indirect split. Columns D and H are seam columns, reachable by a Third-2 card too. See §4.</dd>
+<dt>Through on Goal</dt><dd>+1 Attack die to a Shot, if the shooting unit itself won the Dribble Challenge that carried it into position, earlier in the same activation. Belongs to that one unit and that one Shot only — doesn't transfer on a Pass, and doesn't stack on a second won Dribble Challenge. See §8.</dd>
+<dt>Turn</dt><dd>One player's full cycle: play a Command Card (or Cycle one) → Activate → Move → Act → Discipline check → draw back up. See §7.</dd>
+<dt>Unit</dt><dd>One of the five figures per side — Goalkeeper, Sweeper, Wingback, Playmaker, Poacher. See §14.</dd>
+<dt>Zone</dt><dd>One Third × one Lane (six total) — the finest thing a Command Card can name. Each gets its own card; Third 2's two Zone cards also reach columns D and H (the seam columns), on whichever lane a unit there actually stands in. See §4, §6.</dd>
+<dt>Zone of Control</dt><dd>The six hexes surrounding a unit. Threatens only an opposing ball-carrier moving into or through it — a unit without the ball passes through freely. See §9.</dd>
+</dl>
+</section>
+
+<footer class="book">Hexside · Draft v0.3.1 prototype · reconstructed edition</footer>
+</div>
+
+<script>
+// ---------- shared hex geometry, verified against this book's own worked examples ----------
+const COLS = "ABCDEFGHIJK";
+function isShort(col){ return COLS.indexOf(col) % 2 === 1; }
+// Short columns run rows 0-6: the 5 original full hexes (1-5) plus a half-height cap at
+// row 0 and row 6 that squares the column off flush with its tall neighbors instead of
+// leaving the top/bottom edge recessed by half a hex (§4). Tall columns are unchanged (1-6).
+function minRow(col){ return isShort(col) ? 0 : 1; }
+function maxRow(col){ return 6; }
+function rowsInCol(col){ return maxRow(col) - minRow(col) + 1; }
+// Flat-top hexes, R = center-to-vertex radius. For these to actually tessellate:
+// row spacing (within one column) = R*sqrt(3); a short column nests between its tall
+// neighbors by offsetting half that. dY returns this in units of R (see center()).
+const ROWSTEP = Math.sqrt(3);
+function dY(col,row){ return row * ROWSTEP + (isShort(col) ? ROWSTEP/2 : 0); }
+function center(col,row,R,ox,oy){
+  const x = ox + COLS.indexOf(col) * R * 1.5;
+  const y = oy + dY(col,row) * R;
+  return {x,y};
+}
+function el(tag, attrs, parent){
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function hexPoints(cx, cy, R){
+  // Flat-top: vertices at 30/90/150/210/270/330 degrees, not 0/60/... (which draws a
+  // pointy-top hex instead - the orientation this board's column-offset math needs).
+  // 0.95 is a deliberate small shrink from the true tessellating size, purely so
+  // adjacent hex outlines don't touch pixel-to-pixel; spacing above uses the full R.
+  const pts = [];
+  for (let i=0;i<6;i++){
+    const a = Math.PI/180 * (60*i + 30);
+    pts.push([cx + R*0.95*Math.sin(a), cy - R*0.95*Math.cos(a)]);
+  }
+  return pts.map(p=>p.join(',')).join(' ');
+}
+function hexHalfPoints(cx, cy, R, half){
+  // Top or bottom half of a flat-top hex, split exactly at its own vertical center -
+  // which is exactly where the left (270deg) and right (90deg) vertices already sit,
+  // so the split needs no new intersection math, just picking 4 of the 6 vertices.
+  const angles = half === 'top' ? [330,30,90,270] : [210,150,90,270];
+  return angles.map(a => {
+    const rad = Math.PI/180 * a;
+    return [cx + R*0.95*Math.sin(rad), cy - R*0.95*Math.cos(rad)].join(',');
+  }).join(' ');
+}
+function capPoints(cx, R, half, flushOuterY, flushInnerY){
+  // Row 0/row 6 caps need their outer edge (facing the tall neighbors) to land exactly on
+  // those hexes' own shrunk edge, and their inner edge (facing their own column's first/
+  // last full hex) to land on THAT hex's own shrunk edge. hexHalfPoints can't guarantee
+  // either: its 90/270deg ("point") vertices aren't moved by the shrink factor in Y at all
+  // (cos(90deg)=0), while its 330/30/210/150deg ("flat edge") vertices are (cos(30deg)!=0)
+  // - so a naive half-hex undershoots the true flush line by a small but clearly visible
+  // amount (confirmed empirically: adjacent tall/cap top edges differ by ~0.6px, reading as
+  // a zigzag along what's supposed to be one dead-straight line). Taking each neighbor's
+  // own already-correct edge Y in directly, rather than re-deriving it from this hex's own
+  // center, guarantees an exact match on both edges - this is no longer a simple rotation
+  // of hexPoints' vertex angles, so it's built explicitly instead.
+  const outerHalf = R*0.95, innerHalf = R*0.95*0.5;
+  const pts = half === 'bottom'
+    ? [[cx-outerHalf,flushOuterY],[cx+outerHalf,flushOuterY],[cx+innerHalf,flushInnerY],[cx-innerHalf,flushInnerY]]
+    : [[cx-innerHalf,flushInnerY],[cx+innerHalf,flushInnerY],[cx+outerHalf,flushOuterY],[cx-outerHalf,flushOuterY]];
+  return pts.map(p=>p.join(',')).join(' ');
+}
+function hexClipPoints(cx, cy, R, side){
+  // Column A/K's own outer point cut into a flat vertical edge, so the pitch's left/right
+  // sides read as straight lines the same way the top/bottom do (via hexHalfPoints above).
+  // 'left' drops the left (270deg) point, replacing it with the straight edge between the
+  // upper-left (330deg) and lower-left (210deg) vertices - those two already share the
+  // same x, so (exactly like hexHalfPoints) this needs no new intersection math, just a
+  // 5-of-6 vertex list. 'right' is the mirror, dropping the right (90deg) point instead.
+  const angles = side === 'left' ? [30,90,150,210,330] : [30,150,210,270,330];
+  return angles.map(a => {
+    const rad = Math.PI/180 * a;
+    return [cx + R*0.95*Math.sin(rad), cy - R*0.95*Math.cos(rad)].join(',');
+  }).join(' ');
+}
+function hexRectPoints(cx, cy, R){
+  // Both points clipped instead of just one - the Net hexes' own outer edge (away from
+  // the pitch) gets the same flat treatment as their inner edge (already flush against
+  // column A/K, see hexClipPoints), so what's left is a plain axis-aligned rectangle:
+  // upper-right/lower-right/lower-left/upper-left, the 4 vertices hexClipPoints already
+  // keeps in common for its two sides, with neither point vertex included.
+  const angles = [30,150,210,330];
+  return angles.map(a => {
+    const rad = Math.PI/180 * a;
+    return [cx + R*0.95*Math.sin(rad), cy - R*0.95*Math.cos(rad)].join(',');
+  }).join(' ');
+}
+function laneOf(col,row){
+  // Visual fill category for the diagram. Rules-wise there are only 2 lanes (§4), but a
+  // hex can belong to both (the seam row: row 3 of a short column) - 'Seam' is a
+  // diagram-only third color for those 5 hexes so they don't silently look like they
+  // picked a side.
+  if (isShort(col) && row===3) return 'Seam';
+  if (isShort(col)) return row<=2?'Top':'Bottom';
+  return row<=3?'Top':'Bottom';
+}
+function thirdOf(col){
+  const i = COLS.indexOf(col);
+  return i<=3?1:(i<=6?2:3);
+}
+const LANE_COLOR = {Top:'#2f6b4f', Bottom:'#25334d'};
+// The Goalkeeper Zone: 3 hexes per end - the 2-hex goal box plus one bordering seam-
+// column hex (e.g. A3/A4/B3). Drawn instead of the normal lane fill for these 6 hexes
+// (not layered on top of it) - shaded grey and outlined, uniformly across all 3, since
+// the zone is one rule (confinement/exclusion, §4/§14) regardless of which of its hexes
+// is which lane underneath.
+const GK_ZONE = {A:['A3','A4','B3'], K:['K3','K4','J3']};
+const GK_ZONE_SET = new Set([...GK_ZONE.A, ...GK_ZONE.K]);
+
+function pitchViewBoxWidth(R, hasNets){
+  const netMargin = hasNets ? R*1.5 : 0;
+  const labelMargin = hasNets ? R*1.5 : 0;
+  const ox = R*1.1 + netMargin + labelMargin;
+  return ox*2 + (COLS.length-1)*R*1.5 + R*2;
+}
+// Every diagram in the book - the full pitch, the two other whole-board figures, and
+// every worked example - shares one pixels-per-viewBox-unit scale, calibrated so the
+// main pitch-figure (R=22, nets:true, the book's own visual reference) fills the text
+// column exactly as it always has. Previously each figure just set width:100% on its own
+// SVG regardless of content, so a worked example cropped down to 3 columns stretched to
+// the SAME width as the full 11-column board - its hexes rendered far larger than the
+// main diagram's, and small examples ended up taking a whole page each. Every example
+// below is also normalized to R=22 (was anywhere from 16 to 28) so a hex is genuinely
+// the same size everywhere, not just proportioned by the same formula at different R.
+const CONTENT_WIDTH_PX = 784; // .wrap's max-width (840px) minus its own 28px+28px padding
+const PX_PER_UNIT = CONTENT_WIDTH_PX / pitchViewBoxWidth(22, true);
+
+function drawPitch(svg, R, opts){
+  opts = opts || {};
+  const netMargin = opts.nets ? R*1.5 : 0;
+  const labelMargin = opts.nets ? R*1.5 : 0;
+  const ox = R*1.1 + netMargin + labelMargin, oy = R*1.9;
+  const width = pitchViewBoxWidth(R, !!opts.nets);
+  const height = oy*2 + 6*ROWSTEP*R;
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  // Width is no longer set here - every caller (this function's own direct callers, and
+  // drawCroppedPitch below) sets it explicitly via the shared PX_PER_UNIT scale, so a
+  // figure's displayed size reflects how much pitch it actually shows.
+  // The Y a tall column's own top/bottom edge actually renders at, after shrink - what
+  // every row-0/row-6 cap's outer edge must match exactly (see capPoints above). Same for
+  // every tall column, so computed once here rather than per-hex.
+  const flushTopY = center('A',1,R,ox,oy).y - R*0.95*Math.cos(Math.PI/6);
+  const flushBottomY = center('A',6,R,ox,oy).y + R*0.95*Math.cos(Math.PI/6);
+  for (const col of COLS){
+    for (let row=minRow(col); row<=maxRow(col); row++){
+      const {x,y} = center(col,row,R,ox,oy);
+      const h = col + row;
+      // A short column's row 0/row 6 is a half-height cap, not a full hex - flush with the
+      // tall columns' own top/bottom edge (see minRow/maxRow above) AND with its own
+      // column's first/last full hex - see capPoints for why this needs explicit flush-Y
+      // coordinates rather than a plain hexHalfPoints half-hex.
+      const isCap = isShort(col) && (row===minRow(col) || row===maxRow(col));
+      const capHalf = row===minRow(col) ? 'bottom' : 'top';
+      // Column A/K's own outer point is cut flat too, mirroring the caps' flush treatment
+      // on the sides instead of top/bottom - see hexClipPoints. Never both at once: A/K are
+      // always tall columns, so they never have a cap row.
+      const edgeClip = col==='A' ? 'left' : (col==='K' ? 'right' : null);
+      let shapePoints;
+      if (isCap){
+        const flushOuterY = capHalf==='bottom' ? flushTopY : flushBottomY;
+        const flushInnerY = capHalf==='bottom'
+          ? center(col,1,R,ox,oy).y - R*0.95*Math.cos(Math.PI/6)
+          : center(col,maxRow(col)-1,R,ox,oy).y + R*0.95*Math.cos(Math.PI/6);
+        shapePoints = capPoints(x, R, capHalf, flushOuterY, flushInnerY);
+      } else {
+        shapePoints = edgeClip ? hexClipPoints(x,y,R,edgeClip) : hexPoints(x,y,R);
+      }
+      if (isCap){
+        el('polygon',{points:shapePoints, fill:LANE_COLOR[laneOf(col,row)], 'fill-opacity':0.16, stroke:'#8a8f86','stroke-width':0.5}, svg);
+      } else if (GK_ZONE_SET.has(h)){
+        el('polygon',{points:shapePoints, fill:'#9a9d99', 'fill-opacity':0.45, stroke:'#25334d','stroke-width':2}, svg);
+      } else {
+        const lane = laneOf(col,row);
+        if (lane === 'Seam'){
+          el('polygon',{points:hexHalfPoints(x,y,R,'top'), fill:LANE_COLOR.Top, 'fill-opacity':0.22, stroke:'#8a8f86','stroke-width':0.5}, svg);
+          el('polygon',{points:hexHalfPoints(x,y,R,'bottom'), fill:LANE_COLOR.Bottom, 'fill-opacity':0.22, stroke:'#8a8f86','stroke-width':0.5}, svg);
+          el('polygon',{points:hexPoints(x,y,R), fill:'none', stroke:'#8a8f86','stroke-width':0.5}, svg);
+        } else {
+          el('polygon',{points:shapePoints, fill:LANE_COLOR[lane], 'fill-opacity':0.16, stroke:'#8a8f86','stroke-width':0.5}, svg);
+        }
+      }
+      if (opts.labels){
+        const labelY = (isCap && capHalf==='top') ? y-R*0.30 : y+R*0.55;
+        el('text',{x:x-R*0.42, y:labelY, 'text-anchor':'start','font-size':R*0.22,'font-family':'IBM Plex Mono, monospace',fill:'#55594f'},svg).textContent = col+row;
+      }
+    }
+  }
+  // Kickoff center spot - thematic only, not a rule of its own (the actual kickoff
+  // mechanics are the 7-hex exclusion zone below and §5/§8's text) - a small solid dot
+  // on F3, the same way a real pitch marks its center spot.
+  {
+    const {x,y} = center('F',3,R,ox,oy);
+    el('circle',{cx:x,cy:y,r:R*0.12,fill:'#25334d'},svg);
+  }
+  // Thirds: heavier dashed dividers through the CENTER of the seam columns D and H,
+  // not between columns - D and H each still belong to their own Third, but a
+  // Third-2 (or matching Zone) card can also activate a unit standing there.
+  if (opts.thirds){
+    // Overshoots the actual flush pitch edge (flushTopY/flushBottomY, not a hand-tuned
+    // oy-relative guess) by the same amount on both ends, so the dashed line extends
+    // equally far past the top and the bottom.
+    const dividerOvershoot = R*0.9;
+    const y1 = flushTopY - dividerOvershoot, y2 = flushBottomY + dividerOvershoot;
+    for (const bcol of ['D','H']){
+      const i = COLS.indexOf(bcol);
+      const xmid = ox + i * R * 1.5;
+      el('line',{x1:xmid,y1,x2:xmid,y2, stroke:'#25334d','stroke-width':2,'stroke-dasharray':'8 5','stroke-opacity':0.6}, svg);
+    }
+    const THIRDS = [{n:1, from:'A', to:'D'}, {n:2, from:'E', to:'G'}, {n:3, from:'H', to:'K'}];
+    for (const t of THIRDS){
+      const xmid = ox + (COLS.indexOf(t.from) + COLS.indexOf(t.to)) / 2 * R * 1.5;
+      // Sits just above the divider lines' own top (y1, just above) rather than an
+      // oy-relative guess, so the label stays visually tied to the dashed line beneath it.
+      el('text',{x:xmid, y:y1 - R*0.25, 'text-anchor':'middle','font-size':R*0.32,'font-weight':700,'font-family':'IBM Plex Mono, monospace',fill:'#25334d'},svg).textContent = 'THIRD ' + t.n;
+    }
+  }
+  // Net: three off-board hexes just beyond each goal box - purely the Shot's target
+  // (§4/§8), never a playable hex. Sits one hex-step outside column A / column K, at
+  // the half-row offset a short column would use there.
+  if (opts.nets){
+    const defs = el('defs',{},svg);
+    const meshPat = el('pattern',{id:'netMesh',width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'}, defs);
+    el('line',{x1:0,y1:0,x2:0,y2:5,stroke:'#8a8f86','stroke-width':1}, meshPat);
+    el('line',{x1:0,y1:0,x2:5,y2:0,stroke:'#8a8f86','stroke-width':1}, meshPat);
+    // Slid in from the old one-hex-step gap to sit flush against column A/K's own new cut
+    // edge (see edgeClip above) - each net hex is a plain rectangle (hexRectPoints), both
+    // points clipped rather than just the pitch-facing one, so its outer edge (the true
+    // edge of the board) reads as a straight vertical line too, the same as its inner edge.
+    function netCenters(side){
+      const x = side === 'A' ? ox - R*0.95 : ox + (COLS.length-1)*R*1.5 + R*0.95;
+      return [2,3,4].map(row => ({x, y: oy + (row*ROWSTEP + ROWSTEP/2) * R}));
+    }
+    for (const side of ['A','K']){
+      for (const {x,y} of netCenters(side)){
+        el('polygon',{points:hexRectPoints(x,y,R), fill:'url(#netMesh)', stroke:'#8a8f86','stroke-width':0.8,'stroke-dasharray':'3 2'}, svg);
+      }
+    }
+    // Lane edge labels - approximate band centers, same spirit as the Third labels above.
+    // Anchored to the actual net rectangle's own edge (netCenters/hexRectPoints above)
+    // plus a fixed gap, the same formula mirrored on both sides - previously the two
+    // sides used unrelated hand-tuned offsets, so "TOP"/"BOTTOM" sat closer to the pitch
+    // on one side than the other.
+    const LANES = [{name:'TOP', y: oy + 2*ROWSTEP*R}, {name:'BOTTOM', y: oy + 5*ROWSTEP*R}];
+    const netHalfWidth = R*0.95*0.5, labelGap = R*0.9;
+    const lxLeft = netCenters('A')[0].x - netHalfWidth - labelGap;
+    const lxRight = netCenters('K')[0].x + netHalfWidth + labelGap;
+    for (const l of LANES){
+      el('text',{x:lxLeft,y:l.y,'text-anchor':'middle','font-size':R*0.28,'font-weight':600,'font-family':'IBM Plex Mono, monospace',fill:'#25334d'},svg).textContent = l.name;
+      el('text',{x:lxRight,y:l.y,'text-anchor':'middle','font-size':R*0.28,'font-weight':600,'font-family':'IBM Plex Mono, monospace',fill:'#25334d'},svg).textContent = l.name;
+    }
+  }
+  return {ox,oy,R,width};
+}
+function drawKickoffZone(svg, R, ox, oy){
+  const zone = ['F3','E3','E4','F2','F4','G3','G4'];
+  const g = el('g',{},svg);
+  const pts = zone.map(h=>{ const c=h[0], r=parseInt(h.slice(1)); return center(c,r,R,ox,oy); });
+  // draw dashed outline around union: simplistic approach, ring each hex with dashed stroke
+  for (const p of pts){
+    el('polygon',{points:hexPoints(p.x,p.y,R), fill:'none', stroke:'#b5842a','stroke-width':2,'stroke-dasharray':'4 3'}, g);
+  }
+}
+function drawToken(svg, R, ox, oy, col, row, label, fill){
+  const {x,y} = center(col,row,R,ox,oy);
+  el('circle',{cx:x,cy:y,r:R*0.5, fill, stroke:'#fff','stroke-width':2}, svg);
+  el('text',{x, y:y+5,'text-anchor':'middle','font-size':R*0.42,'font-weight':700,fill:'#fff','font-family':'IBM Plex Sans, sans-serif'}, svg).textContent = label;
+}
+function ringHex(svg, R, ox, oy, col, row, color){
+  // A dashed ring on one specific hex - marks it as contested (inside a Zone of
+  // Control), a pass/move target, or otherwise worth the reader's eye, without
+  // needing its own token. Same visual language §4's line-figure already uses for
+  // its own D5 example, generalized to any hex/color.
+  const {x,y} = center(col,row,R,ox,oy);
+  el('circle',{cx:x,cy:y,r:R*0.62, fill:'none', stroke:color,'stroke-width':2,'stroke-dasharray':'4 3'}, svg);
+}
+function drawCroppedPitch(svg, R, opts, colFrom, colTo, rowFrom, rowTo, padCols){
+  // Small worked-example diagrams (§8.5, §11.5) rarely need the whole 11-column, 6-row
+  // pitch - most turn on a handful of columns and rows of local action. Draws the real,
+  // unmodified drawPitch() (same geometry, same Goalkeeper Zone/lane/Third rendering as
+  // every other diagram), then narrows the SVG's own viewBox to just the requested
+  // column/row window - a pure crop, not a different rendering path, so there's no
+  // second hex-drawing implementation to keep in sync with the real one. Its displayed
+  // width is set from the CROPPED region's own size via the shared PX_PER_UNIT scale
+  // (see pitchViewBoxWidth/PX_PER_UNIT above), not stretched to the page width regardless
+  // of content the way it used to be - a 3-column crop now genuinely renders smaller than
+  // an 8-column one, both at the same true hex size as the main pitch-figure.
+  // `rowFrom`/`rowTo` default to the full 1-6 range if omitted; `padCols` (default 0.7)
+  // is extra column-width of breathing room on each side.
+  rowFrom = rowFrom === undefined ? 1 : rowFrom;
+  rowTo = rowTo === undefined ? 6 : rowTo;
+  padCols = padCols === undefined ? 0.7 : padCols;
+  const {ox, oy, R:R2} = drawPitch(svg, R, opts);
+  const iFrom = COLS.indexOf(colFrom), iTo = COLS.indexOf(colTo);
+  const xMin = ox + (iFrom - padCols) * R * 1.5;
+  const xMax = ox + (iTo + padCols) * R * 1.5;
+  const yMin = oy + (rowFrom - 1) * ROWSTEP * R - R*1.3;
+  const yMax = oy + rowTo * ROWSTEP * R + R*1.8;
+  svg.setAttribute('viewBox', `${xMin} ${yMin} ${xMax-xMin} ${yMax-yMin}`);
+  svg.setAttribute('width', ((xMax-xMin)*PX_PER_UNIT).toFixed(1)+'px');
+  return {ox, oy, R:R2};
+}
+
+(function(){
+  const fig = document.getElementById('pitch-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R,width} = drawPitch(svg, 22, {labels:true, thirds:true, nets:true});
+  svg.setAttribute('width', (width*PX_PER_UNIT).toFixed(1)+'px');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'The full 11-column pitch — tall columns (A,C,E,G,I,K) six hexes, short columns (B,D,F,H,J) five full hexes plus a half-height cap at each end, squaring them off flush with their tall neighbors so the top and bottom edges run straight across; columns A and K have their own outer point trimmed flat too, so the left and right sides read as straight vertical lines, with the Net trimmed and shifted in to meet them. Grey, outlined hexes mark each Goalkeeper Zone (3 hexes per end: the goal box plus one bordering seam-column hex) — the goalkeeper must stay inside it, and no opposing unit may ever enter it (§5/§14); the hatched hexes beyond them are the Net, the Shot\'s actual off-board target (§4, §8); lane tint (green for Top, navy for Bottom) plus the edge labels show the split, with the five seam-row hexes that belong to both lanes at once shaded half of each color; dashed navy dividers and labels mark the three Thirds (A–D, E–G, H–K) — the dividers run through the centers of D and H, not between columns, since those two seam columns can also be activated by a Third-2 (or matching Zone) card (§4).';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('line-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R,width} = drawPitch(svg, 22, {labels:true, thirds:true, nets:true});
+  svg.setAttribute('width', (width*PX_PER_UNIT).toFixed(1)+'px');
+  // highlight B5->F5 straight line through D5, skipping C/E
+  const line = el('line',{}, svg);
+  const p1 = center('B',5,R,ox,oy), p2 = center('F',5,R,ox,oy);
+  el('line',{x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y, stroke:'#b5842a','stroke-width':3}, svg);
+  drawToken(svg,R,ox,oy,'B',5,'','#2f6b4f');
+  const d5 = center('D',5,R,ox,oy);
+  el('circle',{cx:d5.x,cy:d5.y,r:R*0.65, fill:'none', stroke:'#b5842a','stroke-width':2,'stroke-dasharray':'3 2'}, svg);
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'B5 to F5: a single straight horizontal line through D5 (dashed ring) — B, D, and F are all short columns, so all three sit at the exact same height. C and E, both tall, only touch that line at an edge, never a hex center.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('formation-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R,width} = drawPitch(svg, 22, {labels:false, thirds:true, nets:true});
+  svg.setAttribute('width', (width*PX_PER_UNIT).toFixed(1)+'px');
+  drawKickoffZone(svg,R,ox,oy);
+  // Team A (kicking): one legal resolution of the kickoff-placement draft (§5) - GK to
+  // its box, Poacher forced onto F3 as taker, Playmaker free to range the full own half,
+  // Wingback and Sweeper confined to the defensive third (A-D). Generated directly from
+  // sim.formation() rather than hand-picked, so it's guaranteed consistent with the
+  // actual rule - a hand-picked example drifted out of legality once already (Wingback
+  // and Sweeper previously shown at E4/E1, outside the defensive third) when the
+  // third-confinement rule was added after this diagram was first drawn.
+  drawToken(svg,R,ox,oy,'A',3,'GK','#2f6b4f');
+  drawToken(svg,R,ox,oy,'F',3,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'E',3,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'D',2,'WB','#2f6b4f');
+  drawToken(svg,R,ox,oy,'D',3,'SW','#2f6b4f');
+  // Team B (non-kicking): same draft, but every pick must clear the exclusion zone
+  drawToken(svg,R,ox,oy,'K',3,'GK','#a4372f');
+  drawToken(svg,R,ox,oy,'G',1,'PO','#a4372f');
+  drawToken(svg,R,ox,oy,'G',6,'PM','#a4372f');
+  drawToken(svg,R,ox,oy,'H',2,'WB','#a4372f');
+  drawToken(svg,R,ox,oy,'H',3,'SW','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'One legal outcome of the kickoff-placement draft (§5) — Team A (green) won the kickoff, so its Poacher is forced onto F3 with the ball first. Its Wingback and Sweeper stay inside their own defensive third (A–D); its Playmaker, free to range across the full own half, lands at E3 — the one column Defenders don\'t get. Both sides then place their remaining outfield units one at a time, alternating, non-kicking side first — every pick made in full view of everything already down, not a blind reveal. The dashed ochre outline is the 7-hex kickoff exclusion zone (F3 and its six neighbors): Team B (red), as the non-kicking side, must stay clear of it, while Team A, as the kicking side, is exempt — which is why its Playmaker can sit right up against its own taker.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-kickoff-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'D', 'H', 2, 5);
+  drawKickoffZone(svg,R,ox,oy);
+  const f3 = center('F',3,R,ox,oy), e4 = center('E',4,R,ox,oy);
+  el('line',{x1:f3.x,y1:f3.y,x2:e4.x,y2:e4.y, stroke:'#b5842a','stroke-width':3}, svg);
+  drawToken(svg,R,ox,oy,'F',3,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'E',4,'PM','#2f6b4f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Poacher, kickoff-taker, passes F3 → E4 to the Playmaker — distance 1, well inside Pass Range 1, and E4 sits inside the exclusion zone legally (Team A is the kicking side). Team B (not shown) has nothing inside the zone to contest with.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-pass-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'D', 'H', 3, 6);
+  const e4 = center('E',4,R,ox,oy), g5 = center('G',5,R,ox,oy);
+  el('line',{x1:e4.x,y1:e4.y,x2:g5.x,y2:g5.y, stroke:'#b5842a','stroke-width':3,'stroke-dasharray':'6 4'}, svg);
+  ringHex(svg,R,ox,oy,'G',5,'#a4372f');
+  drawToken(svg,R,ox,oy,'E',4,'SW','#2f6b4f');
+  drawToken(svg,R,ox,oy,'F',4,'WB','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Sweeper passes E4 → G5 to the Poacher (not shown at G5, since the pass hasn\'t landed yet) — 2 hexes, exactly at Pass Range 2. The dashed red ring marks G5 as contested: it sits inside Team B\'s Wingback\'s Zone of Control at F4, so the pass rolls Control vs Control instead of landing free.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-bounce-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'D', 1, 4);
+  const c3 = center('C',3,R,ox,oy), b2 = center('B',2,R,ox,oy), a2 = center('A',2,R,ox,oy), b1 = center('B',1,R,ox,oy);
+  el('polyline',{points:`${c3.x},${c3.y} ${b2.x},${b2.y} ${a2.x},${a2.y} ${b1.x},${b1.y}`, fill:'none', stroke:'#b5842a','stroke-width':3,'stroke-dasharray':'6 4'}, svg);
+  ringHex(svg,R,ox,oy,'A',2,'#b5842a');
+  drawToken(svg,R,ox,oy,'C',3,'WB','#2f6b4f');
+  drawToken(svg,R,ox,oy,'B',1,'SW','#2f6b4f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Wingback bounces a pass off the back wall at A2 (ochre ring) — C3 to A2 to B1, reflecting from one diagonal to the other. Total distance 3, exactly the Wingback\'s Pass Range, landing on the Sweeper waiting at B1.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-dribble-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'E', 1, 5);
+  const b3 = center('B',3,R,ox,oy), c3 = center('C',3,R,ox,oy);
+  el('line',{x1:b3.x,y1:b3.y,x2:c3.x,y2:c3.y, stroke:'#b5842a','stroke-width':3}, svg);
+  drawToken(svg,R,ox,oy,'C',3,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'D',3,'SW','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Poacher carries the ball B3 → C3, moving adjacent to Team B\'s Sweeper (D3) — triggering a Dribble Challenge. If it loses, the Poacher\'s own move still ends on C3, but the ball spills back to B3, the hex it moved from, not under either unit.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-shotsave-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:true}, 'H', 'K', 1, 4);
+  drawToken(svg,R,ox,oy,'I',2,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'K',4,'GK','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Poacher shoots from I2 — 3 hexes from the net (measured to the Net itself, not the goal box), well inside Shot Range 4. Team B\'s Goalkeeper, Save 3, is home in its zone at K4 — the Goalkeeper Zone is occupied, so this rolls Shot vs Save rather than resolving as an automatic goal.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-through-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:true}, 'G', 'K', 1, 5);
+  const h3 = center('H',3,R,ox,oy), i3 = center('I',3,R,ox,oy);
+  el('line',{x1:h3.x,y1:h3.y,x2:i3.x,y2:i3.y, stroke:'#b5842a','stroke-width':3}, svg);
+  ringHex(svg,R,ox,oy,'H',3,'#2f6b4f');
+  drawToken(svg,R,ox,oy,'I',3,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'J',3,'WB','#a4372f');
+  drawToken(svg,R,ox,oy,'K',4,'GK','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Playmaker carries H3 → I3 (dashed green ring: where it started), straight into Team B\'s Wingback\'s Zone of Control at J3 — a Dribble Challenge it wins. Winning it, in the same activation, means its follow-up Shot at I3 (3 hexes from net, right at Shot Range 3) gets Through on Goal\'s +1 Attack die.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-tackle-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'E', 1, 5);
+  drawToken(svg,R,ox,oy,'C',3,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'B',3,'SW','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team B\'s Sweeper (B3) is adjacent to Team A\'s Poacher, holding the ball at C3, and attempts a Tackle instead of moving further. Win or lose, the Poacher\'s hex never changes here — a Tackle challenges possession, not position.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-loose-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'G', 'K', 1, 4);
+  drawToken(svg,R,ox,oy,'K',4,'GK','#a4372f');
+  ringHex(svg,R,ox,oy,'J',2,'#b5842a');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'No Flair on the Save roll, so the parry spills to J2 — the K end\'s Top-side rebound hex (§8), one hex outside the Goalkeeper Zone and empty right now (dashed ring). Either side can reach it; whichever gets a unit activated onto it first keeps it.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-backheel-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, thirds:true, nets:false}, 'A', 'D', 1, 4);
+  const c2 = center('C',2,R,ox,oy), c3 = center('C',3,R,ox,oy);
+  el('line',{x1:c2.x,y1:c2.y,x2:c3.x,y2:c3.y, stroke:'#b5842a','stroke-width':3}, svg);
+  drawToken(svg,R,ox,oy,'C',2,'SW','#2f6b4f');
+  drawToken(svg,R,ox,oy,'C',3,'PM','#2f6b4f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Sweeper, carrying the ball at C2, backheels to the adjacent Playmaker at C3 — still contested like any Pass if a Zone of Control reached C3 (none does here), but the Act itself is free: whichever unit was activated this turn can still Pass, Shoot, or Tackle afterward.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-longball-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R,width} = drawPitch(svg, 22, {labels:true, nets:false});
+  svg.setAttribute('width', (width*PX_PER_UNIT).toFixed(1)+'px');
+  const b5 = center('B',5,R,ox,oy), i2 = center('I',2,R,ox,oy);
+  el('line',{x1:b5.x,y1:b5.y,x2:i2.x,y2:i2.y, stroke:'#b5842a','stroke-width':3}, svg);
+  drawToken(svg,R,ox,oy,'B',5,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'I',2,'','#2f6b4f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Playmaker at B5 plays Long Ball diagonally to a teammate at I2 — 7 hexes, passing directly through F3 (and every hex between) along the way. Long Ball ignores Pass Range and every Zone of Control the line merely passes through; only a Zone of Control sitting on I2 itself, the destination, would still contest it.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-throughball-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'D', 1, 5);
+  const b3 = center('B',3,R,ox,oy), d3 = center('D',3,R,ox,oy);
+  el('line',{x1:b3.x,y1:b3.y,x2:d3.x,y2:d3.y, stroke:'#b5842a','stroke-width':3}, svg);
+  ringHex(svg,R,ox,oy,'C',3,'#a4372f');
+  drawToken(svg,R,ox,oy,'B',3,'SW','#2f6b4f');
+  drawToken(svg,R,ox,oy,'D',3,'WB','#2f6b4f');
+  drawToken(svg,R,ox,oy,'C',4,'PO','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Sweeper passes B3 → D3 to the Wingback, straight through C3 — dashed red ring marks C3 as sitting inside Team B\'s Poacher\'s Zone of Control (C4). Through Ball ignores it for this one pass, so the ball flies through uncontested.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-nutmeg-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'F', 'I', 1, 4);
+  const g1 = center('G',1,R,ox,oy), h1 = center('H',1,R,ox,oy);
+  el('line',{x1:g1.x,y1:g1.y,x2:h1.x,y2:h1.y, stroke:'#b5842a','stroke-width':3}, svg);
+  ringHex(svg,R,ox,oy,'G',1,'#2f6b4f');
+  drawToken(svg,R,ox,oy,'H',1,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'H',2,'WB','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Poacher carries G1 → H1 (dashed green ring: where it started), adjacent to Team B\'s Wingback\'s Zone of Control at H2 — a Dribble Challenge currently lost 1-2. Two Flair symbols in the Poacher\'s own roll let Nutmeg win it outright anyway.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-stepover-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'C', 'F', 2, 6);
+  const d4 = center('D',4,R,ox,oy), e4 = center('E',4,R,ox,oy);
+  el('line',{x1:d4.x,y1:d4.y,x2:e4.x,y2:e4.y, stroke:'#b5842a','stroke-width':3}, svg);
+  ringHex(svg,R,ox,oy,'D',4,'#2f6b4f');
+  drawToken(svg,R,ox,oy,'E',4,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'E',5,'SW','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Playmaker carries D4 → E4 (dashed green ring: where it started), adjacent to Team B\'s Sweeper\'s Zone of Control at E5 — a Dribble Challenge currently tied 1-1, lost to the defender. Rerolling 2 dice turns one Blank into a Success, flipping it to a win.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-curlshot-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:true}, 'H', 'K', 1, 4);
+  drawToken(svg,R,ox,oy,'I',2,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'K',4,'GK','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Playmaker shoots from I2 — 3 hexes from the net, exactly at the edge of its own Shot Range 3. Curl Shot\'s +1 Attack die is what turns this from a marginal chance into a genuinely live one.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-onetwo-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'D', 1, 5);
+  const d2 = center('D',2,R,ox,oy), d3 = center('D',3,R,ox,oy), c3 = center('C',3,R,ox,oy);
+  el('line',{x1:d2.x,y1:d2.y,x2:d3.x,y2:d3.y, stroke:'#b5842a','stroke-width':3,'stroke-dasharray':'6 4'}, svg);
+  el('line',{x1:d3.x,y1:d3.y,x2:c3.x,y2:c3.y, stroke:'#b5842a','stroke-width':3,'stroke-dasharray':'6 4'}, svg);
+  ringHex(svg,R,ox,oy,'D',2,'#2f6b4f');
+  drawToken(svg,R,ox,oy,'D',3,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'C',3,'SW','#2f6b4f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Sweeper starts at D2 (dashed green ring), passes to the Playmaker at D3 and immediately gets it back at C3 instead — any unoccupied hex adjacent to the Playmaker, its own choice. Both legs are uncontested regardless of any Zone of Control, and neither triggers a Dribble Challenge.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-composure-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:true}, 'G', 'K', 1, 5);
+  drawToken(svg,R,ox,oy,'H',3,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'K',4,'GK','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Playmaker shoots from H3 — exactly at Shot Range 3 — and rolls a Save, 1-1. Composure rerolls the Blank die from that same roll; it comes back Success, turning the Save into a goal.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-strongtackle-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'E', 1, 5);
+  drawToken(svg,R,ox,oy,'C',3,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'B',3,'SW','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team B\'s Sweeper (B3) goes in hard on Team A\'s Poacher at C3 — +1 Attack die from Strong Tackle, and still loses 1-1 to the Poacher\'s Control. The ball stays with the Poacher either way; losing this way costs the Sweeper two Discipline draws instead of one.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-lastditch-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:true}, 'H', 'K', 1, 4);
+  drawToken(svg,R,ox,oy,'I',2,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'K',4,'GK','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Poacher shoots from I2 and rolls 3 Successes to the Goalkeeper\'s 2 Stops — a goal, until Team B discards Last-Ditch Block to cancel one Success. 2-2 is no longer strictly more; the Shot resolves as a Save instead.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-jockey-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'D', 1, 5);
+  drawToken(svg,R,ox,oy,'D',3,'PM','#2f6b4f');
+  drawToken(svg,R,ox,oy,'C',3,'SW','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Playmaker (D3, Pace 4) is about to be activated to move. Team B\'s Sweeper, adjacent at C3, discards Jockey the instant it is — no roll, just 1 hex of reach gone for this move only.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-press-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'D', 1, 5);
+  drawToken(svg,R,ox,oy,'C',3,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'D',3,'WB','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Poacher holds the ball at C3. Team B\'s Wingback (D3) wasn\'t activated this turn — Press discards to force a Tackle Challenge from it anyway, on the spot.';
+  fig.appendChild(cap);
+})();
+
+(function(){
+  const fig = document.getElementById('ex-foul-figure');
+  const svg = el('svg',{},fig);
+  const {ox,oy,R} = drawCroppedPitch(svg, 22, {labels:true, nets:false}, 'A', 'D', 1, 5);
+  const b3 = center('B',3,R,ox,oy), c3 = center('C',3,R,ox,oy);
+  el('line',{x1:b3.x,y1:b3.y,x2:c3.x,y2:c3.y, stroke:'#b5842a','stroke-width':3}, svg);
+  ringHex(svg,R,ox,oy,'B',3,'#2f6b4f');
+  drawToken(svg,R,ox,oy,'C',3,'PO','#2f6b4f');
+  drawToken(svg,R,ox,oy,'D',3,'SW','#a4372f');
+  const cap = document.createElement('figcaption');
+  cap.textContent = 'Team A\'s Poacher carries B3 → C3 (dashed green ring: where it started), moving adjacent to Team B\'s Sweeper at D3 — normally a Dribble Challenge. Team B plays Foul instead: play stops dead, no roll, and the Sweeper draws a real card from the Discipline Deck.';
+  fig.appendChild(cap);
+})();
+</script>
+</body>
+</html>

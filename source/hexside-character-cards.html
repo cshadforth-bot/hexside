@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexside Character Skins</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2420; --paper:#faf8f3; --paper-2:#f1ede2; --muted:#6b7268;
+    --pitch-green:#2f6b4f; --pitch-green-2:#3d8062; --pitch-green-3:#5aa07e;
+    --cmd-navy:#25334d; --ochre:#b5842a; --ochre-2:#8f6a20; --card-face:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper-2);color:var(--ink);font-family:'IBM Plex Sans',sans-serif}
+  .toolbar{position:sticky;top:0;background:var(--ink);color:#fff;padding:10px 20px;font-family:'IBM Plex Mono',monospace;font-size:.8rem;display:flex;gap:18px;align-items:center;z-index:10}
+  .toolbar b{color:var(--ochre)}
+  .note{max-width:8.27in;margin:18px auto 0;padding:0 .45in;font-size:.82rem;line-height:1.5;color:var(--muted)}
+  .note b{color:var(--ink)}
+  .sheet{width:8.27in;min-height:11.69in;margin:24px auto;background:var(--paper);box-shadow:0 2px 16px rgba(0,0,0,.15);padding:0.45in;display:grid;grid-template-columns:repeat(3,2.5in);grid-template-rows:repeat(3,3.5in);gap:0.1in;justify-content:center}
+  .deck-label{font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:center;margin:30px 0 -14px}
+  .card{width:2.5in;height:3.5in;border-radius:10px;border:1.5px solid var(--ink);background:var(--card-face);display:flex;flex-direction:column;overflow:hidden;position:relative}
+  .band{padding:7px 10px 6px;color:#fff;flex-shrink:0}
+  .band .title{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;line-height:1.1}
+  .band .kind{font-family:'IBM Plex Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;opacity:.9;margin-top:2px}
+  .body{flex:1;padding:7px 11px 8px;display:flex;flex-direction:column;gap:5px;min-height:0}
+  .head-row{display:flex;align-items:baseline;gap:8px;margin:1px 0 0}
+  .pos-abbr-sm{font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;color:var(--ochre-2);line-height:1}
+  .flavor{font-size:.66rem;font-style:italic;color:var(--muted);line-height:1.25}
+  .rule-text{font-size:.72rem;line-height:1.32;color:var(--ink)}
+  .stat-row{display:flex;justify-content:space-between;align-items:center;font-size:.66rem;font-family:'IBM Plex Mono',monospace;padding:1px 0;border-bottom:1px dotted #ddd}
+  .stat-row b{color:var(--pitch-green)}
+  .dice-row{display:inline-flex;gap:2px;align-items:center}
+  .sig-box{background:var(--paper-2);border-radius:6px;padding:6px 8px;margin-top:auto;font-size:.64rem;line-height:1.28}
+  .sig-box .name{font-weight:700;color:var(--ochre-2);display:block;margin-bottom:2px}
+  @media print{
+    @page{ size: A4; margin: 0; }
+    .toolbar, .note{display:none}
+    body{background:#fff}
+    .sheet{box-shadow:none;margin:0;page-break-after:always;width:8.27in;height:11.69in;min-height:0}
+    .deck-label{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">Hexside · Character Skins (draft) &nbsp; <b>12</b> alternates across <b>5</b> slots &nbsp;— print via browser (Cmd/Ctrl+P), landscape off, margins none.</div>
+<div class="note">Optional, house-rule layer on top of the standard <b>Player Roster</b> (see <code>hexside-cards.html</code>) — before kickoff, a side may swap in at most <b>one</b> alternate skin per slot it wants to use, in place of that slot's standard card. Everything else about the unit (which position it drafts into, its Zone of Control, etc.) is unchanged; only the stat line and Signature differ. <b>Draft only</b> — stats and Signatures below are sketched for flavor and rough parity with the standard five, not yet balance-tested or wired into the engine/drivers.</div>
+<div id="root"></div>
+<script>
+function card(inner){ const d=document.createElement('div'); d.className='card'; d.innerHTML=inner; return d; }
+function band(title, kind, bg){
+  return `<div class="band" style="background:${bg}"><div class="title">${title}</div><div class="kind">${kind}</div></div>`;
+}
+function repeat(fn,n){ const out=[]; for(let i=0;i<n;i++) out.push(fn()); return out; }
+function diceIcon(){
+  return `<svg width="13" height="13" viewBox="0 0 16 16">
+    <polygon points="8,2 13.2,5 13.2,11 8,14 2.8,11 2.8,5" fill="var(--card-face)" stroke="var(--ink)" stroke-width="0.6" stroke-linejoin="round"/>
+    <line x1="8" y1="8" x2="13.2" y2="5" stroke="var(--ink)" stroke-width="0.5"/>
+    <line x1="8" y1="8" x2="2.8" y2="5" stroke="var(--ink)" stroke-width="0.5"/>
+    <line x1="8" y1="8" x2="8" y2="14" stroke="var(--ink)" stroke-width="0.5"/>
+    <circle cx="8" cy="5" r="0.8" fill="var(--ink)"/>
+    <circle cx="4.9" cy="8.7" r="0.8" fill="var(--ink)"/>
+    <circle cx="6.1" cy="10.6" r="0.8" fill="var(--ink)"/>
+    <circle cx="9.6" cy="7" r="0.8" fill="var(--ink)"/>
+    <circle cx="10.6" cy="9.5" r="0.8" fill="var(--ink)"/>
+    <circle cx="11.6" cy="12" r="0.8" fill="var(--ink)"/>
+  </svg>`;
+}
+function diceRow(n){ return `<span class="dice-row">${repeat(diceIcon, n).join('')}</span>`; }
+
+// ---------- CHARACTER SKINS (draft, 12 cards) ----------
+// Each is an optional alternate for one standard Player Roster slot: same role in the
+// draft/formation, small stat deltas (kept within the ranges the standard five already
+// span - Pace/Control to 5, Tackle to 4, Range to 4 - so no card needs an engine change
+// just to be printed), and a themed Signature replacing the slot's default one. See the
+// on-page note above for scope - this is the card layer only, not a rules or engine change.
+const characters = [
+  { slot:'GK', base:'Goalkeeper', name:'"The Wall"', flavor:'Got put in goal for being late to picking teams. Won’t come off his line for anything.',
+    pace:3, shot:0, shotRange:null, control:2, range:1, tackle:2, save:4,
+    sig:'Immovable', sigText:'Once per match, reroll up to <b>2</b> Blank dice on a Save (the standard Goalkeeper’s Shot-Stopper only rerolls 1).' },
+  { slot:'GK', base:'Goalkeeper', name:'"Sunday Ederson"', flavor:'Watched one too many Man City games. Thinks he’s better with his feet than he is.',
+    pace:4, shot:0, shotRange:null, control:4, range:2, tackle:2, save:2,
+    sig:'Playing Out', sigText:'Once per match, this unit may leave its Goalkeeper Zone and act as a normal outfield unit for one activation — then must get back into its zone next turn or draws a Yellow Card (§12).' },
+
+  { slot:'SW', base:'Sweeper', name:'"Big Dave"', flavor:'Doesn’t mean to hurt anyone. Mostly.',
+    pace:4, shot:3, shotRange:2, control:4, range:2, tackle:4,
+    sig:'No Way Through', sigText:'Once per match, win a Tackle Challenge automatically, no roll — but draw <b>twice</b> from the Discipline Deck regardless of the result, applying both (same as a lost Strong Tackle).' },
+  { slot:'SW', base:'Sweeper', name:'"Uncle Barry"', flavor:'Hasn’t sprinted since 2019. Still reads every pass a beat before it happens.',
+    pace:3, shot:3, shotRange:2, control:5, range:3, tackle:3,
+    sig:'Reads the Game', sigText:'Once per match, the instant an opposing unit adjacent to this one is activated to move, reduce its Pace by 1 for that move only — a free Jockey: no Flair spent, no card needed.' },
+  { slot:'SW', base:'Sweeper', name:'"Gaffer"', flavor:'Brings the pump. Way too invested in organising a back line with only one other defender on it.',
+    pace:4, shot:2, shotRange:2, control:5, range:3, tackle:3,
+    sig:'Marshalled', sigText:'Once per match, when this unit is activated, choose one other friendly unit on the pitch — it may act as though it had also been activated this turn.' },
+
+  { slot:'WB', base:'Wingback', name:'"The Engine"', flavor:'First to chase a lost cause. First to regret it.',
+    pace:4, shot:3, shotRange:2, control:5, range:3, tackle:4,
+    sig:'Gasser', sigText:'From the start of the second half, this unit’s Pace is reduced by 1 for the rest of the match.' },
+  { slot:'WB', base:'Wingback', name:'"Dodgy Knee"', flavor:'Retired from five-a-side twice. Always back for “one more season.”',
+    pace:4, shot:3, shotRange:2, control:4, range:3, tackle:3,
+    sig:'One More Run', sigText:'Once per match, move using this unit’s full Pace through an opposing Zone of Control with no Dribble Challenge required — then its Pace is reduced by 1 for the remainder of that half.' },
+
+  { slot:'PM', base:'Playmaker', name:'"Roy"', flavor:'Sunday-league Keane. Organises, argues, occasionally erupts.',
+    pace:4, shot:4, shotRange:3, control:3, range:4, tackle:3,
+    sig:'Sees Red', sigText:'Once per match, +1 Attack die to a Tackle Challenge — but if it’s lost, draw <b>twice</b> from the Discipline Deck instead of once.' },
+  { slot:'PM', base:'Playmaker', name:'"Magic"', flavor:'Learned it all from YouTube. Occasionally it actually comes off.',
+    pace:4, shot:4, shotRange:3, control:5, range:3, tackle:1,
+    sig:'Showman', sigText:'Once per match, the next Nutmeg or Step-Over this unit plays costs 1 less Flair (minimum 0).' },
+
+  { slot:'PO', base:'Poacher', name:'"Flash"', flavor:'All legs, no end product. “Used to play semi-pro” (didn’t).',
+    pace:5, shot:3, shotRange:4, control:4, range:1, tackle:2,
+    sig:'Out of Nowhere', sigText:'Once per match, move using this unit’s full Pace and ignore Zones of Control while doing so — but this unit may not Shoot on that same activation.' },
+  { slot:'PO', base:'Poacher', name:'"Me!"', flavor:'Shouts for it even when he isn’t open. Once it’s his, it’s his.',
+    pace:5, shot:5, shotRange:4, control:5, range:1, tackle:1,
+    sig:'Main Character', sigText:'Once per match, reroll all Blank dice on a Shot.' },
+  { slot:'PO', base:'Poacher', name:'"The Wardrobe"', flavor:'Backs into you, plants himself, and doesn’t move. Shielding the ball with that frame, nobody’s shoving him off it.',
+    pace:3, shot:5, shotRange:2, control:5, range:1, tackle:2,
+    sig:'Immovable Object', sigText:'Once per match, when this unit is the target of a Tackle Challenge, treat one of the defender’s Success symbols as a Blank.' },
+];
+
+function renderCharacterCard(c){
+  return card(`
+    ${band(c.name, `Alternate Skin · ${c.slot}`, 'var(--ochre)')}
+    <div class="body">
+      <div class="head-row"><span class="pos-abbr-sm">${c.slot}</span></div>
+      <div class="flavor">${c.flavor}</div>
+      <div class="stat-row"><span>Pace</span><b>${c.pace}</b></div>
+      <div class="stat-row"><span>${c.save ? 'Save' : 'Shot'}</span>${diceRow(c.save || c.shot)}</div>
+      <div class="stat-row"><span>Control</span>${diceRow(c.control)}</div>
+      <div class="stat-row"><span>Range (Pass/Shot)</span><b>${c.range} / ${c.shotRange ?? '—'}</b></div>
+      <div class="stat-row"><span>Tackle</span>${diceRow(c.tackle)}</div>
+      <div class="sig-box"><span class="name">${c.sig}</span>${c.sigText}</div>
+    </div>
+  `);
+}
+
+// ---------- PAGINATION (same 3x3 sheet as the main card deck) ----------
+const root = document.getElementById('root');
+function paginate(items, label){
+  const lbl = document.createElement('div'); lbl.className='deck-label'; lbl.textContent=label;
+  root.appendChild(lbl);
+  for (let i=0;i<items.length;i+=9){
+    const sheet = document.createElement('div'); sheet.className='sheet';
+    items.slice(i,i+9).forEach(el=>sheet.appendChild(el));
+    while (sheet.children.length < 9) sheet.appendChild(document.createElement('div'));
+    root.appendChild(sheet);
+  }
+}
+paginate(characters.map(renderCharacterCard), `Character Skins — ${characters.length} cards (2 GK, 3 SW, 2 WB, 2 PM, 3 PO) — print ×2: each side picks independently and in secret, including both wanting the same character at once`);
+</script>
+</body>
+</html>

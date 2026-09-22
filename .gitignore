@@ -1,0 +1,30 @@
+# OS cruft
+.DS_Store
+
+# Python bytecode cache
+__pycache__/
+*.pyc
+
+# Built PDFs - regenerated from source/*.html via ./build-pdfs.sh
+*.pdf
+# ...except these two, which have no surviving source .html and can't be
+# regenerated - see attachments/hexside_cover_note.md and project memory.
+!hexsidetokens.pdf
+!hexsidereview.pdf
+
+# Built archive - regenerated from the PDFs above, see hexside-print-pack.zip
+*.zip
+# ...except raw historical playtest logs, which are source data, not build output.
+!attachments/hexside_playtest_logs.zip
+
+# Per-match runtime dumps written by running the engine/drivers directly -
+# transient, overwritten on every run, not source.
+engine/state.json
+engine/game_random.json
+playtest-ai/state.json
+playtest-ai/game_random.json
+playtest-ai/batch_stats.json
+
+# Unrelated project content that happens to live in this same folder
+terradocafeprintandplay.pdf
+terradocaferulebook.pdf

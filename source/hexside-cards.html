@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexside Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2420; --paper:#faf8f3; --paper-2:#f1ede2; --muted:#6b7268;
+    --pitch-green:#2f6b4f; --pitch-green-2:#3d8062; --pitch-green-3:#5aa07e;
+    --cmd-navy:#25334d; --ochre:#b5842a; --lane-top:#3a7a58; --lane-bottom:#2a5540;
+    --yellow-card:#e8c547; --red-card:#a4372f; --card-face:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper-2);color:var(--ink);font-family:'IBM Plex Sans',sans-serif}
+  .toolbar{position:sticky;top:0;background:var(--ink);color:#fff;padding:10px 20px;font-family:'IBM Plex Mono',monospace;font-size:.8rem;display:flex;gap:18px;align-items:center;z-index:10}
+  .toolbar b{color:var(--ochre)}
+  .sheet{width:8.27in;min-height:11.69in;margin:24px auto;background:var(--paper);box-shadow:0 2px 16px rgba(0,0,0,.15);padding:0.45in;display:grid;grid-template-columns:repeat(3,2.5in);grid-template-rows:repeat(3,3.5in);gap:0.1in;justify-content:center}
+  .deck-label{font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:center;margin:30px 0 -14px}
+  .card{width:2.5in;height:3.5in;border-radius:10px;border:1.5px solid var(--ink);background:var(--card-face);display:flex;flex-direction:column;overflow:hidden;position:relative}
+  .band{padding:8px 10px 6px;color:#fff;flex-shrink:0}
+  .band .title{font-family:'Fraunces',serif;font-weight:700;font-size:1.02rem;line-height:1.1}
+  .band .kind{font-family:'IBM Plex Mono',monospace;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;opacity:.85;margin-top:2px}
+  .body{flex:1;padding:8px 11px;display:flex;flex-direction:column;gap:6px;min-height:0}
+  .icon-glyph{font-size:1.7rem;color:var(--ink);text-align:center;line-height:1}
+  .rule-text{font-size:.72rem;line-height:1.32;color:var(--ink)}
+  .footer{font-family:'IBM Plex Mono',monospace;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:4px 11px 7px;border-top:1px solid #eee}
+  .zone-icon{display:flex;justify-content:center;margin:2px 0}
+  .zone-grid{display:grid;grid-template-columns:repeat(3,16px);grid-template-rows:repeat(3,16px);gap:2px}
+  .zone-grid div{border-radius:2px;background:#e4e0d2}
+  .zone-grid div.lit{background:var(--ochre)}
+  .stat-row{display:flex;justify-content:space-between;align-items:center;font-size:.66rem;font-family:'IBM Plex Mono',monospace;padding:1px 0;border-bottom:1px dotted #ddd}
+  .stat-row b{color:var(--pitch-green)}
+  .dice-row{display:inline-flex;gap:2px;align-items:center}
+  .sig-box{background:var(--paper-2);border-radius:6px;padding:6px 8px;margin-top:auto;font-size:.66rem;line-height:1.3}
+  .sig-box .name{font-weight:700;color:var(--ochre);display:block;margin-bottom:2px}
+  .pos-abbr{font-family:'Fraunces',serif;font-weight:700;font-size:2.1rem;text-align:center;color:var(--ink);line-height:1;margin:2px 0}
+  @media print{
+    @page{ size: A4; margin: 0; }
+    .toolbar{display:none}
+    body{background:#fff}
+    .sheet{box-shadow:none;margin:0;page-break-after:always;width:8.27in;height:11.69in;min-height:0}
+    .deck-label{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">Hexside · Card Deck Source &nbsp; <b>36</b> Command &nbsp; <b>5</b> Player &nbsp; <b>26</b> Tactic &nbsp; <b>12</b> Discipline (6 + 6 Clean Challenge) &nbsp;— print via browser (Cmd/Ctrl+P), landscape off, margins none.</div>
+<div id="root"></div>
+<script>
+function card(inner){ const d=document.createElement('div'); d.className='card'; d.innerHTML=inner; return d; }
+function commandBand(title, kind, bg){
+  return `<div class="band" style="background:${bg}"><div class="title">${title}</div><div class="kind">${kind}</div></div>`;
+}
+function zoneIcon(litThirds, litLanes){
+  // 2x3 grid: rows=lanes(Top,Bottom), cols=thirds(1,2,3)
+  const laneOrder=['Top','Bottom'];
+  let cells='';
+  for (const lane of laneOrder){
+    for (let t=1;t<=3;t++){
+      const lit = litThirds.includes(t) && litLanes.includes(lane);
+      cells += `<div class="${lit?'lit':''}"></div>`;
+    }
+  }
+  return `<div class="zone-icon"><div class="zone-grid">${cells}</div></div>`;
+}
+function repeat(fn,n){ const out=[]; for(let i=0;i<n;i++) out.push(fn()); return out; }
+function diceIcon(){
+  // A small isometric cube, line-drawn: one hexagon outline split by 3 internal lines
+  // (all meeting at the shared center point) into top/left/right faces, each carrying a
+  // different pip count (1/2/3 - not a real roll, just enough asymmetry that it reads as
+  // "a die" rather than "a single repeated number"). The earlier version filled a single
+  // flat face with the same 5-pip pattern every time, which read as "every die shows a
+  // 5" rather than "roll this many dice" - a real angled cube with only 3 of its 6 faces
+  // ever in view doesn't have that problem, and needs no per-face color fill to read as
+  // 3D: the converging edge lines do that on their own, the way an actual line drawing of
+  // a cube works. White face, ink-colored linework - matches the card's own palette
+  // rather than inventing a new one, and no SVG filter (this project's headless-Chrome
+  // PDF pipeline renders those inconsistently; plain strokes don't have that problem).
+  return `<svg width="13" height="13" viewBox="0 0 16 16">
+    <polygon points="8,2 13.2,5 13.2,11 8,14 2.8,11 2.8,5" fill="var(--card-face)" stroke="var(--ink)" stroke-width="0.6" stroke-linejoin="round"/>
+    <line x1="8" y1="8" x2="13.2" y2="5" stroke="var(--ink)" stroke-width="0.5"/>
+    <line x1="8" y1="8" x2="2.8" y2="5" stroke="var(--ink)" stroke-width="0.5"/>
+    <line x1="8" y1="8" x2="8" y2="14" stroke="var(--ink)" stroke-width="0.5"/>
+    <circle cx="8" cy="5" r="0.8" fill="var(--ink)"/>
+    <circle cx="4.9" cy="8.7" r="0.8" fill="var(--ink)"/>
+    <circle cx="6.1" cy="10.6" r="0.8" fill="var(--ink)"/>
+    <circle cx="9.6" cy="7" r="0.8" fill="var(--ink)"/>
+    <circle cx="10.6" cy="9.5" r="0.8" fill="var(--ink)"/>
+    <circle cx="11.6" cy="12" r="0.8" fill="var(--ink)"/>
+  </svg>`;
+}
+function diceRow(n){ return `<span class="dice-row">${repeat(diceIcon, n).join('')}</span>`; }
+
+// ---------- COMMAND DECK (36 cards) ----------
+let commandCards = [];
+const laneColor = l => l==='Top' ? 'var(--lane-top)' : 'var(--lane-bottom)';
+const zoneList = [
+  {third:1, lane:'Top'}, {third:1, lane:'Bottom'},
+  {third:2, lane:'Top'}, {third:2, lane:'Bottom'},
+  {third:3, lane:'Top'}, {third:3, lane:'Bottom'},
+];
+const FALLBACK = ' <i>If you have no units there, activate 1 unit of your choice instead, anywhere on the pitch.</i>';
+for (const z of zoneList){
+  const seam = z.third===2 ? ` Also reaches the ${z.lane} half of columns D and H (the seam columns).` : '';
+  commandCards.push({kind:'zone', title:`Zone — T${z.third} / ${z.lane}`, count:1, band:laneColor(z.lane), thirds:[z.third], lanes:[z.lane],
+    text:`Activate every one of your units currently standing in <b>Third ${z.third}, ${z.lane}</b>.${seam}${FALLBACK}`});
+}
+for (const l of ['Top','Bottom']){
+  commandCards.push({kind:'lane', title:`Lane — ${l}`, count:5, band:laneColor(l), thirds:[1,2,3], lanes:[l],
+    text:`Activate every one of your units currently in the <b>${l} lane</b>, across all three thirds. A seam-row hex counts for either Lane card.`});
+}
+const thirdBg = {1:'var(--pitch-green)', 2:'var(--pitch-green-2)', 3:'var(--pitch-green-3)'};
+for (const t of [1,2,3]){
+  const seamNote = t===2 ? ' Also reaches columns D and H (the seam columns) — Third 1 and Third 3 already cover them as part of their own A–D and H–K.' : '';
+  commandCards.push({kind:'third', title:`Third — ${t}`, count:2, band:thirdBg[t], thirds:[t], lanes:['Top','Bottom'],
+    text:`Activate every one of your units currently in <b>Third ${t}</b>, across all three lanes.${seamNote}`});
+}
+commandCards.push({kind:'free', title:'Tactical Free', count:6, band:'var(--cmd-navy)', glyph:'&#9679;&nbsp;&#9679;',
+  text:'Activate <b>any 2</b> of your units, anywhere on the pitch.'});
+commandCards.push({kind:'press', title:'Full Press', count:3, band:'var(--cmd-navy)', glyph:'&#9679;&#9679;&#9679;&#9679;&#9679;',
+  text:'Activate <b>all 5</b> of your units, and Act with <b>two</b> of them instead of one. At end of turn, discard your next <b>2</b> card draws unseen.'});
+commandCards.push({kind:'keeper', title:"Keeper&rsquo;s Call", count:2, band:'var(--cmd-navy)', glyph:'&#9812;',
+  text:'Activate your <b>Goalkeeper only</b>. Whether or not they do anything, draw <b>1 extra card</b> this turn regardless — a Tactic Card in the Advanced Game, a Command Card in the Base Game.'});
+commandCards.push({kind:'counter', title:'Counter', count:3, band:'var(--cmd-navy)', glyph:'&#8617;',
+  text:'<b>Not played on your turn.</b> Hold it, then discard to force a reaction — see Rulebook &sect;10.'});
+
+function renderCommandCard(c){
+  const iconBlock = c.icon ? c.icon : (c.kind==='zone'||c.kind==='lane'||c.kind==='third'
+    ? zoneIcon(c.thirds, c.lanes)
+    : `<div class="icon-glyph">${c.glyph}</div>`);
+  return card(`
+    ${commandBand(c.title, 'Command', c.band)}
+    <div class="body">
+      ${iconBlock}
+      <div class="rule-text">${c.text}</div>
+    </div>
+    <div class="footer">Hexside · Command</div>
+  `);
+}
+
+// ---------- PLAYER ROSTER ----------
+// 2026-09-08: the Advanced Game (Base Game + Tactic Deck) currently plays the SAME
+// roster as the Base Game, deliberately unified while the Base Game is validated on
+// its own - one set of Player cards covers both tiers for now. This will likely
+// diverge again once the Tactic Deck itself gets tailored for Advanced play; if so,
+// bring back a second array here the way engine/sim.py keeps ROSTER_ADVANCED_ARCHIVE
+// for exactly that.
+const players = [
+  {pos:'Goalkeeper', abbr:'GK', pace:3, shot:0, shotRange:null, control:2, range:2, tackle:2, save:3, sig:'Shot-Stopper', sigText:'Once per match, reroll one Blank die on your Save roll.'},
+  {pos:'Sweeper', abbr:'SW', pace:4, shot:3, shotRange:2, control:5, range:2, tackle:3, sig:'Overlap', sigText:'Once per turn, when activated by a Lane or Third card, move 1 extra hex if you end in Third 2 (midfield) &ndash; not if it carries you into the attacking third.'},
+  {pos:'Wingback', abbr:'WB', pace:3, shot:3, shotRange:2, control:5, range:3, tackle:4, sig:'Last Man', sigText:'Once per match, make a free Tackle Challenge without spending a Counter card.'},
+  {pos:'Playmaker', abbr:'PM', pace:4, shot:4, shotRange:3, control:4, range:4, tackle:2, sig:'Vision', sigText:'Once per match, this unit&rsquo;s passes ignore one opposing Zone of Control.'},
+  {pos:'Poacher', abbr:'PO', pace:5, shot:5, shotRange:4, control:5, range:1, tackle:2, sig:'Clinical', sigText:'Once per match, reroll one Blank die on a Shot.'},
+];
+function renderPlayerCard(p){
+  return card(`
+    ${commandBand(p.pos, 'Player Roster', 'var(--pitch-green)')}
+    <div class="body">
+      <div class="pos-abbr">${p.abbr}</div>
+      <!-- Dice symbols for the four dice-roll stats (Save/Shot, Control, Tackle) - how
+           many dice this unit actually rolls; plain numbers stay plain numbers for Pace
+           and Range, which are hex distances, not roll counts, so mixing the two glyph
+           styles keeps them visually distinct at a glance. -->
+      <div class="stat-row"><span>Pace</span><b>${p.pace}</b></div>
+      <div class="stat-row"><span>${p.save ? 'Save' : 'Shot'}</span>${diceRow(p.save || p.shot)}</div>
+      <div class="stat-row"><span>Control</span>${diceRow(p.control)}</div>
+      <div class="stat-row"><span>Range (Pass/Shot)</span><b>${p.range} / ${p.shotRange ?? '—'}</b></div>
+      <div class="stat-row"><span>Tackle</span>${diceRow(p.tackle)}</div>
+      <div class="sig-box"><span class="name">${p.sig}</span>${p.sigText}</div>
+    </div>
+    <div class="footer">Hexside · Player Roster</div>
+  `);
+}
+
+// ---------- TACTIC DECK (26 cards) ----------
+const tactics = [
+  {t:'Through Ball', cost:1, tag:'Attack', text:'A pass this turn ignores one defending unit&rsquo;s Zone of Control.'},
+  {t:'Nutmeg', cost:2, tag:'Attack', text:'In a Dribble Challenge, rolling at least 1 Flair symbol wins the challenge outright.'},
+  {t:'Step-Over', cost:1, tag:'Attack', text:'Reroll up to 2 dice in a Dribble Challenge.'},
+  {t:'Curl Shot', cost:2, tag:'Attack', text:'+1 Attack die to a Shot.'},
+  {t:'One-Two', cost:1, tag:'Attack', text:'Pass to an adjacent teammate and immediately get it back, placed in any unoccupied hex adjacent to them, for free.'},
+  {t:'Backheel', cost:1, tag:'Attack', text:'Pass to an adjacent teammate for free — doesn&rsquo;t use your one action for the turn.'},
+  {t:'Long Ball', cost:2, tag:'Attack', text:'Pass may target any unit up to 3 zones away along a straight lane, ignoring Pass Range and intervening Zones of Control.'},
+  {t:'Composure', cost:1, tag:'Attack', text:'Reroll up to 1 die from a Shot you\'ve just taken.'},
+  {t:'Strong Tackle', cost:0, tag:'Defense', text:'+1 Attack die to a Tackle. Free to play. A standard lost Tackle draws once from the 12-card Discipline Deck — a lost Strong Tackle draws from the same deck twice instead, applying both cards, on top of the usual 1 Flair.'},
+  {t:'Last-Ditch Block', cost:2, tag:'Defense', text:'Playable as a Counter. Cancel one Success symbol from an incoming Shot or Pass roll.'},
+  {t:'Jockey', cost:1, tag:'Defense', text:'Reaction. The instant an opposing unit is activated to move, if you have a unit adjacent to it, discard Jockey to reduce that unit&rsquo;s Pace by 1 for this move only. No roll, no Discipline risk.'},
+  {t:'Press', cost:1, tag:'Defense', text:'Force an immediate Tackle Challenge against an adjacent opponent, using an unactivated unit.'},
+  {t:'Foul', cost:0, tag:'Risk', text:'Instantly stop an opposing Dribble Challenge or Pass, if adjacent to the ball-carrier. Draw from the Discipline Deck, redrawing past any Clean Challenge.'},
+];
+function renderTacticCard(t){
+  const bg = t.tag==='Attack' ? 'var(--lane-top)' : (t.tag==='Defense' ? 'var(--cmd-navy)' : '#7a6a54');
+  return card(`
+    ${commandBand(t.t, 'Tactic · '+t.tag+(t.cost?' · '+t.cost+' Flair':' · Free'), bg)}
+    <div class="body">
+      <div class="rule-text" style="font-size:.78rem;margin-top:8px">${t.text}</div>
+    </div>
+    <div class="footer">Hexside · Tactic</div>
+  `);
+}
+
+// ---------- DISCIPLINE DECK (12 cards: 6 base + 6 Clean Challenge) ----------
+// One shared deck for every draw - standard Tackle, Strong Tackle, and Foul alike.
+// Shuffle and return the card(s) drawn after every draw (§12): no deck-memory, ever.
+// Foul is the one exception to what's ALLOWED to stand - on a Foul, a drawn Clean
+// Challenge is set aside and redrawn past, repeating until a real card comes up.
+const discipline = [
+  {t:'Warning', count:2, text:'Nothing happens. Play on from a free kick at the spot of the foul.', bg:'var(--paper-2)', color:'var(--ink)'},
+  {t:'Clean Challenge', count:6, text:'The tackle failed, but it wasn&rsquo;t a foul. No effect. Live on a standard Tackle or Strong Tackle draw; a Foul redraws past it instead.', bg:'var(--pitch-green-3)', color:'#fff'},
+  {t:'Advantage / Play On', count:1, text:'The fouled side may ignore the stoppage and continue with the ball.', bg:'var(--pitch-green)', color:'#fff'},
+  {t:'Yellow Card', count:2, text:'The offending unit&rsquo;s Pace is reduced by 1 for the rest of the match, AND it goes to the sin-bin immediately - it misses its side&rsquo;s next turn entirely, then returns automatically. A second Yellow becomes a Red.', bg:'var(--yellow-card)', color:'#3a2c00'},
+  {t:'Red Card', count:1, text:'The offending unit is removed from the match. That side plays a unit down.', bg:'var(--red-card)', color:'#fff'},
+];
+function renderDisciplineCard(d){
+  return card(`
+    <div class="band" style="background:${d.bg};color:${d.color}"><div class="title">${d.t}</div><div class="kind">Discipline</div></div>
+    <div class="body"><div class="rule-text" style="margin-top:10px">${d.text}</div></div>
+    <div class="footer">Hexside · Discipline</div>
+  `);
+}
+
+// ---------- PAGINATION ----------
+const root = document.getElementById('root');
+function paginate(items, label){
+  const lbl = document.createElement('div'); lbl.className='deck-label'; lbl.textContent=label;
+  root.appendChild(lbl);
+  for (let i=0;i<items.length;i+=9){
+    const sheet = document.createElement('div'); sheet.className='sheet';
+    items.slice(i,i+9).forEach(el=>sheet.appendChild(el));
+    while (sheet.children.length < 9) sheet.appendChild(document.createElement('div'));
+    root.appendChild(sheet);
+  }
+}
+const commandFlat = commandCards.flatMap(c => repeat(()=>renderCommandCard(c), c.count));
+paginate(commandFlat, `Command Deck — ${commandFlat.length} cards (print ×2, private hand per side)`);
+paginate(players.map(renderPlayerCard), `Player Roster — ${players.length} cards (print once; same roster for both Base and Advanced Game at this stage, see rulebook §14)`);
+const tacticFlat = tactics.flatMap(t => repeat(()=>renderTacticCard(t), 2));
+paginate(tacticFlat, `Tactic Deck — ${tacticFlat.length} cards (print ×2, private hand per side)`);
+const discFlat = discipline.flatMap(d => repeat(()=>renderDisciplineCard(d), d.count));
+paginate(discFlat, `Discipline Deck — ${discFlat.length} cards (print once, shared)`);
+</script>
+</body>
+</html>

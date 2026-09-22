@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexside Character Skins Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2420; --paper:#faf8f3; --paper-2:#f1ede2; --muted:#6b7268;
+    --pitch-green:#2f6b4f; --pitch-green-2:#3d8062; --pitch-green-3:#5aa07e;
+    --cmd-navy:#25334d; --ochre:#b5842a; --rule:#d8d2c2; --red-card:#a4372f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;line-height:1.55;font-size:15.5px}
+  .wrap{max-width:840px;margin:0 auto;padding:0 28px 100px}
+  h1,h2,h3{font-family:'Fraunces',ui-serif,Georgia,serif;font-weight:600;line-height:1.15;text-wrap:balance;color:var(--ink)}
+  h1{font-size:2.5rem;font-weight:700;margin:0 0 4px}
+  h2{font-size:1.5rem;margin:2.2em 0 .3em;border-bottom:2px solid var(--pitch-green);padding-bottom:.3em;display:flex;align-items:baseline;gap:10px}
+  h2 .n{font-family:'IBM Plex Mono',monospace;font-size:.62em;color:var(--ochre);font-weight:600}
+  h3{font-size:1.05rem;margin:1.4em 0 .4em;color:var(--pitch-green)}
+  p{margin:0 0 1em}
+  strong{color:var(--ink)}
+  em{color:var(--muted);font-style:normal}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ochre);font-weight:600}
+  .subtitle{color:var(--muted);font-size:1.05rem;margin:6px 0 2em}
+  header.cover{padding:56px 0 18px;border-bottom:3px solid var(--ink)}
+  .cover-meta{display:flex;gap:18px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted);margin-top:16px;flex-wrap:wrap}
+  .cover-meta span{background:var(--paper-2);border-radius:4px;padding:3px 9px}
+  .status{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;border-radius:4px;padding:2px 9px;font-weight:600}
+  .status.adopted{background:var(--pitch-green);color:#fff}
+  .status.fixed{background:var(--cmd-navy);color:#fff}
+  .status.renamed{background:var(--ochre);color:#fff}
+  .status.draft{background:var(--muted);color:#fff}
+  .table-wrap{overflow-x:auto;margin:1em 0}
+  table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+  th,td{border:1px solid var(--rule);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:var(--pitch-green);color:#fff;font-weight:600;font-size:.82rem}
+  tbody tr:nth-child(even){background:var(--paper-2)}
+  td.num,th.num{text-align:right;font-family:'IBM Plex Mono',monospace}
+  .callout{background:var(--paper-2);border-left:4px solid var(--ochre);border-radius:0 8px 8px 0;padding:12px 16px;margin:1.2em 0;font-size:.92rem}
+  .verify{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:16px 20px;margin:1.2em 0}
+  .verify::before{content:"Verified";display:block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--pitch-green);margin-bottom:.5em;font-weight:600}
+  .verify ul{margin:0;padding-left:1.2em}
+  .verify li{margin-bottom:.3em}
+  .stat-row{display:flex;justify-content:space-between;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:.85rem;padding:3px 0;border-bottom:1px dotted var(--rule)}
+  .stat-row .lbl{color:var(--muted)}
+  .stat-row .val{font-weight:600}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;margin:1em 0}
+  .bugfix{border-left:4px solid var(--red-card);background:#fdeeec;border-radius:0 8px 8px 0;padding:10px 16px;margin:1em 0;font-size:.9rem}
+  .bugfix::before{content:"Bug found & fixed";display:block;font-family:'IBM Plex Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--red-card);margin-bottom:.35em;font-weight:600}
+  .timeline{margin:1em 0;padding:0;list-style:none}
+  .timeline li{position:relative;padding:2px 0 14px 22px;border-left:2px solid var(--rule);margin-left:6px}
+  .timeline li:last-child{border-left-color:transparent;padding-bottom:0}
+  .timeline li::before{content:"";position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--ochre)}
+  .timeline .who{font-family:'IBM Plex Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ochre);font-weight:600;display:block;margin-bottom:.2em}
+  footer.book{margin-top:3.5em;padding-top:1.2em;border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem}
+  ::selection{background:var(--ochre);color:#fff}
+  @media print{ @page{ size: A4; margin: 0.6in; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="cover">
+  <div class="kicker">Design &amp; Playtest Report</div>
+  <h1>Hexside &mdash; Character Skins</h1>
+  <div class="subtitle">Twelve optional alternate Player Roster cards, designed, wired into both engines, and verified &mdash; from first sketch to 4,000 clean matches across both engines</div>
+  <div class="cover-meta">
+    <span>2026-09-17, updated 2026-09-21</span>
+    <span>hexside-character-cards.html &middot; engine/sim.py &middot; both playtest drivers</span>
+    <span>All batches: real dice, real random draft, randomized rosters</span>
+  </div>
+</header>
+
+<h2><span class="n">1</span> Twelve characters, one design rule <span class="status adopted">Cards built</span></h2>
+<p>The standard five positions play the same on both sides of the ball &mdash; the idea this session added was optional personality: amateur five-a-side archetypes (the unfit one, the enforcer, the one who takes it far too seriously) a side can swap in for any of its five slots before kickoff, one alternate per slot at most. Twelve were built: one for Goalkeeper, two or three each for the other four.</p>
+<p>Every one of the five standard positions already carries a Signature ability &mdash; Shot-Stopper, Overlap, Last Man, Vision, Clinical &mdash; a small once-per-match or once-per-turn power. Rather than invent new always-on mechanics per character, each skin is a small stat delta from its base slot (kept inside the range the standard five already span) plus a themed <strong>replacement</strong> Signature reusing that same slot. It's a hand-tuned power budget the game already ships with five real examples of &mdash; reusing it, instead of asking for twelve bespoke new systems, is what made the rest of this session's work tractable.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Slot</th><th>Character</th><th>Signature</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td>GK</td><td>The Wall</td><td>Immovable</td><td>Reroll up to 2 Blank Save dice (base: 1)</td></tr>
+<tr><td>GK</td><td>Sunday Ederson</td><td>Playing Out</td><td>Leaves its zone for one activation &mdash; see &sect;4</td></tr>
+<tr><td>SW</td><td>Big Dave</td><td>No Way Through</td><td>Auto-win a Tackle, no roll &mdash; but draws Discipline twice</td></tr>
+<tr><td>SW</td><td>Uncle Barry</td><td>Reads the Game</td><td>Free Jockey once/match &mdash; no Flair, no card</td></tr>
+<tr><td>SW</td><td>Gaffer</td><td>Marshalled</td><td>One teammate acts as though also activated this turn</td></tr>
+<tr><td>WB</td><td>The Engine</td><td>Gasser</td><td>&minus;1 Pace, standing, from the start of the second half</td></tr>
+<tr><td>WB</td><td>Dodgy Knee</td><td>One More Run</td><td>Ignore ZoC once/match &mdash; then &minus;1 Pace for the rest of that half</td></tr>
+<tr><td>PM</td><td>Roy</td><td>Sees Red</td><td>+1 Tackle die once/match &mdash; double Discipline draw if lost</td></tr>
+<tr><td>PM</td><td>Magic</td><td>Showman</td><td>Next Nutmeg/Step-Over costs 1 less Flair</td></tr>
+<tr><td>PO</td><td>Flash</td><td>Out of Nowhere</td><td>Ignore ZoC once/match &mdash; no Shot that activation</td></tr>
+<tr><td>PO</td><td>Me!</td><td>Main Character</td><td>Must Shoot, not Pass, when Through on Goal &mdash; see &sect;3</td></tr>
+<tr><td>PO</td><td>The Wardrobe</td><td>Immovable Object</td><td>Cancel one attacker Success on an incoming Tackle</td></tr>
+</tbody>
+</table></div>
+<div class="bugfix">One draft correction, caught before any code existed: "The Wardrobe"'s first pass was flavored as winning aerial duels. Hexside has no aerial-contest mechanic at all &mdash; only ground-based Dribble/Tackle/Pass/Shot/Save Challenges. Rewritten to a purely ground-game identity (backs into defenders, shields the ball); the mechanic itself was never actually aerial-dependent, only the prose was.</div>
+
+<h2><span class="n">2</span> The K3 occupancy crash <span class="status fixed">Root-caused &amp; fixed</span></h2>
+<div class="bugfix"><code>ValueError: OCCUPANCY CONFLICT: K3 holds both A-PO and A-SW</code> &mdash; surfaced incidentally during an unrelated house-rule trial, then root-caused on request rather than left tolerated. Two bugs stacked: an Emergency Goalkeeper deputy wasn't reserved into its zone before the normal restart draft, the way the real Goalkeeper always is &mdash; so another unit could legally draft onto the exact zone hex the deputy needed a moment later. When that happened, <code>_zone_hex()</code>'s own fallback silently handed back the first zone hex anyway &mdash; a hex it had just proven was occupied.</div>
+<p>Fixed at both points: <code>formation()</code> now reserves a deputy's zone hex in the same upfront step the real Goalkeeper already uses (and the deputy stays eligible as a last-resort kickoff taker, unchanged); <code>_zone_hex()</code> now widens its search &mdash; the zone's own neighbors, then the whole board &mdash; instead of ever handing back a hex it just proved was taken.</p>
+<div class="verify"><ul>
+<li>40,000+ direct <code>formation()</code> trials with a forced Emergency Goalkeeper (including both sides deputized at once, and the deputy-as-only-unit-left edge case) &mdash; zero crashes, zero overlaps</li>
+<li>Both drivers re-run clean at N=1000 afterward, one run hitting 1,357 sin-bin trips (heavy Emergency-Goalkeeper exercise) with zero conflicts</li>
+</ul></div>
+
+<h2><span class="n">3</span> Signature abilities, both drivers <span class="status adopted">Implemented</span></h2>
+<p>All twelve Signatures went from card text to real engine behavior this session, in <code>driver_base.py</code> (Base Game) first, then <code>driver.py</code> (Advanced). The five standard Signatures were already hardcoded by slot code (<code>if unit == 'PO': # Clinical</code>); rather than bolt twelve special cases on top, every roster slot now carries a <code>sig</code> key, and every trigger point dispatches on that key instead &mdash; a swapped-in character roster drives the exact same code a standard one does, confirmed by a direct regression check (standard five, no characters, all pre-existing Signature rates unchanged).</p>
+<p>Porting from Base to Advanced wasn't a copy-paste in two places, both found by reading the target driver's actual code rather than assuming it matched:</p>
+<ul>
+<li><strong>Sees Red</strong> reuses Strong Tackle's own dice logic. Base's first version borrowed the real <code>sim.strong_tackle()</code> function by temporarily slipping a fake card into an always-empty hand. Advanced's hand is <em>not</em> always empty &mdash; a genuine Strong Tackle card can be sitting there at the same moment, and the same trick would risk leaving a duplicate behind. Reimplemented to call the dice/discipline logic directly, never touching the card economy at all.</li>
+<li><strong>Showman</strong> has zero code in Base &mdash; its trigger (playing Nutmeg or Step-Over) is a Tactic-deck card Base never deals, so there was nothing to hook. Real implementation landed only in Advanced, inline inside <code>dribble_contest()</code>.</li>
+</ul>
+<p><strong>Main Character</strong> (Me!) was implemented, then deleted: tracing every place the engine's own "Through on Goal" flag gets set showed it can only ever become true inside a code branch that's mutually exclusive with the one a Pass-instead-of-Shot decision would need &mdash; this driver never actually offers that choice to any character, so there was nothing left to override. Confirmed independently in each driver (and, later, in the digital board too) rather than assumed to carry over from one to the other. A one-off <code>KeyError: 'GK'</code> was also caught and fixed in testing: Playing Out is the first way a Goalkeeper can ever reach a real Shot attempt, a code path the shot-tracking stats had never needed a slot for before.</p>
+<div class="callout"><strong>2026-09-21 redesign:</strong> once real batch data confirmed Me! was structurally inert (see &sect;5), "Main Character" was replaced outright rather than left as a permanently dead card. New effect: once/match, reroll <em>all</em> Blank dice on a Shot, not just one &mdash; the same mechanism as Clinical, sized up, in all three implementations (both drivers and the digital board). "He never misses the big moment" keeps the flavor; the card name and slot are unchanged.</div>
+<div class="verify"><ul>
+<li>N=400 on each driver after the full port, plus a 60-game smoke test before every scale-up &mdash; zero crashes throughout</li>
+<li>All 11 implementable Signatures fired substantially in every batch (dozens to hundreds of times each per 400 games) &mdash; genuinely reachable, not just wired</li>
+<li>Real Strong Tackle plays and Sees Red confirmed firing side-by-side in Advanced with no interference between them</li>
+</ul></div>
+
+<h2><span class="n">4</span> Playing Out &mdash; three rounds of correction <span class="status fixed">Corrected live</span></h2>
+<p>"Playing Out" lets a Goalkeeper leave its own zone for one activation. What happens next went through three real design passes in one sitting, each one a genuine behavior change, not a polish pass &mdash; worth recording as a process, not just a final answer.</p>
+<ul class="timeline">
+<li><span class="who">First build</span> The Goalkeeper snapped back into its zone instantly, same turn, no matter what. Safe, but asked directly "how does it get back?" showed the honest answer was <em>nothing does it</em> &mdash; there was no return code at all. Direct testing confirmed a stranded Goalkeeper has <em>zero</em> legal moves home on its own: the zone-lock filter only checks hexes reachable from where it already stands, with no fallback once that stops including the zone at all &mdash; the ordinary result of chasing the ball toward the opponent's goal, not a rare edge case. Left as-is, that's a free, unsaved goal on the very next shot faced.</li>
+<li><span class="who">First correction</span> "The goalkeeper is forced to return... the next turn" &mdash; the instant teleport was too safe. A real one-turn exposure window, where the zone genuinely sits open, is the point of a card whose own flavor says it "occasionally undoes the whole team." Reworked to a pending-return flag, resolved at the start of the side's own next turn.</li>
+<li><span class="who">Second correction</span> Even a forced return next turn shouldn't be guaranteed &mdash; "if his route is blocked... and his pace can't get him back... he gets a yellow card," chosen explicitly over a version where the return still always succeeds. Reworked again: a genuine Pace-limited <code>legal_reach()</code> attempt, blockable like any real move. Empty (the common outcome once it's wandered far) means a guaranteed Yellow Card, applied directly rather than a random Discipline Deck draw &mdash; which then does everything else for free through code that already existed: permanent Pace &minus;1, a one-turn sin-bin trip with the zone genuinely open the whole time, and an automatic return to zone the moment it comes back, via the sin-bin's own pre-existing logic. A second failure escalates to a Red Card the same organic way, sending the real Goalkeeper off entirely.</li>
+</ul>
+<div class="bugfix">Stress-testing the second correction (forcing this character onto both sides to maximize how often the check fires) hit a genuine <code>KeyError: 'GK'</code>. Root cause: nothing in the Discipline system had ever checked whether a unit being carded and pulled off the pitch was the <em>current ball carrier</em> &mdash; unreachable before, since every existing card-triggering event (a lost Tackle, a Foul) always lands on whoever initiated the challenge, never the passive carrier. Playing Out's own forced-return check is the first code path that can card the carrier directly. Fixed once, at the engine level (a new <code>_drop_ball_if_holding()</code> helper in <code>apply_discipline</code>/<code>send_to_sinbin</code>), rather than patched only where it happened to surface &mdash; it protects every future caller with the same shape, in both drivers at once.</div>
+<div class="verify"><ul>
+<li>300-game batches forcing this character onto both sides, in both drivers, after every correction &mdash; zero crashes on the final version</li>
+<li>Direct before/after tests on the return mechanism itself, not just full-match runs: confirmed empty in the stranded case, confirmed correct in the successful-return case</li>
+<li>Final failure-to-return rate: ~0.4&ndash;0.5% of uses across n=1000 in each driver &mdash; real, rare, not dead</li>
+</ul></div>
+
+<h2><span class="n">5</span> Final verification &mdash; n=2000, both drivers</h2>
+<p>An initial n=1000-per-driver pass came back clean; a follow-up doubled it to <strong>2000 matches per driver (4000 total)</strong>, a fresh random character in every slot every match on top of the engine's own already-randomized formation draft and kickoff draft &mdash; the most exercise any single verification pass has given this system.</p>
+<div class="stat-grid">
+<div>
+<h3>Base Game</h3>
+<div class="stat-row"><span class="lbl">Matches</span><span class="val">2000 / 2000, no crash</span></div>
+<div class="stat-row"><span class="lbl">Goals / match</span><span class="val">2.769</span></div>
+<div class="stat-row"><span class="lbl">Scoreless</span><span class="val">7.2%</span></div>
+<div class="stat-row"><span class="lbl">Cards / match</span><span class="val">2.394</span></div>
+<div class="stat-row"><span class="lbl">Stat anomalies</span><span class="val">0</span></div>
+</div>
+<div>
+<h3>Advanced Game</h3>
+<div class="stat-row"><span class="lbl">Matches</span><span class="val">2000 / 2000, no crash</span></div>
+<div class="stat-row"><span class="lbl">Goals / match</span><span class="val">2.796</span></div>
+<div class="stat-row"><span class="lbl">Scoreless</span><span class="val">6.8%</span></div>
+<div class="stat-row"><span class="lbl">Cards / match</span><span class="val">2.924</span></div>
+<div class="stat-row"><span class="lbl">Stat anomalies</span><span class="val">0</span></div>
+</div>
+</div>
+<p>Goals per match ranged 0&ndash;11 across both drivers, with the same long thin tail of high-scoring outliers. Since Me!'s redesign (&sect;3), his pick shows up disproportionately among the highest-scoring and most lopsided matches in both drivers &mdash; expected, not a balance concern: "reroll all Blanks" is a direct conversion boost, so more of his Shots landing naturally means more goals when he's fielded, without his overall pick rate shifting (still an even ~1-in-3 of the PO slot in both drivers). Advanced's higher cards/match is expected too, not a regression: Strong Tackle, Foul, and Press all add discipline-drawing chances Base's permanently empty Tactic hand never gets.</p>
+<h3>Signature fires per 2000 matches</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Character</th><th>Slot</th><th class="num">Base</th><th class="num">Advanced</th></tr></thead>
+<tbody>
+<tr><td>The Wall</td><td>GK</td><td class="num">1859</td><td class="num">1891</td></tr>
+<tr><td>Sunday Ederson</td><td>GK</td><td class="num">1012</td><td class="num">1103</td></tr>
+<tr><td>Big Dave</td><td>SW</td><td class="num">816</td><td class="num">784</td></tr>
+<tr><td>Uncle Barry</td><td>SW</td><td class="num">803</td><td class="num">756</td></tr>
+<tr><td>Gaffer</td><td>SW</td><td class="num">632</td><td class="num">646</td></tr>
+<tr><td>The Engine</td><td>WB</td><td class="num">1811</td><td class="num">1798</td></tr>
+<tr><td>Dodgy Knee</td><td>WB</td><td class="num">960</td><td class="num">901</td></tr>
+<tr><td>Roy</td><td>PM</td><td class="num">1791</td><td class="num">1737</td></tr>
+<tr><td>Magic</td><td>PM</td><td class="num">0</td><td class="num">518</td></tr>
+<tr><td>Flash</td><td>PO</td><td class="num">833</td><td class="num">896</td></tr>
+<tr><td>Me!</td><td>PO</td><td class="num">472</td><td class="num">451</td></tr>
+<tr><td>The Wardrobe</td><td>PO</td><td class="num">1074</td><td class="num">958</td></tr>
+</tbody>
+</table></div>
+<div class="callout">Magic's zero in Base is expected, not a bug &mdash; Showman needs a real Nutmeg or Step-Over play, and Base never deals Tactic cards. Me! now fires for real (see the redesign note in &sect;3) &mdash; and in both drivers, matches where he's picked skew toward the highest-scoring outliers, a reproducible effect of the new reroll consistent with what "reroll all Blanks" should do, not noise.</div>
+<p>Both rosters' pick distributions came back even across the full 2000-game samples (no character starved of exercise), and <code>batch_stats.json</code> was confirmed to hold the user's own real prior data intact after every run &mdash; the harness that reuses each driver's <code>run_match()</code> has to import the file itself, which runs a small throwaway match as a side effect unless guarded.</p>
+<div class="callout">One counting quirk turned up at this scale, in the test harness only: a handful of matches (0/2000 Base, 24/2000 Advanced in this pass; 2/2000 and 15/2000 in the prior one &mdash; the rate itself varies batch to batch, as expected for a low-probability timing quirk) log a slightly different red-card count depending on which of two counters is asked &mdash; <code>sent_off</code> (a direct list, authoritative) versus <code>reds</code> (detected by scanning a fixed trailing slice of that match's event log, which can occasionally double-count or miss one when two cards land close together). Root-caused to the log-scanning method itself, not the Discipline rules &mdash; <code>apply_discipline</code> was confirmed to record exactly one send-off per card, every time. Harness-only; the shipped rules and both drivers' actual card enforcement are unaffected.</div>
+
+<footer class="book">Hexside &middot; Character Skins Report &middot; 2026-09-17, updated 2026-09-21 &middot; verification data from n=2000-per-driver batches</footer>
+</div>
+</body>
+</html>

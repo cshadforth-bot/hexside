@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexside Playtest Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2420; --paper:#faf8f3; --paper-2:#f1ede2; --muted:#6b7268;
+    --pitch-green:#2f6b4f; --pitch-green-2:#3d8062; --pitch-green-3:#5aa07e;
+    --cmd-navy:#25334d; --ochre:#b5842a; --rule:#d8d2c2; --red-card:#a4372f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;line-height:1.55;font-size:15.5px}
+  .wrap{max-width:840px;margin:0 auto;padding:0 28px 100px}
+  h1,h2,h3{font-family:'Fraunces',ui-serif,Georgia,serif;font-weight:600;line-height:1.15;text-wrap:balance;color:var(--ink)}
+  h1{font-size:2.5rem;font-weight:700;margin:0 0 4px}
+  h2{font-size:1.5rem;margin:2.2em 0 .3em;border-bottom:2px solid var(--pitch-green);padding-bottom:.3em;display:flex;align-items:baseline;gap:10px}
+  h2 .n{font-family:'IBM Plex Mono',monospace;font-size:.62em;color:var(--ochre);font-weight:600}
+  h3{font-size:1.05rem;margin:1.4em 0 .4em;color:var(--pitch-green)}
+  p{margin:0 0 1em}
+  strong{color:var(--ink)}
+  em{color:var(--muted);font-style:normal}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ochre);font-weight:600}
+  .subtitle{color:var(--muted);font-size:1.05rem;margin:6px 0 2em}
+  header.cover{padding:56px 0 18px;border-bottom:3px solid var(--ink)}
+  .cover-meta{display:flex;gap:18px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted);margin-top:16px;flex-wrap:wrap}
+  .cover-meta span{background:var(--paper-2);border-radius:4px;padding:3px 9px}
+  .status{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;border-radius:4px;padding:2px 9px;font-weight:600}
+  .status.adopted{background:var(--pitch-green);color:#fff}
+  .status.fixed{background:var(--cmd-navy);color:#fff}
+  .status.renamed{background:var(--ochre);color:#fff}
+  .table-wrap{overflow-x:auto;margin:1em 0}
+  table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+  th,td{border:1px solid var(--rule);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:var(--pitch-green);color:#fff;font-weight:600;font-size:.82rem}
+  tbody tr:nth-child(even){background:var(--paper-2)}
+  td.num,th.num{text-align:right;font-family:'IBM Plex Mono',monospace}
+  .callout{background:var(--paper-2);border-left:4px solid var(--ochre);border-radius:0 8px 8px 0;padding:12px 16px;margin:1.2em 0;font-size:.92rem}
+  .verify{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:16px 20px;margin:1.2em 0}
+  .verify::before{content:"Verified";display:block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--pitch-green);margin-bottom:.5em;font-weight:600}
+  .verify ul{margin:0;padding-left:1.2em}
+  .verify li{margin-bottom:.3em}
+  .stat-row{display:flex;justify-content:space-between;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:.85rem;padding:3px 0;border-bottom:1px dotted var(--rule)}
+  .stat-row .lbl{color:var(--muted)}
+  .stat-row .val{font-weight:600}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;margin:1em 0}
+  .bugfix{border-left:4px solid var(--red-card);background:#fdeeec;border-radius:0 8px 8px 0;padding:10px 16px;margin:1em 0;font-size:.9rem}
+  .bugfix::before{content:"Bug found & fixed";display:block;font-family:'IBM Plex Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--red-card);margin-bottom:.35em;font-weight:600}
+  footer.book{margin-top:3.5em;padding-top:1.2em;border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem}
+  ::selection{background:var(--ochre);color:#fff}
+  @media print{ @page{ size: A4; margin: 0.6in; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="cover">
+  <div class="kicker">Playtest &amp; Changelog Report</div>
+  <h1>Hexside</h1>
+  <div class="subtitle">Five changes landed and verified in one session, base engine through to the printed rulebook</div>
+  <div class="cover-meta">
+    <span>2026-09-16</span>
+    <span>engine/board.py &middot; engine/sim.py &middot; both playtest drivers &middot; hexside-rulebook.html</span>
+    <span>All batches: real dice, real random draft, no fixed formations</span>
+  </div>
+</header>
+
+<h2><span class="n">1</span> Pace +1, all five positions <span class="status adopted">Adopted</span></h2>
+<p>Goalkeeper, Sweeper, Wingback, Playmaker and Poacher each gained +1 Pace (2/3/2/3/4 &rarr; 3/4/3/4/5). Trialled first, then adopted as canon the same day once the numbers were in — live in the engine roster, the printed Player Roster cards, and the rulebook's own tuning-history prose.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Metric</th><th class="num">Before</th><th class="num">After</th></tr></thead>
+<tbody>
+<tr><td>Goals / match</td><td class="num">2.667</td><td class="num">2.956</td></tr>
+<tr><td>Shots / match</td><td class="num">5.214</td><td class="num">5.888</td></tr>
+<tr><td>Tackle win rate</td><td class="num">19.0%</td><td class="num">19.4%</td></tr>
+<tr><td>Dribble win rate</td><td class="num">52.6%</td><td class="num">53.1%</td></tr>
+<tr><td>Cards / match</td><td class="num">1.98</td><td class="num">2.16</td></tr>
+</tbody>
+</table></div>
+<p>The extra scoring came from more shots taken, not either contest getting easier — and it rebalanced who scores them: Poacher's goal share fell from 55.6% to 49.5% while Wingback and Sweeper both picked up share, since a flat +1 is a proportionally bigger gain for the slower positions.</p>
+
+<h2><span class="n">2</span> Emergency Goalkeeper sin-bin bug <span class="status fixed">Fixed</span></h2>
+<div class="bugfix">Both playtest drivers deputized an Emergency Goalkeeper on any routine sin-bin trip, not just a genuine send-off — the real Goalkeeper returning from the sin-bin then collided with its own still-present deputy and crashed the match outright. Root cause: the turn-start safety net checked "is the Goalkeeper simply absent from the pitch," which is equally true during a temporary sin-bin as a permanent dismissal.</div>
+<p>The same bug class had already been fixed once on the digital board earlier in the project — this was an independent recurrence in the Python reference engine, found incidentally while running an unrelated Pace trial. Fixed in both <code>driver.py</code> and <code>driver_base.py</code> by checking send-off status specifically, not mere absence.</p>
+<div class="verify"><ul>
+<li>Both drivers smoke-tested clean at N=50 after the fix</li>
+<li>Full N=1000 batch immediately after, zero crashes — sin-bin trips still occurring at the same rate, no longer colliding</li>
+</ul></div>
+
+<h2><span class="n">3</span> Bounce Pass — new mechanic <span class="status adopted">In the rulebook</span></h2>
+<p>A Pass may now be played off a side or back wall instead of straight at a teammate, reflecting once before landing. Worked out from first principles this session: the pitch's straight lines run on four axes (vertical, horizontal, and two diagonals), and reflecting any of them off either wall type always lands on another one of the same four — a closed system. Only the two diagonals actually redirect; a vertical or horizontal line either bounces straight back off its own matching wall or can't reach the other type at all.</p>
+<p>One exception drives the whole mechanic's appeal: the two goal-mouth hexes at each end have no wall on any axis. A line reaching one of them keeps going into the net instead of bouncing, resolved exactly like a Shot — Save-contested, never automatic. Pass Range is spent across both legs of the bend combined, the same way a straight Pass counts every hex it crosses.</p>
+<h3>Getting the AI to actually use it</h3>
+<p>Fairly ranked against a normal Pass, a bounce almost never won — it's locked to one of eight fixed lines from wherever the carrier stands, while a straight Pass can aim at any teammate on four axes. A deliberate ranking discount fixed the teammate case, but the empty-hex case needed something sharper: shrinking the discount didn't create a middle ground, it flipped outcomes from 100% one way to 100% the other at any fixed value. The two options are almost always tied in real positions, so no fixed number could split them — only coin-flipping whether the discount applies at all produced a genuine mix.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Driver</th><th class="num">Teammate: bounce share</th><th class="num">Empty hex: bounce share</th><th class="num">Bounce goals</th></tr></thead>
+<tbody>
+<tr><td>Base Game</td><td class="num">38%</td><td class="num">50%</td><td class="num">1 / 1000</td></tr>
+<tr><td>Advanced Game</td><td class="num">45%</td><td class="num">49%</td><td class="num">1 / 1000</td></tr>
+</tbody>
+</table></div>
+<p>Ported to the Advanced Game driver afterward — one real difference handled deliberately rather than copied blind: Composure, Curl Shot and Last Ditch Block are live Tactic Cards there, so a bounce-pass-turned-shot gets the same five Tactic Card interactions a normal Advanced Shot does, which the Base Game version correctly skips (its Tactic hand is always empty).</p>
+<div class="verify"><ul>
+<li>Geometry verified against every hand-derived worked example before any AI logic was written</li>
+<li>Two real bugs caught before trusting a number: an axis costing half its real Pass Range, and a self-pass misread as a completed teammate pass on a full round-trip bounce</li>
+<li>Clean N=1000 in both drivers after every fix, goals/match statistically flat against the no-bounce baseline in each</li>
+</ul></div>
+
+<h2><span class="n">4</span> Slide Tackle &rarr; Strong Tackle <span class="status renamed">Renamed</span></h2>
+<p>Real five-a-side football doesn't allow sliding tackles, so a card named after one was describing an illegal challenge. Renamed throughout the project — engine, both drivers, the printed cards, and the rulebook — with the mechanics completely untouched: +1 Attack die, free to play, double Discipline draw on a loss.</p>
+<p>Not a pure find-and-replace: a handful of sentences used "slide" as ordinary prose for the physical motion itself, not just the card's proper name, and needed rewriting rather than substitution. The digital board Artifact was checked directly and doesn't reference the card at all — it implements the Base Game's Command Deck only, with no Tactic Deck to have ever included it.</p>
+
+<h2><span class="n">5</span> Final confirmation, both drivers</h2>
+<p>After every change above, one last independent N=1000 batch per driver, to confirm the whole session's work holds together rather than trusting any single earlier run.</p>
+<div class="stat-grid">
+<div>
+<h3>Base Game</h3>
+<div class="stat-row"><span class="lbl">Matches</span><span class="val">1000 / 1000, no crash</span></div>
+<div class="stat-row"><span class="lbl">Cards / match</span><span class="val">2.191</span></div>
+<div class="stat-row"><span class="lbl">Strong Tackle</span><span class="val">0 (no Tactic Deck)</span></div>
+</div>
+<div>
+<h3>Advanced Game</h3>
+<div class="stat-row"><span class="lbl">Matches</span><span class="val">1000 / 1000, no crash</span></div>
+<div class="stat-row"><span class="lbl">Goals / match</span><span class="val">3.035</span></div>
+<div class="stat-row"><span class="lbl">Cards / match</span><span class="val">2.853</span></div>
+<div class="stat-row"><span class="lbl">Strong Tackle</span><span class="val">0.82 / match</span></div>
+</div>
+</div>
+<div class="callout">Strong Tackle's usage rate (0.82/match) lands almost exactly on Slide Tackle's own pre-rename rate (0.82&ndash;0.83/match) across every earlier batch this session &mdash; the clearest confirmation available that the rename changed nothing but the name.</div>
+
+<footer class="book">Hexside &middot; Playtest &amp; Changelog Report &middot; 2026-09-16 &middot; generated from the same session that made these changes</footer>
+</div>
+</body>
+</html>
