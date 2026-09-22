@@ -251,9 +251,12 @@ ROSTER_BASE = {
 # hexside-character-cards.html alternates) this unit's slot carries - driver code
 # dispatches on sim.ROSTER[unit]['sig'] rather than hardcoding the slot code, so a
 # swapped-in character roster (same 5 keys, different sig per slot) drives the exact
-# same trigger points a standard roster does. 'vision' has no driver implementation
-# yet (true of both drivers even before character skins existed) - kept here for data
-# completeness, not a gap this change introduces.
+# same trigger points a standard roster does. 'vision' IS implemented in both
+# playtest-ai/driver.py and driver_base.py (see their own vision_used/vision_played
+# tracking and the "ignores a defending Zone of Control, once per match" logic) - an
+# earlier version of this comment claimed neither driver had it, which was stale by the
+# time line 156 above was written. The digital board Artifact's own independent JS
+# implementation is the one still missing it, not either Python driver.
 
 # 2026-09-08 decision: the Advanced Game (Base Game + the Tactic Deck) currently plays
 # the SAME roster as the Base Game, deliberately - kept unified while the Base Game is

@@ -70,7 +70,7 @@ sim.ROSTER = sim.ROSTER_BASE  # Base Game roster (§14) - every sim.ROSTER[...] 
                               # below and inside sim.py's own functions (shot_dice(),
                               # save_stat(), etc.) now resolves to it, module-global.
 
-# Bounce pass mechanic (2026-09-16 design session, not yet in the printed rulebook): a
+# Bounce pass mechanic (2026-09-16 design session, now printed rulebook §8): a
 # deliberate rank_dist() discount for a bounce-to-teammate/bounce-to-empty-hex candidate
 # in try_plain_pass_or_clearance, so it actually gets chosen sometimes. Measured directly
 # (not assumed) that fair, unweighted rank_dist ranking makes it lose to a straight pass
@@ -1263,8 +1263,8 @@ def run_match(match_no):
         sim.check_no_overlap(s)
 
     def try_bounce_shot(mover, carrier, start):
-        """New mechanic (2026-09-16 design session, §14 addendum - not yet in the printed
-        rulebook), the 'net' half of it - see sim.bounce_pass_options's own docstring for
+        """New mechanic (2026-09-16 design session, §14 addendum, now printed rulebook §8),
+        the 'net' half of it - see sim.bounce_pass_options's own docstring for
         the full ruling (axis reflection table, A3/A4/K3/K4 have no wall on any axis, Pass
         Range spent counts both segments combined). Checked unconditionally, before even
         try_plain_pass_or_clearance runs - a genuine bonus scoring chance the direct-Shot
