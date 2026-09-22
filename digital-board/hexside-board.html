@@ -1118,6 +1118,40 @@ function hexPoints(cx,cy){
   for(let i=0;i<6;i++){ const a=Math.PI/180*(60*i+30); pts.push(`${cx+R*0.95*Math.sin(a)},${cy-R*0.95*Math.cos(a)}`); }
   return pts.join(' ');
 }
+// 2026-09-23: ported from source/hexside-pitch.html's own capPoints/hexClipPoints, the
+// treatment that squares off the print pitch's top/bottom and left/right edges - this
+// board only had the underlying row-0/6 geometry fixed (2026-09-22), never the matching
+// half-height-cap/flat-edge rendering, so it still drew every hex (including the new
+// caps) as an ordinary full hexagon. Same vertex-angle scheme as hexPoints above (flat-
+// top, 30/90/150/210/270/330deg), just with the digital board's own R*0.95 shrink factor
+// instead of the print files' R*0.98 - the two were already independently tuned before
+// this port, no reason to change that now.
+function hexHalfPoints(cx,cy,half){
+  const angles = half==='top' ? [330,30,90,270] : [210,150,90,270];
+  return angles.map(a=>{ const rad=Math.PI/180*a; return `${cx+R*0.95*Math.sin(rad)},${cy-R*0.95*Math.cos(rad)}`; }).join(' ');
+}
+// A naive hexHalfPoints undershoots the true flush line by a small but visible amount (its
+// 90/270deg "point" vertices aren't moved by the shrink factor in Y at all, while its
+// 30/150/210/330deg "flat edge" vertices are) - confirmed the exact same issue exists here
+// via getBoundingClientRect before trusting it, same as source/hexside-pitch.html's own
+// "Correction" pass found the hard way. Takes each neighbor's own already-rendered edge Y
+// in directly instead of re-deriving it from this hex's own center, so both edges land
+// exactly flush by construction rather than by coincidence.
+function capPoints(cx,half,flushOuterY,flushInnerY){
+  const outerHalf=R*0.95, innerHalf=R*0.95*0.5;
+  const pts = half==='bottom'
+    ? [[cx-outerHalf,flushOuterY],[cx+outerHalf,flushOuterY],[cx+innerHalf,flushInnerY],[cx-innerHalf,flushInnerY]]
+    : [[cx-innerHalf,flushInnerY],[cx+innerHalf,flushInnerY],[cx+outerHalf,flushOuterY],[cx-outerHalf,flushOuterY]];
+  return pts.map(p=>p.join(',')).join(' ');
+}
+// Column A/K's own outer point cut into a flat vertical edge, mirroring the caps' flush
+// treatment on the sides instead of top/bottom. 'left' drops the left (270deg) point (A);
+// 'right' drops the right (90deg) point (K) - the remaining 4 vertices already share an x
+// pairwise, so (like hexHalfPoints) this needs no new intersection math.
+function hexClipPoints(cx,cy,side){
+  const angles = side==='left' ? [30,90,150,210,330] : [30,150,210,270,330];
+  return angles.map(a=>{ const rad=Math.PI/180*a; return `${cx+R*0.95*Math.sin(rad)},${cy-R*0.95*Math.cos(rad)}`; }).join(' ');
+}
 function svgEl(tag,attrs){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
 
 function allHexes(){ const out=[]; for(const c of COLS) for(let r=minRow(c);r<=maxRow(c);r++) out.push(c+r); return out; }
@@ -1133,6 +1167,12 @@ function renderBoard(){
   const highlight = UI.highlightHexes || new Map(); // hex -> css class suffix
   const explainPhase = (UI.phase==='await-pass-target') || (UI.phase==='await-unit-select' && UI.pendingMoveUnit) || (UI.phase==='await-draft-hex');
 
+  // The Y a tall column's own top/bottom edge actually renders at, after the R*0.95 shrink
+  // - every row-0/row-6 cap's OUTER edge must match this exactly (see capPoints). Computed
+  // once per render rather than per-hex, same as source/hexside-pitch.html's own drawPitch.
+  const flushTopY = center('A1').y - R*0.95*Math.cos(Math.PI/6);
+  const flushBottomY = center('A6').y + R*0.95*Math.cos(Math.PI/6);
+
   for(const h of allHexes()){
     const {x,y} = center(h);
     const [c,r] = parseHex(h);
@@ -1141,13 +1181,32 @@ function renderBoard(){
     if(aEnd||kEnd) fill = 'var(--gk-zone)';
     const isClick = clickable.has(h);
     if(isClick) fill = '#f3dfa3';
-    const poly = svgEl('polygon',{points:hexPoints(x,y), fill, class:'hex'+(isClick?' clickable':'')});
+    // Row-0/row-6 short-column caps (half-height, flush with the tall columns) and column
+    // A/K's own flat-clipped outer edge - mutually exclusive, A/K are always tall so they
+    // never have a cap row. Ordinary hexPoints otherwise.
+    const isCap = isShort(c) && (r===minRow(c) || r===maxRow(c));
+    const capHalf = r===minRow(c) ? 'bottom' : 'top';
+    const edgeClip = c==='A' ? 'left' : (c==='K' ? 'right' : null);
+    let shapePoints;
+    if(isCap){
+      const flushOuterY = capHalf==='bottom' ? flushTopY : flushBottomY;
+      const flushInnerY = capHalf==='bottom'
+        ? center(c+'1').y - R*0.95*Math.cos(Math.PI/6)
+        : center(c+(maxRow(c)-1)).y + R*0.95*Math.cos(Math.PI/6);
+      shapePoints = capPoints(x, capHalf, flushOuterY, flushInnerY);
+    } else {
+      shapePoints = edgeClip ? hexClipPoints(x,y,edgeClip) : hexPoints(x,y);
+    }
+    const poly = svgEl('polygon',{points:shapePoints, fill, class:'hex'+(isClick?' clickable':'')});
     if(isClick){ poly.style.stroke='var(--ochre)'; poly.style.strokeWidth='3px'; }
     if(highlight.has(h)){ poly.style.stroke = highlight.get(h); poly.style.strokeWidth='4px'; }
     if(isClick) poly.onclick = ()=>onHexClick(h);
     else if(explainPhase){ poly.onclick = ()=>explainIllegalHex(h); poly.style.cursor='help'; }
     svg.appendChild(poly);
-    const lbl = svgEl('text',{x, y:y+R*0.85, 'text-anchor':'middle','font-size':R*0.28, class:'hex-label'});
+    // A row-6 cap's visible area is its upper half - the usual downward label offset would
+    // land outside it, so mirror upward for that one case only (mirrors hexside-pitch.html).
+    const labelY = (isCap && capHalf==='top') ? y-R*0.32 : y+R*0.85;
+    const lbl = svgEl('text',{x, y:labelY, 'text-anchor':'middle','font-size':R*0.28, class:'hex-label'});
     lbl.textContent = h;
     svg.appendChild(lbl);
   }
