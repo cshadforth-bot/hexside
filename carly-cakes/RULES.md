@@ -52,7 +52,7 @@ Most points wins. A tie is a shared win.
 ## Quirks
 
 - **Water bath** (Cheesecake, Fruitcake): can't be slammed.
-- **Preheated** (Tiramisu): bake it with the Risen edge up.
+- **Preheated** (Coffee & Salted Pecan): bake it with the Risen edge up.
 
 ## Effects (When pulled)
 

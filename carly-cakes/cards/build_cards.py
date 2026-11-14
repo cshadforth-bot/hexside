@@ -17,13 +17,15 @@ EFF = {
     "scrap": ("Reheat", "Use the most recently discarded card."),
 }
 QUIRK = {"sturdy": ("Water bath", "Can't be slammed."), "preheated": ("Preheated", "Bake with the Risen edge up.")}
-TAG = {"Souffle": "Shhh... don't slam the door!", "Macarons": "Tiny, fussy, fabulous.", "Scones": "Jam first. Fight me.",
-       "Choux Puffs": "Light as air. Mostly.", "Cupcakes": "Twice the cake, twice the fun.", "Genoise": "Plain? Never. Pure.",
+TAG = {"Souffle": "Shhh... don't slam the door!", "Celebration Cake": "Any excuse will do.", "Cookies": "Never enough in the jar.",
+       "Choux Puffs": "Light as air. Mostly.", "Birthday Cake": "Make a wish. Blow hard.", "Cherry Bakewell": "Cherry on top. Obviously.",
        "Lemon Drizzle": "Sharp wit, sweet finish.", "Red Velvet": "Dressed to impress.", "Brownies": "Fudgy. Gooey. Unbothered.",
-       "Victoria Sponge": "Jam, cream and a crown.", "Carrot Cake": "Eats its veg, then dessert.",
-       "Banana Bread": "Overripe and proud.", "Pavlova": "Crisp outside, cloud inside.", "Tiramisu": "Pick me up. Seriously.",
-       "Black Forest": "Dark, deep and cherry-topped.", "Croquembouche": "The tower of power.",
+       "Victoria Sponge": "Jam, cream and a crown.", "Carrot Cake": "Cream cheese frosting, obviously.",
+       "Blueberry & Lemon Cake": "Zesty, juicy, bursting.", "Pavlova": "Crisp outside, cloud inside.", "Coffee & Salted Pecan": "Sweet, salty, wide awake.",
+       "Black Forest": "Dark, deep and cherry-topped.", "Wedding Cake": "Three tiers of patience.",
        "Cheesecake": "Slow, smooth, slam-proof.", "Fruitcake": "Holiday legend. Built to last."}
+CARLY = {"Celebration Cake", "Cookies", "Birthday Cake", "Cherry Bakewell", "Lemon Drizzle", "Red Velvet", "Victoria Sponge",
+         "Carrot Cake", "Blueberry & Lemon Cake", "Coffee & Salted Pecan", "Wedding Cake"}
 FAM = {"quick": ("QUICK RISER", "#ff6f98", "#ffe3ec", "#ffb3c9"),
        "steady": ("STEADY BAKER", "#ffbe2e", "#fff2c9", "#ffe08a"),
        "slow": ("SLOW BURN", "#7f63ee", "#e9e2fd", "#c6b8f8")}
@@ -55,6 +57,7 @@ def card(i, name, d, eff, quirk):
     pk = max(d); nm = html.escape(name.replace("Souffle", "Souffl&eacute;")).replace("&amp;eacute;", "&eacute;")
     en, et = EFF[eff]
     q = QUIRK.get(quirk)
+    own = '<span class="own">&#9733; Carly&rsquo;s</span>' if name in CARLY else ''
     qhtml = f'<div class="quirk"><b>{q[0]}</b> {q[1]}</div>' if q else ""
     pills = pill("top", None, "BATTER", "batter")
     first_peak = d.index(pk)
@@ -63,12 +66,12 @@ def card(i, name, d, eff, quirk):
     return f'''<div class="card" style="--main:{c_main};--pale:{c_pale};--mid:{c_mid}">
   <div class="dots"></div>{pills}
   <div class="panel">
-    <div class="name">{nm}</div>
+    <div class="name{" two" if len(name) > 16 else ""}{" xtwo" if len(name) > 21 else ""}">{nm}</div>
     <div class="tag">{html.escape(TAG[name])}</div>
     <div class="art">{svg(name)}</div>
     {qhtml}
     <div class="eff"><span class="et">{html.escape(en)}</span><span class="ex">{html.escape(et)}</span></div>
-    <div class="foot"><span class="fam">{ftag}</span><span class="no">{i:02d}/18</span></div>
+    <div class="foot"><span class="fam">{ftag}</span>{own}<span class="no">{i:02d}/18</span></div>
   </div>
 </div>'''
 
@@ -111,6 +114,9 @@ body { font-family: "Nunito", system-ui, sans-serif; color: #3a2118 }
 .foot { display: flex; justify-content: space-between; align-items: center; font-size: 2.1mm; font-weight: 700; padding: 0 .4mm }
 .fam { font-family: "Fredoka", sans-serif; letter-spacing: .2mm; background: var(--main); color: #3a2118; padding: .3mm 1.6mm; border-radius: 1mm; border: .3mm solid #3a2118 }
 .no { color: #7b665a }
+.own { font-family: "Fredoka", sans-serif; font-weight: 600; letter-spacing: .15mm; color: #3a2118; font-size: 2.15mm }
+.name.two { font-size: 3.8mm; line-height: 1.25; white-space: nowrap }
+.name.xtwo { font-size: 3.3mm; line-height: 1.45 }
 .pill { position: absolute; width: 25mm; height: 7mm; margin-left: -12.5mm; margin-top: -3.5mm; background: #fffdf8; border: .45mm solid #3a2118; border-radius: 3.5mm; display: flex; align-items: center; gap: 1mm; padding: 0 1.6mm 0 .35mm }
 .e-top { left: 31.5mm; top: 4.3mm } .e-bottom { left: 31.5mm; top: 83.7mm; transform: rotate(180deg) }
 .e-left { left: 4.3mm; top: 44mm; transform: rotate(-90deg) } .e-right { left: 58.7mm; top: 44mm; transform: rotate(90deg) }

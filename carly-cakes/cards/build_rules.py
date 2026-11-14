@@ -107,7 +107,7 @@ def build():
 <p>Most cakes have an effect that happens when you <b>pull</b> them. <i>Use a card</i> means: bake it, slam with it, or put it in the Bin.</p>
 <div class="efx">{effects()}</div>
 <div class="mini" style="margin-top:2.4mm"><span class="chip q">Water bath</span><span>Can't be slammed (Cheesecake, Fruitcake).</span></div>
-<div class="mini"><span class="chip q">Preheated</span><span>Bake it with the Risen edge up (Tiramisu).</span></div></div>
+<div class="mini"><span class="chip q">Preheated</span><span>Bake it with the Risen edge up (Coffee &amp; Salted Pecan).</span></div></div>
 
 <div class="row">
  <div class="col"><h2 class="h-pink">Winning</h2>

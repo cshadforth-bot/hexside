@@ -59,6 +59,7 @@ table.cakes { min-width: 760px }
 thead th { font: 600 .72rem var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 10px 10px; border-bottom: 1.5px solid var(--rule); background: var(--panel) }
 td, tbody th { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: middle; text-align: left }
 tbody th { font: 600 .98rem var(--display); white-space: nowrap }
+tbody th small { display: block; font: 700 .7rem var(--body); color: var(--accent); letter-spacing: .04em }
 tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0 }
 .num { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .82rem } .c { text-align: center; font-variant-numeric: tabular-nums }
 td.fx { min-width: 260px; line-height: 1.45 } td.fx b { font-family: var(--display); font-weight: 700 }
@@ -158,7 +159,7 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
     <tbody>
 %%CARDROWS%%    </tbody>
   </table></div>
-  <p class="legend">Shapes run from spike (Soufflé, Macarons, Scones peak at Risen), through plateau (Cupcakes, Brownies, Carrot Cake), to slow burn (Croquembouche, Black Forest, Pavlova peak at Dark). Cakes were tuned by moving only each peak, so the shapes stayed as designed. They now earn %%PPBMIN%% to %%PPBMAX%% points per bake.</p>
+  <p class="legend">Shapes run from spike (Soufflé, Celebration Cake, Cookies peak at Risen), through plateau (Birthday Cake, Brownies, Carrot Cake), to slow burn (Wedding Cake, Black Forest, Pavlova peak at Dark). Eleven cakes are Carly's own and seven are classic guests. Cakes were tuned by moving only each peak, so the shapes stayed as designed. They now earn %%PPBMIN%% to %%PPBMAX%% points per bake.</p>
 </section>
 
 <section id="print">
@@ -244,7 +245,7 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 <section id="history">
   <h2>How it got here</h2>
   <ol class="history">
-    <li><b>First build.</b> Slam allowed on any cake at any time, dials set by hand. Seats were even (46 / 48) and the stronger bot beat the casual one 87% of the time. But Croquembouche burned 72% of the time and earned 1.6 points per bake, while the two slam-proof cakes earned about 7. In solo the bot I wrote played worse than the casual one (39.6 against 44.2).</li>
+    <li><b>First build.</b> Slam allowed on any cake at any time, dials set by hand. Seats were even (46 / 48) and the stronger bot beat the casual one 87% of the time. But Croquembouche (now the Wedding Cake) burned 72% of the time and earned 1.6 points per bake, while the two slam-proof cakes earned about 7. In solo the bot I wrote played worse than the casual one (39.6 against 44.2).</li>
     <li><b>Slam switched off.</b> The game became a solved puzzle: bake the biggest peak, pull it at the top. The casual bot kept up (60–66% for the strong bot) and scores reached 62 each. So the slam is what makes the game worth playing, and it has to stay.</li>
     <li><b>Auto-tuning rejected.</b> Letting the tuner scale every number flattened the slow cakes to 10 / 10 / 10, which removes the timing. The fix had to be in the rules, not the numbers.</li>
     <li><b>Slam limited to early stages.</b> Four options tried: slam anywhere, only Batter or Risen, only Risen or Golden, only through effects. Only Batter or Risen kept the best mix: a 76% skill gap in that run, 2.5 slams a game, even seats. It also reads naturally: you can't knock a cake that has set.</li>

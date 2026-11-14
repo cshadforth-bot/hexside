@@ -24,7 +24,7 @@
    "burn": 0.06300185299567634
   },
   {
-   "name": "Macarons",
+   "name": "Celebration Cake",
    "dial": [
     6,
     3,
@@ -37,7 +37,7 @@
    "burn": 0.03541532517707663
   },
   {
-   "name": "Scones",
+   "name": "Cookies",
    "dial": [
     6,
     2,
@@ -63,7 +63,7 @@
    "burn": 0.019762845849802372
   },
   {
-   "name": "Cupcakes",
+   "name": "Birthday Cake",
    "dial": [
     6,
     6,
@@ -76,7 +76,7 @@
    "burn": 0.007570659488559893
   },
   {
-   "name": "Genoise",
+   "name": "Cherry Bakewell",
    "dial": [
     4,
     7,
@@ -154,7 +154,7 @@
    "burn": 0.017354022049816252
   },
   {
-   "name": "Banana Bread",
+   "name": "Blueberry & Lemon Cake",
    "dial": [
     4,
     5,
@@ -180,7 +180,7 @@
    "burn": 0.04558467297951993
   },
   {
-   "name": "Tiramisu",
+   "name": "Coffee & Salted Pecan",
    "dial": [
     2,
     5,
@@ -206,7 +206,7 @@
    "burn": 0.010451661067562523
   },
   {
-   "name": "Croquembouche",
+   "name": "Wedding Cake",
    "dial": [
     1,
     2,

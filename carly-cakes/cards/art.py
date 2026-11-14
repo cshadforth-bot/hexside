@@ -252,10 +252,125 @@ def fruitcake():
         + f'<path d="M60 58 L50 76 L60 70 L70 76Z" fill="#e0243f" {S(1.8)}/>' + holly
         + face(60, 50, .95) + sparkle(14, 14, 4) + sparkle(108, 60, 3))
 
+
+# ---------------------------------------------------------------- Carly's own cakes
+import math
+
+def cookie(cx, cy, r, rot=0, bite=False):
+    chips = "".join(f'<ellipse cx="{cx+dx*r:.1f}" cy="{cy+dy*r:.1f}" rx="{r*.13:.1f}" ry="{r*.1:.1f}" fill="#4a2417" transform="rotate({ra} {cx+dx*r:.1f} {cy+dy*r:.1f})"/>'
+                    for dx, dy, ra in ((-.45, -.35, 20), (.25, -.5, -30), (.55, .05, 40), (-.1, .1, 10), (-.55, .35, -20), (.2, .55, 30), (.62, .5, 0)))
+    return (f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="#dca25e" {S()}/><circle cx="{cx}" cy="{cy}" r="{r*.82}" fill="#e8b878" opacity=".75"/>'
+            f'<path d="M{cx-r*.7} {cy-r*.55} Q{cx-r*.35} {cy-r*.85} {cx+r*.1} {cy-r*.8}" fill="none" stroke="#fff3d6" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>' + chips)
+
+def cookies():
+    return (shadow() + cookie(32, 56, 21) + cookie(88, 54, 20) + cookie(60, 50, 26)
+        + f'<path d="M26 18 q4 -5 8 0 M84 16 q4 -5 8 0" fill="none" stroke="none"/>'
+        + face(60, 49, 1.05, "grin") + "".join(f'<circle cx="{x}" cy="{y}" r="1.3" fill="#c98a4b"/>' for x, y in ((14, 74), (24, 78), (98, 76), (108, 72), (60, 80)))
+        + sparkle(14, 22, 4) + sparkle(106, 20, 4) + sparkle(60, 12, 3.5))
+
+def candle(x, top, c1, c2):
+    return (f'<rect x="{x-2}" y="{top}" width="4" height="13" rx="1.2" fill="{c1}" {S(1.6)}/>'
+            f'<path d="M{x-2} {top+4} l4 2 M{x-2} {top+8} l4 2" stroke="{c2}" stroke-width="1.6"/>'
+            f'<path d="M{x} {top-9} Q{x+4.6} {top-3} {x} {top-1} Q{x-4.6} {top-3} {x} {top-9}Z" fill="#ffc933" {S(1.4)}/>'
+            f'<path d="M{x} {top-5.5} Q{x+1.8} {top-2.8} {x} {top-1.8} Q{x-1.8} {top-2.8} {x} {top-5.5}Z" fill="#ff7a2e"/>')
+
+def balloon(x, y, c):
+    return (f'<path d="M{x} {y+11} Q{x+3} {y+22} {x-2} {y+30}" fill="none" {S(1.4)}/>'
+            f'<ellipse cx="{x}" cy="{y}" rx="8.2" ry="10" fill="{c}" {S(2)}/><path d="M{x-2} {y+10} l-2 3 h5z" fill="{c}" {S(1.2)}/>'
+            f'<path d="M{x-4.6} {y-5} Q{x-5} {y-1} {x-3.4} {y+1}" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>')
+
+def birthday_cake():
+    spr = "".join(f'<rect x="{x}" y="{y}" width="3.2" height="1.6" rx=".8" fill="{c}" transform="rotate({r} {x} {y})"/>' for x, y, c, r in ((44, 52, "#ffd23f", 20), (78, 50, "#4fc3f7", -30), (50, 62, "#7ee0a6", 40), (72, 66, "#ffd23f", 10), (36, 60, "#4fc3f7", -20), (84, 60, "#7ee0a6", 30)))
+    return (shadow() + balloon(14, 24, "#4fc3f7") + balloon(106, 18, "#ffd23f") +
+        f'<path d="M28 40 L28 68 Q60 86 92 68 L92 40Z" fill="#ff93b9" {S()}/>'
+        f'<path d="M28 52 Q60 70 92 52 L92 57 Q60 75 28 57Z" fill="#fffaf0" {S(2)}/>'
+        f'<path d="{drip(28, 92, 42, 12, "#fff", 6)} L92 36 Q60 28 28 36Z" fill="#ffffff" {S(2.2)}/>'
+        f'<ellipse cx="60" cy="38" rx="32" ry="10" fill="#fff6fa" {S()}/>'
+        + candle(46, 22, "#7ee0a6", "#fff") + candle(60, 20, "#ffd23f", "#fff") + candle(74, 22, "#4fc3f7", "#fff") + spr
+        + face(60, 60, 1.0, "grin") + sparkle(98, 52, 3.5) + sparkle(24, 66, 3))
+
+def celebration_cake():
+    flags = "".join(f'<path d="M{x} 9 L{x+8} 9 L{x+4} 18Z" fill="{c}" {S(1.6)}/>' for x, c in ((14, "#ff6f98"), (28, "#ffd23f"), (42, "#4fc3f7"), (76, "#ff6f98"), (90, "#ffd23f"), (104, "#7ee0a6")))
+    stars = "".join(f'<path d="M{x} {y-3.2} L{x+1.1} {y-1} L{x+3.4} {y-.8} L{x+1.6} {y+.8} L{x+2.1} {y+3.2} L{x} {y+1.9} L{x-2.1} {y+3.2} L{x-1.6} {y+.8} L{x-3.4} {y-.8} L{x-1.1} {y-1}Z" fill="#ffd23f" {S(1)}/>'
+                    for x, y in ((38, 50), (82, 50), (48, 64), (72, 64)))
+    spark = "".join(f'<path d="M60 22 L{60+11*math.cos(a):.1f} {22+11*math.sin(a):.1f}" stroke="#ffb100" stroke-width="2" stroke-linecap="round"/>' for a in [i * math.pi / 4 for i in range(8)])
+    return (shadow() + f'<path d="M6 9 Q60 22 114 9" fill="none" {S(1.6)}/>' + flags + plate(60, 72, 48) +
+        layer_cake(60, 30, 64, 32, ["#8c6ff0", "#8c6ff0", "#8c6ff0"], "#ffffff", "#ffd23f") + stars
+        + f'<path d="M60 40 V25" {S(2.2)}/><path d="M60 24 v-4" stroke="#c9d0d6" stroke-width="2.4"/>' + spark
+        + "".join(f'<circle cx="{x}" cy="{y}" r="1.7" fill="{c}"/>' for x, y, c in ((16, 34, "#ff6f98"), (104, 40, "#ffd23f"), (24, 50, "#4fc3f7"), (98, 58, "#7ee0a6"), (12, 62, "#ffd23f")))
+        + face(60, 54, 1.0, "grin"))
+
+def cherry_bakewell():
+    flakes = "".join(f'<path d="M{x} {y} q3 -2 5 1 q-2 3 -5 -1z" fill="#fff0c9" {S(1)}/>' for x, y in ((26, 66), (40, 72), (58, 74), (78, 72), (92, 66)))
+    feather = "".join(f'<path d="M60 {42} L{60+30*math.cos(a):.1f} {42+8.5*math.sin(a):.1f}" stroke="#ff8fb3" stroke-width="1.4" opacity=".9"/>' for a in [i * math.pi / 5 + .1 for i in range(10)])
+    return (shadow() + plate(60, 74, 50) +
+        f'<path d="M22 44 L22 64 Q60 82 98 64 L98 44Z" fill="#f2bf62" {S()}/>'
+        f'<path d="M22 54 Q60 72 98 54 L98 58 Q60 76 22 58Z" fill="#e0243f" {S(2)}/>'
+        f'<ellipse cx="60" cy="44" rx="38" ry="12" fill="#ffffff" {S()}/><ellipse cx="60" cy="44" rx="31" ry="8.6" fill="none" stroke="#ff8fb3" stroke-width="2"/>' + feather
+        + flakes + cherry(60, 36, 6.4) + cherry(44, 41, 4.6) + cherry(76, 41, 4.6)
+        + face(60, 62, .95) + sparkle(106, 26, 4) + sparkle(14, 28, 3.5))
+
+def blueberry_lemon():
+    berry = lambda x, y, r=4.6: (f'<circle cx="{x}" cy="{y}" r="{r}" fill="#5a67e8" {S(1.8)}/><circle cx="{x-1.4}" cy="{y-1.4}" r="1.1" fill="#fff" opacity=".8"/>'
+                                 f'<path d="M{x-1.2} {y+.4} l1.2 -1.4 l1.2 1.4" fill="none" stroke="#2c357f" stroke-width="1"/>')
+    seeds = "".join(f'<circle cx="{x}" cy="{y}" r="1.6" fill="#5a67e8"/>' for x, y in ((34, 58), (46, 64), (74, 62), (86, 56), (60, 68)))
+    lemon = (f'<circle cx="100" cy="64" r="11" fill="#ffe65a" {S()}/><circle cx="100" cy="64" r="7.6" fill="#fff9c2" {S(1.3)}/>'
+             + "".join(f'<path d="M100 64 L{100+7.6*math.cos(a):.1f} {64+7.6*math.sin(a):.1f}" stroke="{OUT}" stroke-width="1.1"/>' for a in [i * math.pi / 3 for i in range(6)]))
+    return (shadow() + plate(56, 74, 46) +
+        f'<path d="M20 42 L20 66 Q56 82 92 66 L92 42Z" fill="#f6d466" {S()}/>' + seeds +
+        f'<path d="{drip(20, 92, 44, 15, "#fff", 6)} L92 38 Q56 30 20 38Z" fill="#ffffff" {S(2.2)}/>'
+        f'<ellipse cx="56" cy="40" rx="36" ry="11" fill="#fffbe0" {S()}/>'
+        + berry(40, 36) + berry(52, 32) + berry(66, 34) + berry(76, 39) + berry(46, 42, 4) + berry(62, 41, 4)
+        + f'<path d="M56 22 q4 -8 9 -3 M70 24 q6 -6 10 0" fill="none" stroke="#9bd24a" stroke-width="2.6" stroke-linecap="round"/>'
+        + lemon + face(56, 58, 1.0, "grin") + sparkle(12, 24, 4) + sparkle(106, 30, 3))
+
+def pecan(x, y, r=0):
+    return (f'<g transform="rotate({r} {x} {y})"><path d="M{x-5} {y} Q{x-5} {y-5} {x} {y-6} Q{x+5} {y-5} {x+5} {y} Q{x+3} {y+6} {x} {y+7} Q{x-3} {y+6} {x-5} {y}Z" fill="#b8742f" {S(1.6)}/>'
+            f'<path d="M{x} {y-5} V{y+5}" stroke="#7a4a1e" stroke-width="1.4"/></g>')
+
+def coffee_pecan():
+    bean = lambda x, y, r: (f'<ellipse cx="{x}" cy="{y}" rx="4.2" ry="3" fill="#5a3320" {S(1.4)} transform="rotate({r} {x} {y})"/>'
+                            f'<path d="M{x-3.6} {y} Q{x} {y-1.6} {x+3.6} {y}" fill="none" stroke="#2a150c" stroke-width="1" transform="rotate({r} {x} {y})"/>')
+    cup = (f'<path d="M92 50 H112 L110 68 Q102 72 94 68Z" fill="#fff" {S(2)}/><path d="M112 54 Q119 56 112 62" fill="none" {S(2)}/>'
+           f'<path d="M94 53 H110" stroke="#6b3a1e" stroke-width="3"/><path d="M98 46 q-3 -4 0 -7 M105 46 q-3 -4 0 -7" fill="none" stroke="{OUT}" stroke-width="1.8" stroke-linecap="round" opacity=".5"/>')
+    return (shadow(56, 80, 44) + plate(52, 74, 44) +
+        f'<path d="M18 40 L18 66 Q52 82 86 66 L86 40Z" fill="#a9703c" {S()}/>'
+        f'<path d="M18 52 Q52 68 86 52 L86 57 Q52 73 18 57Z" fill="#fff0d6" {S(2)}/>'
+        f'<path d="{drip(18, 86, 41, 14, "#e8a33a", 5)} L86 36 Q52 30 18 36Z" fill="#e8a33a" {S(2.2)}/>'
+        f'<ellipse cx="52" cy="38" rx="34" ry="10.5" fill="#8a5530" {S()}/><path d="M32 38 Q52 30 72 38" fill="none" stroke="#b9854f" stroke-width="2.2" stroke-linecap="round"/>'
+        + pecan(38, 36, -30) + pecan(52, 31, 10) + pecan(66, 36, 35) + pecan(52, 41, 80)
+        + "".join(f'<rect x="{x}" y="{y}" width="2" height="2" fill="#fff" {S(.7)} transform="rotate(30 {x} {y})"/>' for x, y in ((30, 34), (44, 29), (60, 28), (74, 34), (46, 40), (60, 40)))
+        + cup + bean(14, 74, 20) + bean(24, 79, -30) + face(52, 58, 1.0) + sparkle(12, 18, 4) + sparkle(78, 12, 3.5))
+
+def tier(cx, top, rx, ry, h, fill="#ffffff"):
+    return (f'<path d="M{cx-rx} {top} L{cx-rx} {top+h} Q{cx} {top+h+ry*2} {cx+rx} {top+h} L{cx+rx} {top}Z" fill="{fill}" {S()}/>'
+            f'<ellipse cx="{cx}" cy="{top}" rx="{rx}" ry="{ry}" fill="#fffdf8" {S()}/>')
+
+def pearls(cx, top_y, rx, ry, h, n):
+    out = []
+    for i in range(n):
+        x = cx - rx + 3 + (2 * rx - 6) * i / (n - 1)
+        y = top_y + h + ry * math.sqrt(max(0, 1 - ((x - cx) / rx) ** 2))
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="1.9" fill="#fff" {S(1.1)}/>')
+    return "".join(out)
+
+def rose(x, y, c="#ff6f98"):
+    return (f'<circle cx="{x}" cy="{y}" r="5.4" fill="{c}" {S(1.8)}/><path d="M{x-2.6} {y} Q{x-2.6} {y-3} {x} {y-3} Q{x+3} {y-3} {x+3} {y} Q{x+3} {y+3.4} {x} {y+3.4}" fill="none" stroke="{OUT}" stroke-width="1.3" stroke-linecap="round"/>')
+
+def wedding_cake():
+    leaf = lambda x, y, r: f'<path d="M{x} {y} q6 -4 10 1 q-5 5 -10 -1z" fill="#59b84a" {S(1.3)} transform="rotate({r} {x} {y})"/>'
+    return (shadow() + plate(60, 76, 50) +
+        tier(60, 52, 34, 8, 20) + tier(60, 34, 25, 6.5, 18) + tier(60, 20, 16, 5, 14)
+        + f'<path d="M26 58 Q60 74 94 58 L94 63 Q60 79 26 63Z" fill="#ff9bb8" {S(1.8)}/>'
+        + pearls(60, 34, 25, 6.5, 18, 9) + pearls(60, 20, 16, 5, 14, 6) + pearls(60, 52, 34, 8, 20, 12)
+        + leaf(24, 54, 160) + leaf(86, 54, 20) + rose(30, 52) + rose(90, 52) + rose(60, 8, "#ff6f98") + leaf(48, 10, 190) + leaf(62, 10, -10)
+        + f'<path d="M60 3 C54 -3 46 3 52 8 L60 14 L68 8 C74 3 66 -3 60 3Z" fill="#ff6f98" {S(1.6)} transform="translate(0 0) scale(.7) translate(25 6)"/>'
+        + face(60, 44, .85) + sparkle(12, 22, 4) + sparkle(108, 26, 4) + sparkle(100, 8, 3))
+
 ART = {"Souffle": souffle, "Macarons": macarons, "Scones": scones, "Choux Puffs": choux, "Cupcakes": cupcakes,
        "Genoise": genoise, "Lemon Drizzle": lemon_drizzle, "Red Velvet": red_velvet, "Brownies": brownies,
        "Victoria Sponge": victoria, "Carrot Cake": carrot_cake, "Banana Bread": banana_bread, "Pavlova": pavlova,
-       "Tiramisu": tiramisu, "Black Forest": black_forest, "Croquembouche": croquembouche, "Cheesecake": cheesecake,
+       "Tiramisu": tiramisu, "Cookies": cookies, "Birthday Cake": birthday_cake, "Celebration Cake": celebration_cake, "Cherry Bakewell": cherry_bakewell, "Blueberry & Lemon Cake": blueberry_lemon, "Coffee & Salted Pecan": coffee_pecan, "Wedding Cake": wedding_cake, "Black Forest": black_forest, "Croquembouche": croquembouche, "Cheesecake": cheesecake,
        "Fruitcake": fruitcake}
 
 def svg(name):

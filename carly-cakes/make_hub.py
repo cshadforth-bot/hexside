@@ -15,15 +15,19 @@ EFF = {
 }
 QUIRK = {"": "", "sturdy": ("Water bath", "Can't be slammed."), "preheated": ("Preheated", "Bake it with the Risen edge up.")}
 NOTE = {"Souffle": "Biggest single number in the deck, gone a turn later.",
-        "Croquembouche": "Three turns of waiting for the highest Dark in the deck.",
-        "Cupcakes": "Risen and Golden are equal, so it forgives a late pull.",
+        "Wedding Cake": "Three turns of waiting for the highest Dark in the deck, and it can be slammed early.",
+        "Birthday Cake": "Risen and Golden are equal, so it forgives a late pull.",
+        "Cookies": "In and out of the oven fast. The Tip jar is the cookie jar.",
+        "Coffee & Salted Pecan": "Starts warm, so it skips the Batter edge.",
         "Cheesecake": "Slow and safe.", "Fruitcake": "Slow and safe, and the Glaze pays for a full oven."}
 
+CARLY = {'Celebration Cake', 'Cookies', 'Birthday Cake', 'Cherry Bakewell', 'Lemon Drizzle', 'Red Velvet', 'Victoria Sponge', 'Carrot Cake', 'Blueberry & Lemon Cake', 'Coffee & Salted Pecan', 'Wedding Cake'}
 def e(s): return html.escape(s)
 
 rows = ""
 for i, c in enumerate(R["cards"], 1):
     n = c["name"].replace("Souffle", "Soufflé")
+    carly = c["name"] in CARLY
     d = c["dial"]; pk = max(d)
     bars = "".join(
         f'<span class="b{" pk" if v == pk else ""}"><i style="--v:{v}"></i><b>{v}</b></span>' for v in d)
@@ -33,7 +37,7 @@ for i, c in enumerate(R["cards"], 1):
     if q: eff += f'<br><span class="quirk">{e(q[0])}.</span> {e(q[1])}'
     note = NOTE.get(c["name"], "")
     if note: eff += f'<br><span class="muted">{e(note)}</span>'
-    rows += (f'<tr><td class="num">{i:02d}</td><th scope="row">{e(n)}</th><td><div class="dial" role="img" '
+    rows += (f'<tr><td class="num">{i:02d}</td><th scope="row">{e(n)}{"<small>&#9733; Carly&rsquo;s</small>" if carly else ""}</th><td><div class="dial" role="img" '
              f'aria-label="Risen {d[0]}, Golden {d[1]}, Dark {d[2]}">{bars}</div></td>'
              f'<td class="fx">{eff}</td><td class="c">{c["ppb"]:.1f}</td></tr>\n')
 
