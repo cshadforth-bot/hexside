@@ -1,0 +1,91 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>Textilesme rules sheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Mulish:wght@400;600;700&display=swap">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--ink:#261c33;--muted:#6f6382;--accent:#b8317f;--panel:#efeaf6;--rule:#d8cfe6;--fD:#2f6fd0;--fW:#e8643c;--fS:#c2408f;--fL:#ffe9c7;--fK:#3fae6a;--fC:#f2b632}
+html,body{margin:0;background:#fff;color:var(--ink);font:9.6pt/1.42 Mulish,system-ui,sans-serif}
+.page{width:210mm;height:297mm;padding:12mm 13mm;break-after:page;page-break-after:always;display:flex;flex-direction:column;gap:3.2mm;overflow:hidden}
+.page:last-child{break-after:auto;page-break-after:auto}
+h1,h2,h3{font-family:Jost,Futura,sans-serif;margin:0}
+h1{font-size:34pt;line-height:.95;text-transform:uppercase;letter-spacing:.01em}
+h2{font-size:11.5pt;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+p{margin:0}.eyebrow{font:600 7.5pt Jost;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.thread{display:grid;grid-template-columns:repeat(6,1fr);height:2.6mm;width:90mm;border-radius:2mm;overflow:hidden}
+.thread i:nth-child(1){background:var(--fD)}.thread i:nth-child(2){background:var(--fW)}.thread i:nth-child(3){background:var(--fS)}.thread i:nth-child(4){background:var(--fL)}.thread i:nth-child(5){background:var(--fK)}.thread i:nth-child(6){background:var(--fC)}
+.facts{display:flex;gap:2mm;flex-wrap:wrap}.facts span{background:var(--panel);border-radius:9mm;padding:.8mm 3mm;font:600 8pt Jost}
+.facts .d{background:var(--accent);color:#fff}
+.turn{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm}.turn div{border-top:.9mm solid var(--accent);padding-top:1.5mm}.turn b{font:700 10.5pt Jost;display:block}
+.key{display:flex;gap:4mm;flex-wrap:wrap;font-size:8.5pt}.key span{display:inline-flex;align-items:center;gap:1.4mm}
+.sw{display:inline-grid;place-items:center;width:5.2mm;height:5.2mm;border-radius:1.2mm;font:700 7pt Jost;color:#fff;box-shadow:inset 0 0 0 .35mm rgba(0,0,0,.35)}
+.fD{background:var(--fD)}.fW{background:var(--fW)}.fS{background:var(--fS)}.fL{background:var(--fL);color:#5a3a1a}.fK{background:var(--fK)}.fC{background:var(--fC);color:#4a3200}
+.ex{display:grid;grid-template-columns:3fr 2.2fr;gap:6mm;align-items:start}
+dl{display:grid;grid-template-columns:26mm 1fr;gap:1.6mm 4mm;margin:0}dt{font-weight:700}dd{margin:0}
+table{border-collapse:collapse;width:100%;font-size:8.2pt}th{font:600 6.8pt Jost;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;background:var(--panel);padding:1.2mm 1.6mm}
+td{padding:.9mm 1.6mm;border-bottom:.2mm solid var(--rule);vertical-align:middle}td.n{color:var(--muted);width:7mm}td.t{font:700 9pt Jost;text-align:center;width:9mm}
+.rc{display:flex;gap:.6mm;align-items:center}.rc .sw{width:4mm;height:4mm;font-size:5.5pt;border-radius:.8mm}.rc .sep{color:var(--muted);padding:0 .6mm}
+.small{font-size:8pt;color:var(--muted)}
+.box{background:var(--panel);border-radius:2.5mm;padding:3mm 4mm}
+.ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;text-align:center}.ladder div{background:#fff;border:.25mm solid var(--rule);border-radius:2mm;padding:1.6mm}.ladder b{display:block;font:700 12pt Jost;color:var(--accent)}
+.log{border:.3mm solid var(--rule);border-radius:2.5mm;padding:2.5mm 3.5mm}
+.log table td{height:6.4mm;border-bottom:.2mm solid var(--rule)}.log th{background:none}
+</style></head><body>
+
+<section class="page">
+  <div><span class="eyebrow">18-card sewing game · sister to Pour Decisions, Carly Cakes and First Crack</span></div>
+  <h1>Textilesme</h1>
+  <p>You run a one-bench tailoring studio and nothing you sew is new. Build garments layer by layer out of other people's old clothes, and scrap what you can't use before your rival can. Day 2 is played with the clothes you finished on day 1.</p>
+  <div class="thread"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="facts"><span class="d">Draft 0.3</span><span>1-2 tailors</span><span>20 minutes</span><span>18 cards</span><span>Ages 10+</span></div>
+
+  <h2>Every card is two things</h2>
+  <p>A <b>garment order</b> (a name, a recipe of 2-4 fabrics and 2, 4 or 6 tips) and a <b>fabric source</b>. The <b>top strip</b> is the garment's own first fabric. The <b>bottom strip</b> is a salvage patch, printed upside down. Recipes read bottom to top and are numbered on the garment.</p>
+  <div class="key"><span><i class="sw fD">D</i>Denim</span><span><i class="sw fW">W</i>Wool</span><span><i class="sw fS">S</i>Silk</span><span><i class="sw fL">L</i>Lace</span><span><i class="sw fK">K</i>Knit</span><span><i class="sw fC">C</i>Canvas</span></div>
+
+  <h2>Setup</h2>
+  <p>Shuffle all 18 cards. Each player takes one as their first <b>open garment</b>, its top strip already its first layer. Deal 4 cards face up: the <b>Counter</b> (3 in solo). The rest is the deck. Player 1 goes first.</p>
+
+  <h2>Your turn: take one Counter card and do one thing with it</h2>
+  <div class="turn">
+    <div><b>Design</b>Start a new garment with it, its top strip is layer 1. You have two workbenches: at most 2 open garments.</div>
+    <div><b>Stitch</b>Slide it under one of your open garments so one strip peeks out as the next layer. That strip must be the fabric the recipe needs next. You may show either strip.</div>
+    <div><b>Unpick</b>Scrap it into the face-up scrap bin. Usually to stop your rival finishing a garment.</div>
+  </div>
+  <p>Then refill the Counter from the deck. When a garment's layers match its recipe it is <b>finished</b>: bank its tips and resolve its effect. Its stitched cards go to the scrap bin. The garment card itself stays in front of you as your score.</p>
+
+  <h2>Effects (when finished)</h2>
+  <dl>
+    <dt>Second pair of hands</dt><dd>Take another Counter card and use it.</dd>
+    <dt>Moth</dt><dd>Unpick the top stitched layer off one of your rival's open garments. A ticket's own first layer is safe. The card goes to the scrap bin.</dd>
+    <dt>Keep the offcuts</dt><dd>Put one stitched card from this garment in your Stash (+1 tip each) instead of the scrap bin.</dd>
+    <dt>Rummage</dt><dd>Draw the top card of the deck and use it as if it were on the Counter.</dd>
+    <dt>Jumble sale</dt><dd>Scrap the whole Counter, then deal a new one.</dd>
+  </dl>
+  <h2>Score log</h2>
+  <div class="log"><table><thead><tr><th style="width:18mm"></th><th>Garments finished (name and tips)</th><th style="width:16mm">Tips</th><th style="width:16mm">Stash</th><th style="width:16mm">Open</th></tr></thead>
+  <tbody><tr><td>Day 1</td><td></td><td></td><td></td><td></td></tr><tr><td>Day 2</td><td></td><td></td><td></td><td></td></tr><tr><td><b>Score</b></td><td></td><td colspan="3"></td></tr></tbody></table></div>
+</section>
+
+<section class="page">
+  <h2>Two days, and nothing is wasted</h2>
+  <p>When the deck is empty, keep playing without refills until the Counter is empty. That ends a day.</p>
+  <div class="box">
+    <b>Washing up.</b> Every open garment is unpicked (<b>-1 tip</b> each) and goes to the scrap bin. <b>Finished garments are resold:</b> they go into the scrap bin too, and your tips stay banked. Shuffle the scrap bin into a new deck and deal a new Counter. Day 2 is played with the clothes you made on day 1. <b>Player 2 starts day 2.</b> Stashed cards leave the game.
+  </div>
+  <h2>Scoring</h2>
+  <p>Tips on finished garments, plus 1 for each card in your Stash, minus 1 for each garment still open at the end of day 2. Most points wins. A tie is a shared win.</p>
+
+  <h2>Solo</h2>
+  <p>Use a Counter of 3. After each of your turns the oldest Counter card goes cold and leaves the game. Ignore Moth. Play both days and score as above.</p>
+  <div class="ladder"><div><b>0-7</b>Patcher</div><div><b>8-10</b>Seamstress</div><div><b>11-14</b>Designer</div><div><b>15+</b>Couturier</div></div>
+  <p class="small">Solo ranks are provisional: set from simulated bots, not human play.</p>
+
+  <h2>The 18 garments</h2>
+  <table id="garments"><thead><tr><th>#</th><th>Garment</th><th>Recipe, bottom to top</th><th>Tips</th><th>Strips top / bottom</th><th>Effect</th></tr></thead><tbody></tbody></table>
+
+</section>
+<script src="data.js"></script><script>
+const sw=f=>`<i class="sw f${f}" title="${FABRICS[f][0]}">${FABRICS[f][0][0]}</i>`;
+document.querySelector('#garments tbody').innerHTML=CARDS.map((c,i)=>{const [en]=EFFECTS[c.effect];
+return `<tr><td class="n">${String(i+1).padStart(2,'0')}</td><td><b>${c.name}</b></td><td><div class="rc">${c.recipe.map(sw).join('')}</div></td><td class="t">${c.pts}</td><td><div class="rc">${sw(c.recipe[0])}<span class="sep">/</span>${sw(c.bottom)}</div></td><td>${c.effect==='none'?'<span class="small">None</span>':en}</td></tr>`}).join('');
+</script></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>Textilesme cards, print sheet</title>
+<style>
+/* A4 portrait, 3x3 poker-size cards (63 x 88 mm) with crop marks. Card images come from build-pdfs.js (img/NN.png, 794 px wide = about 320 dpi). */
+@page{size:A4;margin:0}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;background:#fff}
+.page{position:relative;width:210mm;height:297mm;overflow:hidden;break-after:page;page-break-after:always}
+.page:last-child{break-after:auto;page-break-after:auto}
+.grid{position:absolute;left:10.5mm;top:16.5mm;width:189mm;height:264mm;display:grid;grid-template-columns:repeat(3,63mm);grid-template-rows:repeat(3,88mm)}
+.grid img{display:block;width:63mm;height:88mm}
+.mk{position:absolute;background:#000}
+.mk.h{height:.2mm;width:4mm}.mk.v{width:.2mm;height:4mm}
+.lbl{position:absolute;left:0;right:0;bottom:6mm;text-align:center;font:8pt system-ui;color:#777}
+</style></head><body><div id="pages"></div>
+<script>
+const X=[10.5,73.5,136.5,199.5], Y=[16.5,104.5,192.5,280.5];
+function marks(){let m='';
+  for(const y of Y){m+=`<i class="mk h" style="left:3.5mm;top:${y-.1}mm"></i><i class="mk h" style="left:202.5mm;top:${y-.1}mm"></i>`;}
+  for(const x of X){m+=`<i class="mk v" style="left:${x-.1}mm;top:8.5mm"></i><i class="mk v" style="left:${x-.1}mm;top:284.5mm"></i>`;}
+  return m;}
+// Double-sided, flip on the long edge: the back of a card must sit in the mirrored column.
+function sheet(nums,back,label){
+  const cells=[];for(let r=0;r<3;r++)for(let c=0;c<3;c++){const k=r*3+(back?2-c:c);cells.push(`<img alt="" src="img/${back?'back':String(nums[k]).padStart(2,'0')}.png">`);}
+  return `<section class="page"><div class="grid">${cells.join('')}</div>${marks()}<div class="lbl">${label}</div></section>`;}
+const A=[1,2,3,4,5,6,7,8,9],B=[10,11,12,13,14,15,16,17,18];
+document.getElementById('pages').innerHTML=
+  sheet(A,false,'Textilesme cards 1-9 front. Print double-sided, flip on long edge. Cut on the crop marks.')+
+  sheet(A,true,'Textilesme backs for cards 1-9')+
+  sheet(B,false,'Textilesme cards 10-18 front. Print double-sided, flip on long edge. Cut on the crop marks.')+
+  sheet(B,true,'Textilesme backs for cards 10-18');
+</script></body></html>

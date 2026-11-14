@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700;800&family=Mulish:wght@400;600;700&display=swap');
+.c,.c *{font-family:Mulish,system-ui,sans-serif}.c h2,.c .s,.c .p,.c b{font-family:Jost,Futura,sans-serif}
+.c{--f:#888;--t:#0a8;width:252px;height:352px;border:3px solid var(--t);border-radius:14px;background:color-mix(in srgb,var(--f) 16%,#fff);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.s{height:38px;position:relative;display:flex;align-items:center;justify-content:center;font:800 12px system-ui;letter-spacing:.14em;text-transform:uppercase}
+.s svg{position:absolute;inset:0;width:100%;height:100%}.s span{position:relative;padding:1px 9px;border-radius:10px;background:rgba(255,255,255,.9)}
+.s.b{transform:rotate(180deg)}
+.m{flex:1;padding:4px 10px 6px;display:flex;flex-direction:column;gap:3px;min-height:0}
+.art{height:148px;display:grid;place-items:center;border-radius:10px;background:radial-gradient(circle at 50% 45%,#fff 0,color-mix(in srgb,var(--f) 22%,#fff) 70%)}
+.art svg{width:144px;height:144px;overflow:visible}
+.t{display:flex;justify-content:space-between;align-items:center}.t h2{margin:0;font-size:16px}.p{background:var(--t);color:#fff;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-weight:800}
+.r{display:flex;gap:4px;align-items:center}.r i{width:22px;height:22px;border:1.5px solid #2b2118;border-radius:5px;overflow:hidden}.r i svg{width:100%;height:100%;display:block}.r small{color:#7a6a58;font-size:10px;margin-left:4px}
+.e{font-size:11.5px;line-height:1.28;overflow:hidden;background:rgba(255,255,255,.7);border-radius:8px;padding:4px 7px;flex:1}.e b{display:block}
+.c.back{background:#2b1d3a;border-color:#2b1d3a}.c.back svg{width:100%;height:100%;display:block}
