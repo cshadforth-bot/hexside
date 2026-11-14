@@ -1,7 +1,7 @@
 // Textilesme card data (draft 0.2). Every card is a garment order AND a fabric source.
 // recipe: fabrics bottom-to-top; recipe[0] is the card's TOP strip (its own first layer).
 // bottom: the card's BOTTOM strip (a salvage patch, printed upside down). pts: stitched tips when finished.
-const FABRICS = { D: ['Denim', '#3b5a8c'], W: ['Wool', '#b5532f'], S: ['Silk', '#6e3a63'], L: ['Lace', '#eadfc6'], K: ['Knit', '#5c7a3a'], C: ['Canvas', '#d3a21f'] };
+const FABRICS = { D: ['Denim', '#2f6fd0'], W: ['Wool', '#e8643c'], S: ['Silk', '#c2408f'], L: ['Lace', '#ffe9c7'], K: ['Knit', '#3fae6a'], C: ['Canvas', '#f2b632'] };
 const EFFECTS = {
   none:  ['No effect', ''],
   again: ['Second pair of hands', 'Take another Counter card and use it.'],

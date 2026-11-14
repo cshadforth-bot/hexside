@@ -1,31 +1,74 @@
 <!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>Textilesme cards</title>
 <style>
-body{font:13px system-ui;margin:16px;background:#f1ebe0;color:#2b2118}h1{margin:0 0 12px;font-size:20px}
-.g{display:grid;grid-template-columns:repeat(auto-fill,252px);gap:14px}
-.c{width:252px;height:352px;border:2px solid #2b2118;border-radius:12px;background:#fffaf1;display:flex;flex-direction:column;overflow:hidden}
-.s{height:54px;position:relative;display:flex;align-items:center;justify-content:center;font:700 13px system-ui;letter-spacing:.1em;text-transform:uppercase}
-.s svg{position:absolute;inset:0;width:100%;height:100%}.s span{position:relative;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.85)}
+body{font:13px system-ui;margin:16px;background:#fbefd9;color:#2b2118}h1{margin:0 0 12px;font-size:20px}
+.g{display:grid;grid-template-columns:repeat(auto-fill,252px);gap:16px}
+.c{--f:#888;--t:#0a8;width:252px;height:352px;border:3px solid var(--t);border-radius:14px;background:color-mix(in srgb,var(--f) 16%,#fff);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.s{height:38px;position:relative;display:flex;align-items:center;justify-content:center;font:800 12px system-ui;letter-spacing:.14em;text-transform:uppercase}
+.s svg{position:absolute;inset:0;width:100%;height:100%}.s span{position:relative;padding:1px 9px;border-radius:10px;background:rgba(255,255,255,.9)}
 .s.b{transform:rotate(180deg)}
-.m{flex:1;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
-.t{display:flex;justify-content:space-between;align-items:center}.t h2{margin:0;font-size:17px}.p{background:#2b2118;color:#fff;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font-weight:700}
-.r{display:flex;gap:4px}.r i{width:30px;height:30px;border:1.5px solid #2b2118;border-radius:6px;position:relative;overflow:hidden}.r i svg{width:100%;height:100%}
-.e{border-top:1px dashed #9a8a76;padding-top:6px;font-size:12px;line-height:1.35;flex:1}.e b{display:block;font-size:12.5px}
-.n{font-size:10px;color:#7a6a58}
-</style></head><body><h1>Textilesme — 18 cards (draft 0.2)</h1><div class="g" id="g"></div>
+.m{flex:1;padding:4px 10px 6px;display:flex;flex-direction:column;gap:3px;min-height:0}
+.art{height:148px;display:grid;place-items:center;border-radius:10px;background:radial-gradient(circle at 50% 45%,#fff 0,color-mix(in srgb,var(--f) 22%,#fff) 70%)}
+.art svg{width:144px;height:144px;overflow:visible}
+.t{display:flex;justify-content:space-between;align-items:center}.t h2{margin:0;font-size:16px}.p{background:var(--t);color:#fff;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-weight:800}
+.r{display:flex;gap:4px;align-items:center}.r i{width:22px;height:22px;border:1.5px solid #2b2118;border-radius:5px;overflow:hidden}.r i svg{width:100%;height:100%;display:block}.r small{color:#7a6a58;font-size:10px;margin-left:4px}
+.e{font-size:11.5px;line-height:1.28;overflow:hidden;background:rgba(255,255,255,.7);border-radius:8px;padding:4px 7px;flex:1}.e b{display:block}
+</style></head><body><h1>Textilesme — 18 cards (draft 0.3: illustrated)</h1>
+<svg width="0" height="0" style="position:absolute"><defs id="defs"></defs></svg><div class="g" id="g"></div>
 <script src="data.js"></script><script>
-function pat(f,id){const c=FABRICS[f][1],d='rgba(0,0,0,.3)';const m={
-D:`<path d="M-20 80L80 -20M0 100L100 0M20 120L120 20M-40 60L60 -40" stroke="${d}" stroke-width="3"/>`,
-W:`<path d="${[10,40,70].flatMap(y=>[0,25,50,75].map(x=>`M${x} ${y}l10 10`)).join('')}" stroke="${d}" stroke-width="3"/>`,
-S:`<defs><linearGradient id="g${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient></defs><rect width="100" height="100" fill="url(#g${id})"/>`,
-L:`<g fill="none" stroke="${d}" stroke-width="2">${[15,45,75].flatMap(x=>[20,50,80].map(y=>`<circle cx="${x}" cy="${y}" r="9"/>`)).join('')}</g>`,
-C:`<path d="M0 25H100M0 55H100M0 85H100M25 0V100M55 0V100M85 0V100" stroke="${d}" stroke-width="2"/>`,
-K:`<path d="${[15,45,75].flatMap(y=>[10,30,50,70,90].map(x=>`M${x-6} ${y}l6 10l6-10`)).join('')}" stroke="${d}" stroke-width="3" fill="none"/>`}[f];
-return `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="${c}"/>${m}</svg>`}
-let n=0;document.getElementById('g').innerHTML=CARDS.map((c,i)=>{const [en,et]=EFFECTS[c.effect];
-return `<div class="c"><div class="s">${pat(c.recipe[0],n++)}<span>${FABRICS[c.recipe[0]][0]}</span></div>
+const TIER={2:'#12a39a',4:'#f08a24',6:'#8a45c8'};
+// 14px tiles of fabric texture, drawn once and shared by strips, chips and garments.
+const dk='rgba(0,0,0,.28)',lt='rgba(255,255,255,.45)';
+const TEX={
+D:`<path d="M-4 14L14 -4M0 18L18 0M-4 6L6 -4" stroke="${dk}" stroke-width="1.6"/><path d="M0 7L7 0" stroke="${lt}" stroke-width="1"/>`,
+W:`<path d="M1 3l4 4 4-4 4 4M1 10l4 4 4-4 4 4" stroke="${dk}" stroke-width="1.6" fill="none"/>`,
+S:`<rect width="14" height="14" fill="url(#sheen)"/><path d="M0 7Q7 3 14 7" stroke="${lt}" stroke-width="1.4" fill="none"/>`,
+L:`<circle cx="7" cy="7" r="4.5" fill="none" stroke="#d99a6a" stroke-width="1.4"/><circle cx="7" cy="7" r="1.2" fill="#d99a6a"/><circle cx="0" cy="0" r="1.2" fill="#d99a6a"/><circle cx="14" cy="14" r="1.2" fill="#d99a6a"/>`,
+C:`<path d="M0 3.5H14M0 10.5H14M3.5 0V14M10.5 0V14" stroke="${dk}" stroke-width="1.2"/>`,
+K:`<path d="M2 2l2.5 5L7 2M9 2l2.5 5L14 2M2 9l2.5 5L7 9M9 9l2.5 5L14 9" stroke="${dk}" stroke-width="1.3" fill="none" transform="translate(-1 -1)"/>`};
+document.getElementById('defs').innerHTML=`<linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient>`+
+Object.keys(TEX).map(k=>`<pattern id="p${k}" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="${FABRICS[k][1]}"/>${TEX[k]}</pattern>`).join('');
+const fill=(f,w,h)=>`<rect width="${w}" height="${h}" fill="url(#p${f})"/>`;
+// Garment silhouettes in a 100x100 box. paths = clip/fill shapes; extra = decoration drawn on top.
+const MIR='transform="translate(100 0) scale(-1 1)"';
+const G={
+'Pocket Tee':{p:['M30 15L10 30 18 42 28 36V88H72V36L82 42 90 30 70 15Q50 26 30 15Z'],x:'<rect x="56" y="46" width="12" height="13" rx="2" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 2"/>'},
+'Scarf':{p:['M12 22Q50 4 88 22V36Q50 20 12 36Z','M58 30H78L84 88H62Z'],x:'<path d="M64 88v8M70 88v8M76 88v8M82 88v8" stroke="#2b2118" stroke-width="1.6"/>'},
+'Scrunchie':{p:['M50 10A40 40 0 1 0 50.01 10ZM50 32A18 18 0 1 1 49.99 32Z'],e:1},
+'Tote Bag':{p:['M20 38H80L86 92H14Z'],x:'<path d="M36 38Q36 8 50 8Q64 8 64 38" fill="none" stroke="#2b2118" stroke-width="3.5"/>'},
+'Beanie':{p:['M16 66Q16 20 50 20Q84 20 84 66Z','M12 66H88V84H12Z','M50 10m-8 0a8 8 0 1 0 16 0a8 8 0 1 0-16 0'],x:'<path d="M12 75H88" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 2"/>'},
+'Hankie':{p:['M50 6L94 50 50 94 6 50Z'],x:'<path d="M50 20L80 50 50 80 20 50Z" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 2"/>'},
+'Denim Jacket':{p:['M32 12L8 28V84H24L26 52V90H74V52L76 84H92V28L68 12 50 28Z'],x:'<path d="M50 28V90M32 12L50 34 68 12" stroke="#fff" stroke-width="1.6" fill="none" stroke-dasharray="3 2"/>'},
+'Cardigan':{p:['M34 12L10 30V86H26L28 56V92H72V56L74 86H90V30L66 12 50 38Z'],x:'<path d="M50 38V92" stroke="#2b2118" stroke-width="2.4"/><path d="M34 12L50 38 66 12" stroke="#fff" stroke-width="1.6" fill="none" stroke-dasharray="3 2"/><circle cx="45" cy="52" r="2.4" fill="#fff" stroke="#2b2118"/><circle cx="45" cy="68" r="2.4" fill="#fff" stroke="#2b2118"/><circle cx="45" cy="84" r="2.4" fill="#fff" stroke="#2b2118"/>'},
+'Slip Dress':{p:['M36 8H41L43 28Q50 35 57 28L59 8H64L68 38 79 92H21L32 38Z']},
+'Boiler Suit':{p:['M34 10L14 22 16 42 28 36 30 52 32 94H47L50 66 53 94H68L70 52 72 36 84 42 86 22 66 10Q50 24 34 10Z'],x:'<path d="M50 24V66" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 2"/>'},
+'Peacoat':{p:['M30 10L8 26 10 64H22L24 94H76L78 64H90L92 26 70 10 50 32Z'],x:'<path d="M50 32V94" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 2"/><circle cx="56" cy="56" r="2.2" fill="#fff"/><circle cx="56" cy="72" r="2.2" fill="#fff"/>'},
+'Kimono':{p:['M40 8L50 26 60 8 98 22V54H76V92H24V54H2V22Z'],x:'<path d="M24 60H76" stroke="#2b2118" stroke-width="6"/><path d="M24 60H76" stroke="#fff" stroke-width="1.2" stroke-dasharray="3 2"/>'},
+'Pinafore':{p:['M30 10H38L40 34H60L62 10H70L74 42 86 92H14L26 42Z']},
+'Shawl':{p:['M4 24Q50 0 96 24Q72 64 50 96Q28 64 4 24Z'],x:'<path d="M20 30Q50 14 80 30" stroke="#fff" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>'},
+'Patchwork Coat':{p:['M30 10L6 30 8 68H22L16 94H84L78 68H92L94 30 70 10 50 30Z'],x:'<path d="M50 30V94" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 2"/>'},
+'Wedding Dress':{p:['M38 6H62L58 36 66 44 94 94H6L34 44 42 36Z'],x:'<path d="M50 44V94M36 60L22 94M64 60L78 94" stroke="#fff" stroke-width="1.2" fill="none" opacity=".8"/>'},
+'Quilt':{p:['M8 12H92V88H8Z'],x:'<path d="M36 12V88M64 12V88M8 37H92M8 63H92" stroke="#fff" stroke-width="1.6" stroke-dasharray="4 2.5"/>'},
+'Evening Gown':{p:['M40 6L44 24Q50 30 56 24L60 6 66 36 58 52 76 96H24L42 52 34 36Z'],x:'<path d="M50 30V52" stroke="#fff" stroke-width="1.4" stroke-dasharray="3 2"/>'},
+};
+let uid=0;
+function garment(c){
+  const g=G[c.name]; const id='c'+(uid++); const n=c.recipe.length;
+  const shapes=g.p.map(s=>{const [d,tr]=s.split('|');return `<path d="${d}" ${tr||''} ${g.e?'clip-rule="evenodd" fill-rule="evenodd"':''}/>`}).join('');
+  const top=8,bot=95,h=(bot-top)/n;
+  const bands=c.recipe.map((f,k)=>{const y=bot-(k+1)*h;return `<rect x="0" y="${y}" width="100" height="${h+.3}" fill="url(#p${f})"/>`+(k?`<path d="M0 ${y+h}H100" stroke="#fff" stroke-width="1.4" stroke-dasharray="3 2"/>`:'')}).join('');
+  const nums=c.recipe.map((f,k)=>{const y=bot-(k+.5)*h;return `<g transform="translate(5 ${y})"><circle r="4.6" fill="#2b2118"/><text y="1.9" font-size="5.6" font-weight="800" fill="#fff" text-anchor="middle">${k+1}</text></g>`}).join('');
+  return `<svg viewBox="0 0 100 100"><defs><clipPath id="${id}">${shapes}</clipPath></defs>
+  <g transform="translate(2 4)" opacity=".18"><g clip-path="url(#${id})"><rect width="100" height="100" fill="#000"/></g></g>
+  <g clip-path="url(#${id})">${bands}</g>
+  <g fill="none" stroke="#2b2118" stroke-width="2.4" stroke-linejoin="round">${g.p.map(s=>{const [d,tr]=s.split('|');return `<path d="${d}" ${tr||''} ${g.e?'fill-rule="evenodd"':''}/>`}).join('')}</g>${g.x||''}${nums}</svg>`;
+}
+const strip=(f,w)=>`<svg viewBox="0 0 252 38" preserveAspectRatio="xMidYMid slice">${fill(f,252,38)}</svg>`;
+document.getElementById('g').innerHTML=CARDS.map((c,i)=>{const [en,et]=EFFECTS[c.effect];
+return `<div class="c" style="--f:${FABRICS[c.recipe[0]][1]};--t:${TIER[c.pts]}">
+<div class="s">${strip(c.recipe[0])}<span>${FABRICS[c.recipe[0]][0]}</span></div>
 <div class="m"><div class="t"><h2>${String(i+1).padStart(2,'0')} ${c.name}</h2><div class="p">${c.pts}</div></div>
-<div class="r">${c.recipe.map(f=>`<i title="${FABRICS[f][0]}">${pat(f,n++)}</i>`).join('')}</div>
-<div class="n">Recipe, bottom to top · top strip = layer 1</div>
+<div class="art">${garment(c)}</div>
+<div class="r">${c.recipe.map(f=>`<i title="${FABRICS[f][0]}"><svg viewBox="0 0 22 22">${fill(f,22,22)}</svg></i>`).join('')}<small>layers, bottom → top</small></div>
 <div class="e"><b>${en}</b>${et||'Just tips.'}</div></div>
-<div class="s b">${pat(c.bottom,n++)}<span>${FABRICS[c.bottom][0]}</span></div></div>`}).join('');
+<div class="s b">${strip(c.bottom)}<span>${FABRICS[c.bottom][0]}</span></div></div>`}).join('');
 </script></body></html>
