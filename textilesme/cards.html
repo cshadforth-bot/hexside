@@ -1,0 +1,18 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>Textilesme cards</title>
+<style>body{font:14px system-ui;margin:16px;background:#f4efe6}h2{margin:20px 0 8px}.g{display:flex;flex-wrap:wrap;gap:12px}
+.c{width:200px;border:2px solid #333;border-radius:10px;background:#fff;padding:8px}.c h3{margin:0 0 6px;font-size:15px}.c small{display:block;color:#444;margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}.grid svg{width:100%;height:80px;border-radius:4px}.slot{font-size:12px;margin:2px 0}</style></head><body>
+<h1>Textilesme — 18 cards</h1><h2>12 Salvage</h2><div class="g" id="s"></div><h2>6 Commissions</h2><div class="g" id="c"></div>
+<script src="data.js"></script><script>
+const pat=(t,c,id)=>{const d='rgba(0,0,0,.28)';const m={
+Denim:`<path d="M-10 90L90 -10M0 100L100 0M10 110L110 10" stroke="${d}" stroke-width="3"/>`,
+Wool:`<path d="M5 15l10 10m20-10l10 10m20-10l10 10m20-10l10 10M5 55l10 10m20-10l10 10m20-10l10 10m20-10l10 10" stroke="${d}" stroke-width="3" fill="none"/>`,
+Silk:`<rect width="100" height="100" fill="url(#g${id})"/>`,
+Lace:`<g fill="none" stroke="${d}" stroke-width="2">${[20,50,80].flatMap(x=>[20,50,80].map(y=>`<circle cx="${x}" cy="${y}" r="9"/>`)).join('')}</g>`,
+Canvas:`<path d="M0 20H100M0 50H100M0 80H100M20 0V100M50 0V100M80 0V100" stroke="${d}" stroke-width="2"/>`,
+Knit:`<path d="${[15,45,75].flatMap(y=>[10,30,50,70,90].map(x=>`M${x-6} ${y}l6 10l6-10`)).join('')}" stroke="${d}" stroke-width="3" fill="none"/>`}[t];
+return `<svg viewBox="0 0 100 100"><defs><linearGradient id="g${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient></defs><rect width="100" height="100" fill="${COLOURS[c]}"/>${m}</svg>`};
+const hole=`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#ddd"/><path d="M50 25l9 15 18 4-13 12 3 18-17-9-17 9 3-18-13-12 18-4z" fill="#fff" stroke="#999" stroke-dasharray="4"/></svg>`;
+let n=0;document.getElementById('s').innerHTML=SALVAGE.map((c,i)=>`<div class="c"><h3>${i+1}. ${c.name}</h3><div class="grid">${c.patches.map(p=>p?pat(p[1],p[0],n++):hole).join('')}</div><small>${[...new Set(c.patches.filter(Boolean).map(p=>p[0]+' '+p[1]))].join(', ')}</small></div>`).join('');
+document.getElementById('c').innerHTML=COMMISSIONS.map(c=>`<div class="c" style="background:#fffaf0"><h3>${c.name}</h3>${c.slots.map(s=>`<div class="slot">${s.size==2?'▬▬':'▬'} <b>${s.name}</b> — ${s.req||'any'}</div>`).join('')}<small><b>Style (+4): ${c.style}</b><br>${c.rule}</small></div>`).join('');
+</script></body></html>
