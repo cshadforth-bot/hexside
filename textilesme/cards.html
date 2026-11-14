@@ -1,18 +1,31 @@
 <!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>Textilesme cards</title>
-<style>body{font:14px system-ui;margin:16px;background:#f4efe6}h2{margin:20px 0 8px}.g{display:flex;flex-wrap:wrap;gap:12px}
-.c{width:200px;border:2px solid #333;border-radius:10px;background:#fff;padding:8px}.c h3{margin:0 0 6px;font-size:15px}.c small{display:block;color:#444;margin-top:4px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}.grid svg{width:100%;height:80px;border-radius:4px}.slot{font-size:12px;margin:2px 0}</style></head><body>
-<h1>Textilesme — 18 cards</h1><h2>12 Salvage</h2><div class="g" id="s"></div><h2>6 Commissions</h2><div class="g" id="c"></div>
+<style>
+body{font:13px system-ui;margin:16px;background:#f1ebe0;color:#2b2118}h1{margin:0 0 12px;font-size:20px}
+.g{display:grid;grid-template-columns:repeat(auto-fill,252px);gap:14px}
+.c{width:252px;height:352px;border:2px solid #2b2118;border-radius:12px;background:#fffaf1;display:flex;flex-direction:column;overflow:hidden}
+.s{height:54px;position:relative;display:flex;align-items:center;justify-content:center;font:700 13px system-ui;letter-spacing:.1em;text-transform:uppercase}
+.s svg{position:absolute;inset:0;width:100%;height:100%}.s span{position:relative;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.85)}
+.s.b{transform:rotate(180deg)}
+.m{flex:1;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.t{display:flex;justify-content:space-between;align-items:center}.t h2{margin:0;font-size:17px}.p{background:#2b2118;color:#fff;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font-weight:700}
+.r{display:flex;gap:4px}.r i{width:30px;height:30px;border:1.5px solid #2b2118;border-radius:6px;position:relative;overflow:hidden}.r i svg{width:100%;height:100%}
+.e{border-top:1px dashed #9a8a76;padding-top:6px;font-size:12px;line-height:1.35;flex:1}.e b{display:block;font-size:12.5px}
+.n{font-size:10px;color:#7a6a58}
+</style></head><body><h1>Textilesme — 18 cards (draft 0.2)</h1><div class="g" id="g"></div>
 <script src="data.js"></script><script>
-const pat=(t,c,id)=>{const d='rgba(0,0,0,.28)';const m={
-Denim:`<path d="M-10 90L90 -10M0 100L100 0M10 110L110 10" stroke="${d}" stroke-width="3"/>`,
-Wool:`<path d="M5 15l10 10m20-10l10 10m20-10l10 10m20-10l10 10M5 55l10 10m20-10l10 10m20-10l10 10m20-10l10 10" stroke="${d}" stroke-width="3" fill="none"/>`,
-Silk:`<rect width="100" height="100" fill="url(#g${id})"/>`,
-Lace:`<g fill="none" stroke="${d}" stroke-width="2">${[20,50,80].flatMap(x=>[20,50,80].map(y=>`<circle cx="${x}" cy="${y}" r="9"/>`)).join('')}</g>`,
-Canvas:`<path d="M0 20H100M0 50H100M0 80H100M20 0V100M50 0V100M80 0V100" stroke="${d}" stroke-width="2"/>`,
-Knit:`<path d="${[15,45,75].flatMap(y=>[10,30,50,70,90].map(x=>`M${x-6} ${y}l6 10l6-10`)).join('')}" stroke="${d}" stroke-width="3" fill="none"/>`}[t];
-return `<svg viewBox="0 0 100 100"><defs><linearGradient id="g${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient></defs><rect width="100" height="100" fill="${COLOURS[c]}"/>${m}</svg>`};
-const hole=`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#ddd"/><path d="M50 25l9 15 18 4-13 12 3 18-17-9-17 9 3-18-13-12 18-4z" fill="#fff" stroke="#999" stroke-dasharray="4"/></svg>`;
-let n=0;document.getElementById('s').innerHTML=SALVAGE.map((c,i)=>`<div class="c"><h3>${i+1}. ${c.name}</h3><div class="grid">${c.patches.map(p=>p?pat(p[1],p[0],n++):hole).join('')}</div><small>${[...new Set(c.patches.filter(Boolean).map(p=>p[0]+' '+p[1]))].join(', ')}</small></div>`).join('');
-document.getElementById('c').innerHTML=COMMISSIONS.map(c=>`<div class="c" style="background:#fffaf0"><h3>${c.name}</h3>${c.slots.map(s=>`<div class="slot">${s.size==2?'▬▬':'▬'} <b>${s.name}</b> — ${s.req||'any'}</div>`).join('')}<small><b>Style (+4): ${c.style}</b><br>${c.rule}</small></div>`).join('');
+function pat(f,id){const c=FABRICS[f][1],d='rgba(0,0,0,.3)';const m={
+D:`<path d="M-20 80L80 -20M0 100L100 0M20 120L120 20M-40 60L60 -40" stroke="${d}" stroke-width="3"/>`,
+W:`<path d="${[10,40,70].flatMap(y=>[0,25,50,75].map(x=>`M${x} ${y}l10 10`)).join('')}" stroke="${d}" stroke-width="3"/>`,
+S:`<defs><linearGradient id="g${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient></defs><rect width="100" height="100" fill="url(#g${id})"/>`,
+L:`<g fill="none" stroke="${d}" stroke-width="2">${[15,45,75].flatMap(x=>[20,50,80].map(y=>`<circle cx="${x}" cy="${y}" r="9"/>`)).join('')}</g>`,
+C:`<path d="M0 25H100M0 55H100M0 85H100M25 0V100M55 0V100M85 0V100" stroke="${d}" stroke-width="2"/>`,
+K:`<path d="${[15,45,75].flatMap(y=>[10,30,50,70,90].map(x=>`M${x-6} ${y}l6 10l6-10`)).join('')}" stroke="${d}" stroke-width="3" fill="none"/>`}[f];
+return `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="${c}"/>${m}</svg>`}
+let n=0;document.getElementById('g').innerHTML=CARDS.map((c,i)=>{const [en,et]=EFFECTS[c.effect];
+return `<div class="c"><div class="s">${pat(c.recipe[0],n++)}<span>${FABRICS[c.recipe[0]][0]}</span></div>
+<div class="m"><div class="t"><h2>${String(i+1).padStart(2,'0')} ${c.name}</h2><div class="p">${c.pts}</div></div>
+<div class="r">${c.recipe.map(f=>`<i title="${FABRICS[f][0]}">${pat(f,n++)}</i>`).join('')}</div>
+<div class="n">Recipe, bottom to top · top strip = layer 1</div>
+<div class="e"><b>${en}</b>${et||'Just tips.'}</div></div>
+<div class="s b">${pat(c.bottom,n++)}<span>${FABRICS[c.bottom][0]}</span></div></div>`}).join('');
 </script></body></html>
