@@ -53,7 +53,7 @@ function cardHTML(c,i){
   return `<div class="c" style="--f:${FABRICS[c.top][1]}">
 ${band('bt',c.top,`<span class="pill">${nm(c.top)}</span>`)}
 <div class="mid">${band('bl',c.left,dot(c.left))}
-<div class="core"><h2><small>${String(i+1).padStart(2,'0')}</small>${c.name}</h2><div class="col">${c.collection}</div><div class="art">${garment(c)}</div></div>
+<div class="core"><h2><small>${String(i+1).padStart(2,'0')}</small>${c.name}</h2><div class="col">${c.collection}</div><div class="art">${garment(c)}</div><div class="e"><b>${c.effect[0]}</b>${c.effect[1]}</div></div>
 ${band('br',c.right,dot(c.right))}</div>
 ${band('bb',c.bottom,`<span class="pill">${nm(c.bottom)}</span>`)}</div>`}
 
