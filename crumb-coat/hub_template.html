@@ -1,0 +1,224 @@
+<title>Crumb Coat</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Mulish:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a baker's order book. One reading column; the 18 cakes sit in one wide, scrollable table with a dial chart per cake. */
+:root {
+  --bg: #fbf5ee; --panel: #f2e8dc; --ink: #34201a; --muted: #7b665a; --rule: #e4d6c5;
+  --accent: #c23a63; --accent-ink: #ffffff; --card: #fffaf4;
+  --s0: #8a4a3c; --s1: #c98b6b; --s2: #e9c46a; --s3: #e08e45; --s4: #c23a63; --s5: #6e1d45;
+  --s0-ink: #ffffff; --s1-ink: #34201a; --s2-ink: #34201a; --s3-ink: #34201a; --s4-ink: #ffffff; --s5-ink: #ffffff;
+  --display: "Jost", "Futura", "Avenir Next", sans-serif; --body: "Mulish", "Avenir Next", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1d1410; --panel: #2a1d18; --ink: #f3e8dc; --muted: #b7a294; --rule: #402e26;
+  --accent: #f0678d; --accent-ink: #1d1410; --card: #251a15;
+  --s0: #a85a49; --s1: #b97d5f; --s2: #d9b455; --s3: #d17f38; --s4: #e0527c; --s5: #a7456f;
+  --s0-ink: #ffffff; --s1-ink: #1d1410; --s2-ink: #1d1410; --s3-ink: #1d1410; --s4-ink: #1d1410; --s5-ink: #ffffff; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #1d1410; --panel: #2a1d18; --ink: #f3e8dc; --muted: #b7a294; --rule: #402e26;
+  --accent: #f0678d; --accent-ink: #1d1410; --card: #251a15;
+  --s0: #a85a49; --s1: #b97d5f; --s2: #d9b455; --s3: #d17f38; --s4: #e0527c; --s5: #a7456f;
+  --s0-ink: #ffffff; --s1-ink: #1d1410; --s2-ink: #1d1410; --s3-ink: #1d1410; --s4-ink: #1d1410; --s5-ink: #ffffff; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px }
+.wrap { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0 }
+h2 { font-size: 1.45rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase }
+h3 { font-size: 1.05rem; font-weight: 600 }
+p { margin: 0 } section { display: flex; flex-direction: column; gap: 14px; min-width: 0 }
+.eyebrow { font: 600 .78rem var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent) }
+header { display: flex; flex-direction: column; gap: 12px }
+h1 { font-size: clamp(2.6rem, 9vw, 4.4rem); line-height: .95; font-weight: 700; text-transform: uppercase }
+.pitch { font-size: 1.12rem; max-width: 62ch }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px }
+.facts span { background: var(--panel); border-radius: 999px; padding: 4px 12px; font: 600 .85rem var(--display); letter-spacing: .03em }
+.facts .draft { background: var(--accent); color: var(--accent-ink) }
+.meta, .muted { color: var(--muted) } .meta { font-size: .9rem }
+code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere }
+/* turn */
+.turn { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px }
+.turn div { border-top: 3px solid var(--accent); padding-top: 8px; display: flex; flex-direction: column; gap: 4px }
+.turn b { font: 700 1rem var(--display) } .turn span { font-size: .92rem }
+dl.terms { display: grid; grid-template-columns: minmax(120px, auto) 1fr; gap: 6px 16px; margin: 0 }
+dl.terms dt { font-weight: 700 } dl.terms dd { margin: 0 }
+.diagram { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 20px; align-items: center }
+.diagram svg { width: 100%; max-width: 240px; height: auto }
+.diagram ol { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; font-size: .95rem }
+.card-face { fill: var(--card); stroke: var(--ink); stroke-width: 2 }
+.svg-t { fill: var(--ink); font: 700 15px var(--display) } .svg-n { fill: var(--accent); font: 700 24px var(--display) }
+.svg-s { fill: var(--muted); font: 600 10px var(--display); letter-spacing: .1em; text-transform: uppercase }
+.svg-a { fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round }
+.svg-h { fill: var(--accent) }
+/* cake table */
+.board { overflow-x: auto; border: 1.5px solid var(--rule); border-radius: 10px; background: var(--bg) }
+table { border-collapse: collapse; width: 100%; font-size: .9rem }
+table.cakes { min-width: 760px }
+thead th { font: 600 .72rem var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 10px 10px; border-bottom: 1.5px solid var(--rule); background: var(--panel) }
+td, tbody th { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: middle; text-align: left }
+tbody th { font: 600 .98rem var(--display); white-space: nowrap }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0 }
+.num { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .82rem } .c { text-align: center; font-variant-numeric: tabular-nums }
+td.fx { min-width: 260px; line-height: 1.45 } td.fx b { font-family: var(--display); font-weight: 700 }
+.quirk { font: 700 .72rem var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--accent) }
+.dial { display: flex; gap: 6px; align-items: flex-end; height: 52px }
+.dial .b { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; width: 22px; height: 100% }
+.dial i { display: block; width: 100%; height: calc(var(--v) * 3.6px + 2px); background: var(--rule); border-radius: 3px 3px 0 0 }
+.dial .pk i { background: var(--accent) } .dial b { font: 700 .78rem var(--display); font-variant-numeric: tabular-nums }
+.legend { font-size: .85rem; color: var(--muted) }
+/* ladder */
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px }
+.s0 { background: var(--s0); color: var(--s0-ink) } .s1 { background: var(--s1); color: var(--s1-ink) } .s2 { background: var(--s2); color: var(--s2-ink) }
+.s3 { background: var(--s3); color: var(--s3-ink) } .s4 { background: var(--s4); color: var(--s4-ink) } .s5 { background: var(--s5); color: var(--s5-ink) }
+table.ladder td, table.ladder th { padding: 9px 10px } table.ladder { min-width: 520px }
+tr.win td:nth-child(3) { color: var(--accent); font-weight: 700 }
+.lrow { display: grid; grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) 56px; gap: 14px; align-items: center }
+.llabel { display: flex; flex-direction: column; line-height: 1.3 } .llabel b { font: 700 .98rem var(--display) } .llabel span { font-size: .8rem }
+.lbar { display: flex; height: 30px; border-radius: 6px; overflow: hidden; background: var(--panel) }
+.seg { display: flex; align-items: center; justify-content: center; font: 700 .78rem var(--display); font-variant-numeric: tabular-nums; min-width: 0; overflow: hidden }
+.lwin { display: flex; flex-direction: column; text-align: right; line-height: 1.2 } .lwin b { font: 700 1.1rem var(--display); font-variant-numeric: tabular-nums } .lwin span { font-size: .75rem }
+.lkey { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .84rem; color: var(--muted) }
+.lbars { display: flex; flex-direction: column; gap: 12px }
+@media (max-width: 600px) { .lrow { grid-template-columns: minmax(0, 1fr) 52px } .lrow .lbar { grid-column: 1 / -1; grid-row: 2 } }
+/* numbers */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px }
+.stat { background: var(--panel); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px }
+.stat b { font: 700 1.5rem var(--display); font-variant-numeric: tabular-nums } .stat span { font-size: .85rem; color: var(--muted); line-height: 1.35 }
+ol.history { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 10px }
+ol.history li::marker { font-family: var(--display); font-weight: 700; color: var(--accent) }
+ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px }
+.files { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: minmax(130px, auto) 1fr; gap: 4px 14px; font-size: .9rem }
+.files code { justify-self: start }
+@media (max-width: 560px) { .diagram { grid-template-columns: 1fr } dl.terms, .files { grid-template-columns: 1fr } dl.terms dd { margin-bottom: 6px } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Project hub · 18-card baking game</span>
+  <h1>Crumb<br>Coat</h1>
+  <p class="pitch">You run a one-oven bakery. Cakes rise, peak and burn on a dial you turn every turn. Pull each one at its best, and slam the oven door on a rival's cake while it is still rising. Every card is a cake, and its four edges are its dial. A sister game to Pour Decisions, First Crack and Microlot.</p>
+  <div class="facts"><span class="draft">Draft 0.1</span><span>1–2 bakers</span><span>25 minutes</span><span>18 cards</span><span>Ages 10+</span></div>
+  <p class="meta">Working title · simulated only, not yet played at a table · rules in <code>RULES.md</code></p>
+</header>
+
+<section id="rules">
+  <h2>How it plays</h2>
+  <p>You have two racks in your oven. Four cards sit face up as <b>the Counter</b>. At the start of your turn, give every cake in your oven a quarter-turn clockwise. Then do one thing:</p>
+  <div class="turn">
+    <div><b>Pull</b><span>Take a cake that is Risen, Golden or Dark. Score the number on its top edge, then its effect.</span></div>
+    <div><b>Bake</b><span>Take a Counter card into an empty rack, Batter edge up.</span></div>
+    <div><b>Slam the door</b><span>Tuck a Counter card under a rival's cake that is still Batter or Risen. It turns a quarter-turn at once.</span></div>
+    <div><b>Bin</b><span>Take a Counter card and throw it away, so your rival can't have it.</span></div>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 240 240" role="img" aria-label="A Soufflé card with four dial edges: Batter at the top, 9 on the left, 2 at the bottom and 0 on the right, with a clockwise arrow">
+      <rect class="card-face" x="30" y="30" width="180" height="180" rx="14"/>
+      <text class="svg-t" x="120" y="116" text-anchor="middle">Soufflé</text>
+      <text class="svg-s" x="120" y="134" text-anchor="middle">card, as baked</text>
+      <text class="svg-s" x="120" y="52" text-anchor="middle">A · Batter</text>
+      <text class="svg-n" transform="translate(54 120) rotate(-90)" text-anchor="middle">9</text>
+      <text class="svg-s" transform="translate(40 120) rotate(-90)" text-anchor="middle">B · Risen</text>
+      <text class="svg-n" transform="translate(120 190) rotate(180)" text-anchor="middle">2</text>
+      <text class="svg-s" transform="translate(120 200) rotate(180)" text-anchor="middle">C · Golden</text>
+      <text class="svg-n" transform="translate(186 120) rotate(90)" text-anchor="middle">0</text>
+      <text class="svg-s" transform="translate(200 120) rotate(90)" text-anchor="middle">D · Dark</text>
+      <path class="svg-a" d="M 96 94 A 36 36 0 0 1 148 100"/><path class="svg-h" d="M 150 93 L 154 106 L 141 103 Z"/>
+    </svg>
+    <ol>
+      <li>Bake it with Batter on top. It scores nothing yet.</li>
+      <li>Next turn, turn the card clockwise: the left edge comes to the top. The Soufflé shows <b>9</b>. Pull it now.</li>
+      <li>Wait one more turn and it is Golden at <b>2</b>, then Dark at <b>0</b>.</li>
+      <li>One more turn and it is cinders: it goes to the Bin and scores nothing.</li>
+    </ol>
+  </div>
+  <p>A slam makes the cake jump a stage. If its next edge was the peak, the owner loses it. If the stage after is better, the slam has helped them. That is why you can only slam a cake that is still Batter or Risen: once it is Golden or Dark, it is set.</p>
+  <dl class="terms">
+    <dt>The Counter</dt><dd>4 cards in the middle (3 solo). Refill after every turn. If it is empty, you must pull.</dd>
+    <dt>Effects</dt><dd>Most cakes have a <b>When pulled</b> effect. <i>Use a card</i> means bake it, slam with it, or bin it.</dd>
+    <dt>Days</dt><dd>Two. A day ends when the deck and the Counter are both empty.</dd>
+    <dt>Washing up</dt><dd>Sold cakes go to the Sold pile, everything else goes to the Bin. When a day ends, shuffle the Sold pile into a new deck and throw the Bin out of the game. <b>Player 2 starts day 2.</b> Cakes still in an oven stay there, and cakes left at the end of day 2 score nothing.</dd>
+    <dt>Winning</dt><dd>Most points. A tie is a shared win.</dd>
+    <dt>Solo</dt><dd>One oven, Counter of 3, no slamming. After each turn the oldest Counter card goes cold and leaves the game. Grade yourself on the ladder below. A win is Apprentice or better.</dd>
+  </dl>
+</section>
+
+<section id="cakes">
+  <h2>The 18 cakes</h2>
+  <p class="legend">The chart shows the three dial values: Risen, Golden and Dark, left to right. The tallest bar is the cake's peak. Points per bake is what a bot earned from each baked cake in 4,000 simulated games, where each bot bakes a random card one turn in five so that every cake gets tested.</p>
+  <div class="board"><table class="cakes">
+    <thead><tr><th>#</th><th>Cake</th><th>Risen · Golden · Dark</th><th>Effect</th><th class="c">Pts per bake</th></tr></thead>
+    <tbody>
+%%CARDROWS%%    </tbody>
+  </table></div>
+  <p class="legend">Shapes run from spike (Soufflé, Macarons, Scones peak at Risen), through plateau (Cupcakes, Brownies, Carrot Cake), to slow burn (Croquembouche, Black Forest, Pavlova peak at Dark). Cakes were tuned by moving only each peak, so the shapes stayed as designed. They now earn %%PPBMIN%% to %%PPBMAX%% points per bake.</p>
+</section>
+
+<section id="solo">
+  <h2>Solo grades</h2>
+  <p>Losing and winning get different kinds of names. A loss says what went wrong with the bake. A win says how good a baker you are. The win line sits between Soggy Bottom and Apprentice.</p>
+  <div class="board"><table class="ladder">
+    <thead><tr><th>Grade</th><th>Score</th><th></th><th>Meaning</th></tr></thead>
+    <tbody>
+%%LADDER%%    </tbody>
+  </table></div>
+  <h3>Where bots land</h3>
+  <div class="lbars">
+%%LBARS%%  </div>
+  <div class="lkey">%%LEGEND%%</div>
+  <p class="legend">Thresholds were set so a casual player wins about three games in five, a good one four in five, and Master Baker stays rare (one game in a hundred for the casual bot, one in six for the expert). The expert and good bots play out the rest of the game from each option, 500 games each. The casual bot played 6,000. People will land somewhere between casual and good; expect the thresholds to move after real plays.</p>
+</section>
+
+<section id="numbers">
+  <h2>Where it stands</h2>
+  <p>From 10,000 two-player games between the same bot, plus the solo runs above.</p>
+  <div class="stats">
+    <div class="stat"><b>%%P1%% / %%P2%%</b><span>Player 1 / Player 2 wins (%), ties %%TIE%%%</span></div>
+    <div class="stat"><b>%%MEAN%%</b><span>points a player, over about %%TURNS%% turns each</span></div>
+    <div class="stat"><b>%%SLAMS%%</b><span>slams a game</span></div>
+    <div class="stat"><b>%%SKILL%%%</b><span>wins for the stronger bot against the casual bot</span></div>
+    <div class="stat"><b>%%MARGIN%%</b><span>points: the typical winning margin</span></div>
+  </div>
+  <h3>Open issues</h3>
+  <ul class="plain">
+    <li><b>Nobody has played it.</b> Every figure comes from bots. Real players will forget a turn, mis-read an edge, and slam at the wrong moment, which the bots never do.</li>
+    <li><b>The slam is the only interaction.</b> With slamming switched off the casual bot nearly matches the strong one, and each player scores about 62. The deck then plays as a solved puzzle, so the whole game depends on this one action.</li>
+    <li><b>Player 2 leans ahead.</b> Player 2 wins %%P2%%% to %%P1%%%. Starting day 2 may be giving too much.</li>
+    <li><b>Skill gap is modest.</b> The stronger bot beats the casual one %%SKILL%%% of the time. It is a simple bot, so that probably understates a good human, but it is the number to watch.</li>
+    <li><b>Effects were not tuned on their own.</b> Only dial peaks moved. The point values I gave each effect are my estimates, and Draught and Second helping are the most likely to need a second look.</li>
+    <li><b>Water bath may be redundant.</b> Now that slams only hit early stages, Cheesecake and Fruitcake may not need it. Untested.</li>
+    <li><b>Solo ladder is calibrated on bots.</b> The thresholds will shift once people play.</li>
+    <li><b>Name and art.</b> Crumb Coat is a working title. There is no art and no print layout yet.</li>
+  </ul>
+</section>
+
+<section id="history">
+  <h2>How it got here</h2>
+  <ol class="history">
+    <li><b>First build.</b> Slam allowed on any cake at any time, dials set by hand. Seats were even (46 / 48) and the stronger bot beat the casual one 87% of the time. But Croquembouche burned 72% of the time and earned 1.6 points per bake, while the two slam-proof cakes earned about 7. In solo the bot I wrote played worse than the casual one (39.6 against 44.2).</li>
+    <li><b>Slam switched off.</b> The game became a solved puzzle: bake the biggest peak, pull it at the top. The casual bot kept up (60–66% for the strong bot) and scores reached 62 each. So the slam is what makes the game worth playing, and it has to stay.</li>
+    <li><b>Auto-tuning rejected.</b> Letting the tuner scale every number flattened the slow cakes to 10 / 10 / 10, which removes the timing. The fix had to be in the rules, not the numbers.</li>
+    <li><b>Slam limited to early stages.</b> Four options tried: slam anywhere, only Batter or Risen, only Risen or Golden, only through effects. Only Batter or Risen kept the best mix: a 76% skill gap in that run, 2.5 slams a game, even seats. It also reads naturally: you can't knock a cake that has set.</li>
+    <li><b>Shape-preserving tune.</b> With each cake's profile held fixed and only its peak moving, the spread in points per bake fell from 1.5 to 0.7. I then rewrote 18 distinct shapes and re-tuned.</li>
+    <li><b>One day, rejected.</b> A single pass through the deck gave Player 1 58% against 36%. Two days with Player 2 starting day 2 came back to even.</li>
+    <li><b>Washing up.</b> Returning only sold cakes to the deck, and throwing the rest out, cut the game from about 20 turns each to 16, and kept seats even.</li>
+    <li><b>Solo rebuilt.</b> The heuristic bot was no use for solo, so I wrote one that plays out each option many times. It scores 55.5 against the casual bot's 44.2, which is a wide enough range to build six grades on.</li>
+  </ol>
+</section>
+
+<section id="files">
+  <h2>Project files</h2>
+  <p class="meta">These live in the <code>crumb-coat</code> folder of the working copy and have not been committed.</p>
+  <ul class="files">
+    <li><code>RULES.md</code><span>the rules as the simulator plays them</span></li>
+    <li><code>sim.py</code><span>rules engine, bots, card data (<code>CAKES</code>)</span></li>
+    <li><code>solo_mc.py</code><span>the playout bot used for the solo ladder</span></li>
+    <li><code>tune.py</code><span>shape-preserving tuner</span></li>
+    <li><code>exp.py</code><span>compares rule variants (the slam options)</span></li>
+    <li><code>final.py</code>, <code>ladder.py</code><span>the runs behind the numbers on this page</span></li>
+    <li><code>make_hub.py</code><span>builds this page from <code>results.json</code> and <code>ladder.json</code></span></li>
+  </ul>
+</section>
+</div>

@@ -1,0 +1,248 @@
+{
+ "games": 10000,
+ "p1": 0.4599,
+ "p2": 0.4885,
+ "tie": 0.0516,
+ "mean": 50.486,
+ "sd": 10.597263986520295,
+ "turns": 15.97415,
+ "slams": 2.1056,
+ "skill": 0.6421666666666667,
+ "median_margin": 6.0,
+ "cards": [
+  {
+   "name": "Souffle",
+   "dial": [
+    9,
+    2,
+    0
+   ],
+   "eff": "twofor",
+   "quirk": "",
+   "baked": 2450,
+   "ppb": 5.024706609017913,
+   "burn": 0.06300185299567634
+  },
+  {
+   "name": "Macarons",
+   "dial": [
+    6,
+    3,
+    0
+   ],
+   "eff": "fresh",
+   "quirk": "",
+   "baked": 7427,
+   "ppb": 4.222794591113973,
+   "burn": 0.03541532517707663
+  },
+  {
+   "name": "Scones",
+   "dial": [
+    6,
+    2,
+    0
+   ],
+   "eff": "tip",
+   "quirk": "",
+   "baked": 13319,
+   "ppb": 5.1961464354527935,
+   "burn": 0.0674373795761079
+  },
+  {
+   "name": "Choux Puffs",
+   "dial": [
+    6,
+    4,
+    1
+   ],
+   "eff": "draw",
+   "quirk": "",
+   "baked": 3008,
+   "ppb": 4.77639751552795,
+   "burn": 0.019762845849802372
+  },
+  {
+   "name": "Cupcakes",
+   "dial": [
+    6,
+    6,
+    2
+   ],
+   "eff": "twofor",
+   "quirk": "",
+   "baked": 15432,
+   "ppb": 5.487550471063257,
+   "burn": 0.007570659488559893
+  },
+  {
+   "name": "Genoise",
+   "dial": [
+    4,
+    7,
+    3
+   ],
+   "eff": "none",
+   "quirk": "",
+   "baked": 10210,
+   "ppb": 4.992063492063492,
+   "burn": 0.050347222222222224
+  },
+  {
+   "name": "Lemon Drizzle",
+   "dial": [
+    3,
+    6,
+    4
+   ],
+   "eff": "free_slam",
+   "quirk": "",
+   "baked": 9427,
+   "ppb": 4.511413043478261,
+   "burn": 0.034239130434782605
+  },
+  {
+   "name": "Red Velvet",
+   "dial": [
+    4,
+    7,
+    4
+   ],
+   "eff": "fresh",
+   "quirk": "",
+   "baked": 16942,
+   "ppb": 5.8873156342182895,
+   "burn": 0.04675516224188791
+  },
+  {
+   "name": "Brownies",
+   "dial": [
+    5,
+    6,
+    5
+   ],
+   "eff": "rest",
+   "quirk": "",
+   "baked": 7657,
+   "ppb": 4.687719298245614,
+   "burn": 0.01850079744816587
+  },
+  {
+   "name": "Victoria Sponge",
+   "dial": [
+    4,
+    6,
+    5
+   ],
+   "eff": "glaze",
+   "quirk": "",
+   "baked": 10894,
+   "ppb": 5.166398898324535,
+   "burn": 0.026623823731925636
+  },
+  {
+   "name": "Carrot Cake",
+   "dial": [
+    4,
+    6,
+    6
+   ],
+   "eff": "draw",
+   "quirk": "",
+   "baked": 12722,
+   "ppb": 5.059207839934667,
+   "burn": 0.017354022049816252
+  },
+  {
+   "name": "Banana Bread",
+   "dial": [
+    4,
+    5,
+    6
+   ],
+   "eff": "scrap",
+   "quirk": "",
+   "baked": 3405,
+   "ppb": 4.546205472379969,
+   "burn": 0.02839442436757873
+  },
+  {
+   "name": "Pavlova",
+   "dial": [
+    2,
+    5,
+    7
+   ],
+   "eff": "rest",
+   "quirk": "",
+   "baked": 11615,
+   "ppb": 5.172208764589297,
+   "burn": 0.04558467297951993
+  },
+  {
+   "name": "Tiramisu",
+   "dial": [
+    2,
+    5,
+    6
+   ],
+   "eff": "tip",
+   "quirk": "preheated",
+   "baked": 15348,
+   "ppb": 5.860279441117765,
+   "burn": 0.05755156353958749
+  },
+  {
+   "name": "Black Forest",
+   "dial": [
+    1,
+    5,
+    7
+   ],
+   "eff": "free_slam",
+   "quirk": "",
+   "baked": 13983,
+   "ppb": 5.25531914893617,
+   "burn": 0.010451661067562523
+  },
+  {
+   "name": "Croquembouche",
+   "dial": [
+    1,
+    2,
+    7
+   ],
+   "eff": "none",
+   "quirk": "",
+   "baked": 15032,
+   "ppb": 5.492955326460481,
+   "burn": 0.06512027491408935
+  },
+  {
+   "name": "Cheesecake",
+   "dial": [
+    2,
+    4,
+    6
+   ],
+   "eff": "none",
+   "quirk": "sturdy",
+   "baked": 8493,
+   "ppb": 4.857831325301205,
+   "burn": 0.02650602409638554
+  },
+  {
+   "name": "Fruitcake",
+   "dial": [
+    2,
+    4,
+    6
+   ],
+   "eff": "glaze",
+   "quirk": "sturdy",
+   "baked": 14599,
+   "ppb": 5.539196602371262,
+   "burn": 0.006724473544505397
+  }
+ ]
+}
