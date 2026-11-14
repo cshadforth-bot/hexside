@@ -5,7 +5,7 @@
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 :root{--ink:#261c33;--muted:#6f6382;--accent:#b8317f;--panel:#efeaf6;--rule:#d8cfe6;--fD:#2f6fd0;--fW:#e8643c;--fS:#c2408f;--fL:#ffe9c7;--fK:#3fae6a;--fC:#f2b632}
 html,body{margin:0;background:#fff;color:var(--ink);font:9.6pt/1.42 Mulish,system-ui,sans-serif}
-.page{width:210mm;height:297mm;padding:12mm 13mm;break-after:page;page-break-after:always;display:flex;flex-direction:column;gap:3.2mm;overflow:hidden}
+.page{width:210mm;height:297mm;padding:12mm 13mm;break-after:page;page-break-after:always;display:flex;flex-direction:column;gap:2.6mm;overflow:hidden}.page>*{flex-shrink:0}
 .page:last-child{break-after:auto;page-break-after:auto}
 h1,h2,h3{font-family:Jost,Futura,sans-serif;margin:0}
 h1{font-size:34pt;line-height:.95;text-transform:uppercase;letter-spacing:.01em}
@@ -34,42 +34,47 @@ td{padding:.9mm 1.6mm;border-bottom:.2mm solid var(--rule);vertical-align:middle
 <section class="page">
   <div><span class="eyebrow">18-card sewing game · sister to Pour Decisions, Carly Cakes and First Crack</span></div>
   <h1>Textilesme</h1>
-  <p>You run a one-bench tailoring studio and nothing you sew is new. Piece a quilt together from other people's old clothes, edge to edge, and match your swatches to score buttons. Day 2 is played with the same clothes, remade.</p>
+  <p>You run a one-bench tailoring studio and nothing you sew is new. Piece a quilt together from other people's old clothes, edge to edge, and match your swatches to score buttons. Remake what you can't use. Day 2 is played with the same clothes, remade.</p>
   <div class="thread"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="facts"><span class="d">Draft 0.5</span><span>1-2 tailors</span><span>20 minutes</span><span>18 cards</span><span>Ages 10+</span></div>
+  <div class="facts"><span class="d">Draft 0.6</span><span>1-2 tailors</span><span>20 minutes</span><span>18 cards</span><span>Ages 10+</span></div>
 
-  <h2>Every card is a patch</h2>
-  <p>Each card is a garment cut into four patches: a <b>swatch</b> on its top, bottom, left and right edges. The garment in the middle is drawn from the same four fabrics, so you can read the edges off the picture. There are 72 swatches, 12 of each fabric.</p>
+  <h2>Every card is a patch, and a garment</h2>
+  <p>Each card is a garment cut into four patches: a <b>swatch</b> on its top, bottom, left and right edges. The garment in the middle is drawn from the same four fabrics, so you can read the edges off the picture. There are 72 swatches, 12 of each fabric. Every garment also belongs to a <b>collection</b>, named under its title (see the table on page 2).</p>
   <div class="key"><span><i class="sw fD">D</i>Denim</span><span><i class="sw fW">W</i>Wool</span><span><i class="sw fS">S</i>Silk</span><span><i class="sw fL">L</i>Lace</span><span><i class="sw fK">K</i>Knit</span><span><i class="sw fC">C</i>Canvas</span></div>
 
   <h2>Setup</h2>
   <p>Shuffle all 18 cards. Turn the top card face up in the middle of the table: the <b>Foundation</b>. The fabric on its <b>top edge</b> is today's <b>Trend</b>. Deal 4 cards face up: the <b>Rail</b> (3 in solo). The rest is the deck. Player 1 goes first.</p>
 
-  <h2>Your turn</h2>
-  <p>Take one Rail card and <b>sew</b> it onto the quilt. Lay it next to the cards already there, edge to edge, in a square grid. Cards stay upright, but you may turn one 180 degrees. It must touch at least one card. Then refill the Rail.</p>
+  <h2>Your turn: take one Rail card and do one thing with it</h2>
+  <div class="ex2">
+    <div><b>Sew</b> it onto the quilt. Lay it next to the cards already there, edge to edge, in a square grid. Cards stay upright, but you may turn one 180 degrees. It must touch at least one card.</div>
+    <div><b>Upcycle</b> it. Sew it <b>over</b> a card on the quilt from the <b>same collection</b>. The covered card is unpicked and out for the day. Score the new card's seams there as for a sew, then <b>pay 1 button</b>. A card that covers another can be covered in turn.</div>
+  </div>
+  <p>Then refill the Rail. Scoring is the same either way:</p>
   <div class="turn">
     <div><b class="h">Seam: 2 buttons</b>Each card you touch whose touching edge shows the <b>same fabric</b> scores 2 buttons.</div>
     <div><b class="h">Trend: +1</b>A matching seam in the <b>Trend</b> fabric scores 1 more button.</div>
     <div><b class="h">Perfect fit: +2</b>If your card touches 2 or more cards and <b>every</b> touching edge matches, take 2 more buttons.</div>
   </div>
-  <p>Edges that don't match score nothing and cost nothing. The Foundation scores nothing. Every card is sewn: there is no pass and no discard. Taking a card is also how you keep it from your rival.</p>
+  <p>Edges that don't match score nothing and cost nothing. The Foundation scores nothing, but it can be covered. Every card is sewn or upcycled: there is no pass and no discard. Taking a card is also how you keep it from your rival.</p>
 
-  <h2>Example</h2>
-  <p>The Trend is Silk. You sew a card so its left edge (Wool) meets the right edge (Wool) of a card already there: 2 buttons. Its top edge (Silk) meets the bottom edge (Silk) of another card: 2 buttons, plus 1 for the Trend. Both edges match, so it is a perfect fit: 2 more. That turn scores 7 buttons.</p>
+  <h2>Examples</h2>
+  <p><b>Sew.</b> The Trend is Silk. You sew a card so its left edge (Wool) meets the right edge (Wool) of a card already there: 2 buttons. Its top edge (Silk) meets the bottom edge (Silk) of another card: 2 buttons, plus 1 for the Trend. Both edges match, so it is a perfect fit: 2 more. That turn scores 7 buttons.</p>
+  <p><b>Upcycle.</b> A Pocket Tee (Tops) sits on the quilt with a bad Silk seam beside it. You take the Kimono (also Tops) from the Rail and sew it over the Tee. Its edges match two of the Tee's old neighbours: 2 + 2 buttons, and as both touching edges match, a perfect fit: +2. Minus 1 for the remake. That turn scores 5 buttons, and the Tee is unpicked.</p>
 
   <h2>Two days, and nothing is wasted</h2>
-  <p>A day ends when the deck and the Rail are empty. <b>Washing up:</b> unpick the whole quilt and shuffle all 18 cards together. Your buttons stay banked. Day 2 is played with the same clothes, remade: a new Foundation, a new Trend, a new Rail. <b>Player 2 starts day 2.</b></p>
+  <p>A day ends when the deck and the Rail are empty. <b>Washing up:</b> unpick the whole quilt, covered cards included, and shuffle all 18 cards together. Your buttons stay banked. Day 2 is played with the same clothes, remade: a new Foundation, a new Trend, a new Rail. <b>Player 2 starts day 2.</b></p>
   <div class="box"><b>Score.</b> Buttons from both days. Most buttons wins. A tie is a shared win.</div>
 </section>
 
 <section class="page">
   <h2>Solo</h2>
-  <p>Use a Rail of 3. After each of your turns the oldest Rail card goes cold and leaves the day, so you sew 9 cards a day. Play both days and score as above. A typical game scores around 50.</p>
+  <p>Use a Rail of 3. After each of your turns the oldest Rail card goes cold and leaves the day, so you play 9 cards a day. Play both days and score as above. A typical game scores around 50.</p>
   <div class="ladder"><div><b>0-41</b>Patcher</div><div><b>42-47</b>Seamstress</div><div><b>48-53</b>Designer</div><div><b>54+</b>Couturier</div></div>
   <p class="small">Solo ranks are provisional: set from simulated bots, not human play.</p>
 
   <h2>The 18 patches</h2>
-  <table id="garments"><thead><tr><th>#</th><th>Garment</th><th>Top</th><th>Bottom</th><th>Left</th><th>Right</th></tr></thead><tbody></tbody></table>
+  <table id="garments"><thead><tr><th>#</th><th>Garment</th><th>Collection</th><th>Top</th><th>Bottom</th><th>Left</th><th>Right</th></tr></thead><tbody></tbody></table>
   <p class="small">Swatches are listed with the card upright. Turning a card 180 degrees swaps top with bottom and left with right.</p>
 
   <h2>Score log</h2>
@@ -78,5 +83,5 @@ td{padding:.9mm 1.6mm;border-bottom:.2mm solid var(--rule);vertical-align:middle
 </section>
 <script src="data.js"></script><script>
 const sw=f=>`<i class="sw f${f}" title="${FABRICS[f][0]}">${FABRICS[f][0][0]}</i>`;
-document.querySelector('#garments tbody').innerHTML=CARDS.map((c,i)=>`<tr><td class="n">${String(i+1).padStart(2,'0')}</td><td><b>${c.name}</b></td><td>${sw(c.top)}</td><td>${sw(c.bottom)}</td><td>${sw(c.left)}</td><td>${sw(c.right)}</td></tr>`).join('');
+document.querySelector('#garments tbody').innerHTML=CARDS.map((c,i)=>`<tr><td class="n">${String(i+1).padStart(2,'0')}</td><td><b>${c.name}</b></td><td>${c.collection}</td><td>${sw(c.top)}</td><td>${sw(c.bottom)}</td><td>${sw(c.left)}</td><td>${sw(c.right)}</td></tr>`).join('');
 </script></body></html>
