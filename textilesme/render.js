@@ -36,27 +36,26 @@ const G={
 'Evening Gown':{p:['M40 6L44 24Q50 30 56 24L60 6 66 36 58 52 76 96H24L42 52 34 36Z'],x:'<path d="M50 30V52" stroke="#fff" stroke-width="1.4" stroke-dasharray="3 2"/>'},
 };
 let uid=0;
+// The garment is cut from four triangles meeting at its centre, one per card edge: top, right, bottom, left.
 function garment(c){
-  const g=G[c.name]; const id='c'+(uid++); const n=c.recipe.length;
+  const g=G[c.name]; const id='c'+(uid++);
   const shapes=g.p.map(s=>{const [d,tr]=s.split('|');return `<path d="${d}" ${tr||''} ${g.e?'clip-rule="evenodd" fill-rule="evenodd"':''}/>`}).join('');
-  const top=8,bot=95,h=(bot-top)/n;
-  const bands=c.recipe.map((f,k)=>{const y=bot-(k+1)*h;return `<rect x="0" y="${y}" width="100" height="${h+.3}" fill="url(#p${f})"/>`+(k?`<path d="M0 ${y+h}H100" stroke="#fff" stroke-width="1.4" stroke-dasharray="3 2"/>`:'')}).join('');
-  const nums=c.recipe.map((f,k)=>{const y=bot-(k+.5)*h;return `<g transform="translate(5 ${y})"><circle r="4.6" fill="#2b2118"/><text y="1.9" font-size="5.6" font-weight="800" fill="#fff" text-anchor="middle">${k+1}</text></g>`}).join('');
+  const tri=[[c.top,'0,0 100,0 50,50'],[c.right,'100,0 100,100 50,50'],[c.bottom,'100,100 0,100 50,50'],[c.left,'0,100 0,0 50,50']]
+    .map(([f,pts])=>`<polygon points="${pts}" fill="url(#p${f})"/>`).join('');
   return `<svg viewBox="0 0 100 100"><defs><clipPath id="${id}">${shapes}</clipPath></defs>
   <g transform="translate(2 4)" opacity=".18"><g clip-path="url(#${id})"><rect width="100" height="100" fill="#000"/></g></g>
-  <g clip-path="url(#${id})">${bands}</g>
-  <g fill="none" stroke="#2b2118" stroke-width="2.4" stroke-linejoin="round">${g.p.map(s=>{const [d,tr]=s.split('|');return `<path d="${d}" ${tr||''} ${g.e?'fill-rule="evenodd"':''}/>`}).join('')}</g>${g.x||''}${nums}</svg>`;
+  <g clip-path="url(#${id})">${tri}<path d="M0 0L100 100M100 0L0 100" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 2.2"/></g>
+  <g fill="none" stroke="#2b2118" stroke-width="2.4" stroke-linejoin="round">${g.p.map(s=>{const [d,tr]=s.split('|');return `<path d="${d}" ${tr||''} ${g.e?'fill-rule="evenodd"':''}/>`}).join('')}</g></svg>`;
 }
-const swatch=(f,w)=>`<svg viewBox="0 0 252 38" preserveAspectRatio="xMidYMid slice">${fill(f,252,38)}</svg>`;
-
-function cardHTML(c,i){const [en,et]=EFFECTS[c.effect];
-return `<div class="c" style="--f:${FABRICS[c.recipe[0]][1]};--t:${TIER[c.pts]}">
-<div class="s">${swatch(c.recipe[0])}<span>${FABRICS[c.recipe[0]][0]}</span></div>
-<div class="m"><div class="t"><h2>${String(i+1).padStart(2,'0')} ${c.name}</h2><div class="p">${c.pts}</div></div>
-<div class="art">${garment(c)}</div>
-<div class="r">${c.recipe.map(f=>`<i title="${FABRICS[f][0]}"><svg viewBox="0 0 22 22">${fill(f,22,22)}</svg></i>`).join('')}<small>layers, bottom → top</small></div>
-<div class="e"><b>${en}</b>${et||'Just buttons.'}</div></div>
-<div class="s b">${swatch(c.bottom)}<span>${FABRICS[c.bottom][0]}</span></div></div>`}
+const band=(cls,f,inner)=>`<div class="band ${cls}"><svg viewBox="0 0 ${cls==='bt'||cls==='bb'?'252 38':'28 280'}" preserveAspectRatio="xMidYMid slice">${fill(f,252,280)}</svg>${inner}</div>`;
+function cardHTML(c,i){
+  const nm=f=>FABRICS[f][0], dot=f=>`<span class="dot" title="${nm(f)}">${nm(f)[0]}</span>`;
+  return `<div class="c" style="--f:${FABRICS[c.top][1]}">
+${band('bt',c.top,`<span class="pill">${nm(c.top)}</span>`)}
+<div class="mid">${band('bl',c.left,dot(c.left))}
+<div class="core"><h2><small>${String(i+1).padStart(2,'0')}</small>${c.name}</h2><div class="art">${garment(c)}</div></div>
+${band('br',c.right,dot(c.right))}</div>
+${band('bb',c.bottom,`<span class="pill">${nm(c.bottom)}</span>`)}</div>`}
 
 // Card back: a patchwork of all six fabrics, stitched, with the name on a label.
 function backHTML(){

@@ -1,41 +1,37 @@
-# Textilesme — draft 0.4 (simulated only, never played at a table)
-18 cards, 1–2 tailors, ~20 minutes. Make stylish garments out of other people's old clothes.
+# Textilesme — draft 0.5, patchwork (simulated only, never played at a table)
+18 cards, 1–2 tailors, ~20 minutes. Piece a quilt together from other people's old clothes.
 
-## Every card is two things
-A **garment order** (name, recipe of 2–4 fabrics, buttons) and a **fabric source** (two swatches: the **top swatch** is the card's own first
-fabric, the **bottom swatch** is a salvage patch, printed upside down). Fabrics: Denim, Wool, Silk, Lace, Knit, Canvas.
+## Every card is a patch
+Each card is a garment cut into four patches: a **swatch** on its top, bottom, left and right edges, in one of six fabrics
+(Denim, Wool, Silk, Lace, Knit, Canvas). 72 swatches in all, 12 of each fabric. The garment in the middle is drawn from the same four
+fabrics, so you can read the edges off the picture.
 
 ## Setup
-Shuffle all 18. Each player takes one card as their first **open garment** on a dress form (its top swatch is layer 1). Deal 4 face up:
-**the Rail** (3 in solo). The rest is the deck.
+Shuffle all 18. Turn the top card face up in the middle of the table: the **Foundation**. The fabric on its **top edge** is today's
+**Trend**. Deal 4 cards face up: **the Rail** (3 in solo). The rest is the deck. Player 1 goes first.
 
-## Your turn: take one Rail card and do one thing with it
-- **Design** — start a new garment with it (its top swatch is layer 1). You have two dress forms: at most 2 open garments.
-- **Stitch** — slide it under one of your open garments so one swatch peeks out as the next layer. That swatch must be the fabric the
-  recipe needs next. You may show either of its swatches.
-- **Unpick** — put it in the face-up rag bag. Usually to deny your rival.
-Then refill the Rail from the deck. When a garment's layers match its recipe it is **finished**: bank its buttons, resolve its effect.
-Its stitched cards go to the rag bag; the garment card itself stays in front of you as your score.
-
-## Effects (when finished)
-Second pair of hands: take another Rail card and use it · Moth: unpick the top stitched layer off a rival's open garment ·
-Keep the offcuts: put one stitched card in your button tin (+1 button each) instead of the rag bag · Rummage: draw the top deck card and use it ·
-Jumble sale: put the Rail in the rag bag and deal a new one.
+## Your turn
+Take one Rail card and **sew** it onto the quilt: lay it next to the cards already there, edge to edge, in a square grid (cards stay
+upright; you may turn it 180 degrees). It must touch at least one card. Then refill the Rail.
+- **Seam:** each card it touches whose touching edge shows the **same fabric** scores **2 buttons**. A seam in the **Trend** fabric scores **+1**.
+- **Perfect fit:** if the card touches 2 or more cards and **every** touching edge matches, **+2 buttons**.
+- Edges that don't match score nothing and cost nothing. The Foundation scores nothing.
+Every card is sewn: there is no pass and no discard. Taking a card is also how you keep it from your rival.
 
 ## Two days, and nothing is wasted
-When the deck is empty keep playing without refills until the Rail is empty. That ends a day.
-**Washing up:** every open garment is unpicked (−1 button each) and goes to the rag bag. **Finished garments are resold:** they go
-into the rag bag too (your buttons stay banked). Shuffle the rag bag into a new deck, deal a new Rail; day 2 is played with the
-clothes you made on day 1. **Player 2 starts day 2.** Cards in a button tin leave the game. After day 2, open garments cost −1 each.
-**Score:** buttons on finished garments + button tin − open garments. Tie: shared win.
+A day ends when the deck and the Rail are empty. **Washing up:** unpick the whole quilt and shuffle all 18 cards together. Your buttons stay
+banked. Day 2 is played with the same clothes, remade: a new Foundation, a new Trend, a new Rail. **Player 2 starts day 2.**
+**Score:** buttons from both days. Most buttons wins. A tie is a shared win.
 
 ## Solo
-Rail of 3; after each turn the oldest Rail card goes cold and leaves the game; ignore Moth. Provisional ranks:
-0–7 Patcher · 8–10 Seamstress · 11–14 Designer · 15+ Couturier.
+Rail of 3. After each of your turns the oldest Rail card goes cold and leaves the day, so you sew 9 cards a day. Provisional ranks:
+0–41 Patcher · 42–47 Seamstress · 48–53 Designer · 54+ Couturier.
 
-## What the simulator says (3,000 games per row, `node sim.js 3000`)
-Strong bots, P1/P2/tie 46.5/47.7/5.8%; about 2.9 garments and 8.6 buttons each; strong beats casual about 65%.
-Solo: strong bot mean 11.2 (p10 6, p90 16), casual bot mean 7.6.
-Tested and dropped: a +1 button for stitching recycled cards (flat inflation, tilts towards the day-2 starter: 45/50).
-Not tested: whether resale feels like a real decision to humans; the bots never consider feeding the rival.
-(The simulator's code still uses the earlier names: counter, scrap, stash, tips. Same rules, only the words changed in draft 0.4.)
+## What the simulator says (`node sim-patchwork.js 400`)
+Strong bots, P1 / P2 / tie 48 / 45 / 7%; each player makes about 44 buttons. A strong bot beats a casual one (15% random moves) about 80% of the
+time and a greedy one that never blocks about 76%. Solo: strong bot mean 52 (p10 46, p90 59), casual bot mean 46.
+Tested: with no Trend and no Perfect fit, ties jump to 24%, so both stay. A penalty for non-matching edges changed nothing for strong play.
+A discard ("unpick") action was dead (used about 0.1 times a game) and was removed.
+Not tested: whether it is fun to place cards when you must always sew; how long a game takes with real people; whether the edge set is fair
+to the player who sews first on a particular Foundation.
+(Earlier drafts built garments in recipe order and were close to Pour Decisions. Draft 0.4 is kept in `archive-stack/`.)

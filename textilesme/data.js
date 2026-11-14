@@ -1,23 +1,8 @@
-// Textilesme card data (draft 0.4). Every card is a garment order AND a fabric source.
-// recipe: fabrics bottom-to-top; recipe[0] is the card's TOP swatch (its own first layer).
-// bottom: the card's BOTTOM swatch (a salvage patch, printed upside down). pts: buttons earned when finished.
+// Textilesme card data (draft 0.5, patchwork). Every card is a patch with a fabric on each of its four edges.
+// edges: 'TBLR' = top, bottom, left, right fabric. Rotating a card 180 degrees swaps top/bottom and left/right.
+// 18 cards x 4 edges = 72 swatches, exactly 12 of each fabric. Every card shows 2 or 3 different fabrics.
 const FABRICS = { D: ['Denim', '#2f6fd0'], W: ['Wool', '#e8643c'], S: ['Silk', '#c2408f'], L: ['Lace', '#ffe9c7'], K: ['Knit', '#3fae6a'], C: ['Canvas', '#f2b632'] };
-const EFFECTS = {
-  none:  ['No effect', ''],
-  again: ['Second pair of hands', 'Take another Rail card and use it.'],
-  moth:  ['Moth', "Unpick the top layer off one of your rival's garments (not its first swatch)."],
-  stash: ['Keep the offcuts', 'Put one card from this garment in your button tin (+1 button).'],
-  draw:  ['Rummage', 'Draw the top card of the deck and use it.'],
-  fresh: ['Jumble sale', 'Put the whole Rail in the rag bag and deal a new one.'],
-};
-const mk = (name, recipe, bottom, effect) => ({ name, recipe: recipe.split(''), bottom, effect, pts: { 2: 2, 3: 4, 4: 6 }[recipe.length] });
-const CARDS = [
-  mk('Pocket Tee', 'KC', 'D', 'again'), mk('Scarf', 'WK', 'L', 'none'), mk('Scrunchie', 'SL', 'K', 'moth'),
-  mk('Tote Bag', 'CD', 'W', 'stash'), mk('Beanie', 'KW', 'S', 'draw'), mk('Hankie', 'LS', 'C', 'none'),
-  mk('Denim Jacket', 'DCW', 'S', 'moth'), mk('Cardigan', 'KWL', 'D', 'fresh'), mk('Slip Dress', 'SLK', 'C', 'stash'),
-  mk('Boiler Suit', 'CDK', 'L', 'again'), mk('Peacoat', 'WKD', 'S', 'moth'), mk('Kimono', 'SWL', 'D', 'draw'),
-  mk('Pinafore', 'DKC', 'W', 'stash'), mk('Shawl', 'LWK', 'C', 'none'),
-  mk('Patchwork Coat', 'DWKC', 'L', 'stash'), mk('Wedding Dress', 'LSKS', 'W', 'draw'),
-  mk('Quilt', 'KCDW', 'S', 'fresh'), mk('Evening Gown', 'SLWD', 'K', 'moth'),
-];
-if (typeof module !== 'undefined') module.exports = { FABRICS, EFFECTS, CARDS };
+const NAMES = ['Pocket Tee', 'Scarf', 'Scrunchie', 'Tote Bag', 'Beanie', 'Hankie', 'Denim Jacket', 'Cardigan', 'Slip Dress', 'Boiler Suit', 'Peacoat', 'Kimono', 'Pinafore', 'Shawl', 'Patchwork Coat', 'Wedding Dress', 'Quilt', 'Evening Gown'];
+const EDGES = ['WSWS', 'SCCL', 'SKCC', 'SSKW', 'SKKS', 'CDDL', 'SCCD', 'LSKL', 'LWWL', 'WLWC', 'WWSW', 'DKDK', 'DKDL', 'KDLD', 'CCLW', 'DKKC', 'SDDW', 'CLKL'];
+const CARDS = NAMES.map((name, i) => ({ name, edges: EDGES[i], top: EDGES[i][0], bottom: EDGES[i][1], left: EDGES[i][2], right: EDGES[i][3] }));
+if (typeof module !== 'undefined') module.exports = { FABRICS, CARDS };
