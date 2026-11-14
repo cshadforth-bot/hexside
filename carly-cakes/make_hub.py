@@ -1,4 +1,4 @@
-"""Builds hub.html for Crumb Coat from results.json and ladder.json."""
+"""Builds hub.html for Carly Cakes from results.json and ladder.json."""
 import json, html
 
 R = json.load(open("results.json")); L = json.load(open("ladder.json"))

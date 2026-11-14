@@ -1,4 +1,4 @@
-"""Crumb Coat (working title) - rules engine, heuristic AIs and balance simulator.
+"""Carly Cakes - rules engine, heuristic AIs and balance simulator.
 
 Rules in one breath: 18 cards, each a cake with 3 dial values (stages B, C, D) printed on
 three edges and a blank 'batter' edge (stage A).  Racks: 2 per player.  Each of your turns:

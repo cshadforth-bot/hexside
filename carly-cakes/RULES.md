@@ -1,4 +1,4 @@
-# Crumb Coat (working title) — rules, draft 0.1
+# Carly Cakes — rules, draft 0.1
 
 18-card baking game for 1–2 bakers, about 25 minutes. Sister game to Pour Decisions, First Crack and Microlot.
 Every number below is what `sim.py` plays; if this file and the code ever disagree, fix whichever is wrong.

@@ -81,7 +81,7 @@ BACK = ('''<div class="card back"><svg viewBox="0 0 63 88" xmlns="http://www.w3.
 <circle cx="31.5" cy="38" r="17.5" fill="#ffe3ec"/>
 <svg x="13.5" y="24.5" width="36" height="25.2" viewBox="0 0 120 84">{CAKE}</svg>
 <path d="M13 28 A19 19 0 0 1 26 19.5" fill="none" stroke="#7f63ee" stroke-width="2" stroke-linecap="round"/><path d="M27.2 16.4 L28 22.6 L22.6 19.6Z" fill="#7f63ee"/>
-<text x="31.5" y="68.5" text-anchor="middle" font-family="Fredoka, 'Baloo 2', sans-serif" font-weight="700" font-size="6.6" fill="#fff" stroke="#3a2118" stroke-width="1.9" paint-order="stroke" stroke-linejoin="round" letter-spacing=".3">CRUMB COAT</text>
+<text x="31.5" y="68.5" text-anchor="middle" font-family="Fredoka, 'Baloo 2', sans-serif" font-weight="700" font-size="6.6" fill="#fff" stroke="#3a2118" stroke-width="1.9" paint-order="stroke" stroke-linejoin="round" letter-spacing=".3">CARLY CAKES</text>
 <text x="31.5" y="75.6" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="700" font-size="2.5" fill="#fff" letter-spacing=".3">BAKING GAME &#183; 1-2 BAKERS</text>
 <path d="M8 12 l1.2 2.4 2.4 1.2 -2.4 1.2 -1.2 2.4 -1.2 -2.4 -2.4 -1.2 2.4 -1.2z M55 70 l1 2 2 1 -2 1 -1 2 -1 -2 -2 -1 2 -1z" fill="#fff" stroke="#3a2118" stroke-width=".6"/>
 </svg></div>''').replace('{CAKE}', red_velvet())
@@ -141,10 +141,10 @@ def build():
     pages = []
     for s in range(2):
         chunk = cards[s * 9:(s + 1) * 9]
-        pages.append(sheet("".join(chunk), f"Crumb Coat &middot; Cakes {s*9+1:02d}&ndash;{s*9+9:02d} &middot; fronts",
+        pages.append(sheet("".join(chunk), f"Carly Cakes &middot; Cakes {s*9+1:02d}&ndash;{s*9+9:02d} &middot; fronts",
                            "Print at 100% on A4, double-sided, flip on the long edge. Cut on the marks."))
-        pages.append(sheet(BACK * 9, "Crumb Coat &middot; backs", "Back of the sheet before. Cut on the marks."))
-    head = ('<meta charset="utf-8"><title>Crumb Coat cards</title>'
+        pages.append(sheet(BACK * 9, "Carly Cakes &middot; backs", "Back of the sheet before. Cut on the marks."))
+    head = ('<meta charset="utf-8"><title>Carly Cakes cards</title>'
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,600;0,700;1,700&display=swap">'
             f'<style>{CSS}</style>')
     open("cards.html", "w").write(f"<!doctype html><html><head>{head}</head><body>{''.join(pages)}</body></html>")
