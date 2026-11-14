@@ -1,7 +1,7 @@
 // Shared card rendering for cards.html and print.html. Needs data.js loaded first.
 
 const TIER={2:'#12a39a',4:'#f08a24',6:'#8a45c8'};
-// 14px tiles of fabric texture, drawn once and shared by strips, chips and garments.
+// 14px tiles of fabric texture, drawn once and shared by swatches, chips and garments.
 const dk='rgba(0,0,0,.28)',lt='rgba(255,255,255,.45)';
 const TEX={
 D:`<path d="M-4 14L14 -4M0 18L18 0M-4 6L6 -4" stroke="${dk}" stroke-width="1.6"/><path d="M0 7L7 0" stroke="${lt}" stroke-width="1"/>`,
@@ -47,16 +47,16 @@ function garment(c){
   <g clip-path="url(#${id})">${bands}</g>
   <g fill="none" stroke="#2b2118" stroke-width="2.4" stroke-linejoin="round">${g.p.map(s=>{const [d,tr]=s.split('|');return `<path d="${d}" ${tr||''} ${g.e?'fill-rule="evenodd"':''}/>`}).join('')}</g>${g.x||''}${nums}</svg>`;
 }
-const strip=(f,w)=>`<svg viewBox="0 0 252 38" preserveAspectRatio="xMidYMid slice">${fill(f,252,38)}</svg>`;
+const swatch=(f,w)=>`<svg viewBox="0 0 252 38" preserveAspectRatio="xMidYMid slice">${fill(f,252,38)}</svg>`;
 
 function cardHTML(c,i){const [en,et]=EFFECTS[c.effect];
 return `<div class="c" style="--f:${FABRICS[c.recipe[0]][1]};--t:${TIER[c.pts]}">
-<div class="s">${strip(c.recipe[0])}<span>${FABRICS[c.recipe[0]][0]}</span></div>
+<div class="s">${swatch(c.recipe[0])}<span>${FABRICS[c.recipe[0]][0]}</span></div>
 <div class="m"><div class="t"><h2>${String(i+1).padStart(2,'0')} ${c.name}</h2><div class="p">${c.pts}</div></div>
 <div class="art">${garment(c)}</div>
 <div class="r">${c.recipe.map(f=>`<i title="${FABRICS[f][0]}"><svg viewBox="0 0 22 22">${fill(f,22,22)}</svg></i>`).join('')}<small>layers, bottom → top</small></div>
-<div class="e"><b>${en}</b>${et||'Just tips.'}</div></div>
-<div class="s b">${strip(c.bottom)}<span>${FABRICS[c.bottom][0]}</span></div></div>`}
+<div class="e"><b>${en}</b>${et||'Just buttons.'}</div></div>
+<div class="s b">${swatch(c.bottom)}<span>${FABRICS[c.bottom][0]}</span></div></div>`}
 
 // Card back: a patchwork of all six fabrics, stitched, with the name on a label.
 function backHTML(){

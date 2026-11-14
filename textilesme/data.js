@@ -1,14 +1,14 @@
-// Textilesme card data (draft 0.2). Every card is a garment order AND a fabric source.
-// recipe: fabrics bottom-to-top; recipe[0] is the card's TOP strip (its own first layer).
-// bottom: the card's BOTTOM strip (a salvage patch, printed upside down). pts: stitched tips when finished.
+// Textilesme card data (draft 0.4). Every card is a garment order AND a fabric source.
+// recipe: fabrics bottom-to-top; recipe[0] is the card's TOP swatch (its own first layer).
+// bottom: the card's BOTTOM swatch (a salvage patch, printed upside down). pts: buttons earned when finished.
 const FABRICS = { D: ['Denim', '#2f6fd0'], W: ['Wool', '#e8643c'], S: ['Silk', '#c2408f'], L: ['Lace', '#ffe9c7'], K: ['Knit', '#3fae6a'], C: ['Canvas', '#f2b632'] };
 const EFFECTS = {
   none:  ['No effect', ''],
-  again: ['Second pair of hands', 'Take another Counter card and use it.'],
-  moth:  ['Moth', "Unpick the top layer off one of your rival's open garments (not its ticket)."],
-  stash: ['Keep the offcuts', 'Put one card from this garment in your Stash (+1) instead of recycling it.'],
+  again: ['Second pair of hands', 'Take another Rail card and use it.'],
+  moth:  ['Moth', "Unpick the top layer off one of your rival's garments (not its first swatch)."],
+  stash: ['Keep the offcuts', 'Put one card from this garment in your button tin (+1 button).'],
   draw:  ['Rummage', 'Draw the top card of the deck and use it.'],
-  fresh: ['Jumble sale', 'Scrap the whole Counter and deal a new one.'],
+  fresh: ['Jumble sale', 'Put the whole Rail in the rag bag and deal a new one.'],
 };
 const mk = (name, recipe, bottom, effect) => ({ name, recipe: recipe.split(''), bottom, effect, pts: { 2: 2, 3: 4, 4: 6 }[recipe.length] });
 const CARDS = [
