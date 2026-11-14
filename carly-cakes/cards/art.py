@@ -373,5 +373,31 @@ ART = {"Souffle": souffle, "Macarons": macarons, "Scones": scones, "Choux Puffs"
        "Tiramisu": tiramisu, "Cookies": cookies, "Birthday Cake": birthday_cake, "Celebration Cake": celebration_cake, "Cherry Bakewell": cherry_bakewell, "Blueberry & Lemon Cake": blueberry_lemon, "Coffee & Salted Pecan": coffee_pecan, "Wedding Cake": wedding_cake, "Black Forest": black_forest, "Croquembouche": croquembouche, "Cheesecake": cheesecake,
        "Fruitcake": fruitcake}
 
+
+# ---------------------------------------------------------------- the two losing grades
+def burnt_cake():
+    smoke = "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#aab4be" {S(1.8)} opacity=".92"/>' for x, y, r in ((50, 16, 7), (62, 10, 9), (74, 17, 7), (58, 20, 6)))
+    return (shadow() + smoke + plate(60, 74, 46) +
+        f'<path d="M24 40 L24 66 Q60 84 96 66 L96 40Z" fill="#4a352c" {S()}/>'
+        f'<ellipse cx="60" cy="40" rx="36" ry="11" fill="#2d201b" {S()}/>'
+        f'<path d="M34 38 l8 4 -4 5 M70 36 l7 3 M52 46 l-3 7 M84 44 l-5 5" fill="none" stroke="#7a5a48" stroke-width="2" stroke-linecap="round"/>'
+        f'<path d="M44 34 Q48 24 52 33 Q54 26 58 34Z" fill="#ff7a2e" {S(1.6)}/><path d="M72 34 Q75 27 78 34Z" fill="#ffc933" {S(1.4)}/>'
+        + f'<path d="M48 54 l7 7 M55 54 l-7 7 M65 54 l7 7 M72 54 l-7 7" {S(2.2)} fill="none"/>'
+        + f'<path d="M50 68 Q54 64 58 68 Q62 72 66 68 Q70 64 74 68" fill="none" {S(2)}/>' + sparkle(14, 24, 3.5, "#fff") + sparkle(108, 30, 3, "#fff"))
+
+def soggy_cake():
+    drops = "".join(f'<path d="M{x} {y} q3 5 0 8 q-3 -3 0 -8z" fill="#7fc8f0" {S(1.3)}/>' for x, y in ((26, 28), (94, 34), (14, 52)))
+    return (shadow() + drops + f'<ellipse cx="60" cy="76" rx="50" ry="7" fill="#8fd3f2" {S(2)}/><ellipse cx="46" cy="75" rx="14" ry="2.6" fill="#cdeefc" opacity=".8"/>' +
+        f'<path d="M18 70 Q16 52 34 48 Q60 36 86 48 Q104 52 102 70 Q60 82 18 70Z" fill="#e9bd66" {S()}/>'
+        f'<path d="M18 66 Q60 80 102 66 L102 72 Q60 84 18 72Z" fill="#9a6b3a" {S(1.8)}/>'
+        f'<path d="M30 50 Q60 40 90 50 Q92 58 86 58 Q84 66 78 58 Q70 62 66 54 Q52 60 44 54 Q36 62 32 56Z" fill="#fffaf0" {S(2)}/>'
+        f'<path d="M36 52 Q42 44 56 45" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".7"/>'
+        + f'<ellipse cx="50" cy="62" rx="2.3" ry="3" fill="{OUT}"/><ellipse cx="70" cy="62" rx="2.3" ry="3" fill="{OUT}"/><circle cx="49.2" cy="61" r=".9" fill="#fff"/><circle cx="69.2" cy="61" r=".9" fill="#fff"/>'
+        + f'<path d="M71.5 66 q1.4 4 0 6 q-1.4 -2 0 -6z" fill="#7fc8f0" {S(1)}/>'
+        + f'<path d="M54 72 Q60 67 66 72" fill="none" {S(2)}/>' + f'<path d="M46 56 q-3 1 -4 4 M74 56 q3 1 4 4" fill="none" stroke="{OUT}" stroke-width="1.6" stroke-linecap="round"/>')
+
+ART["Burnt Cake"] = burnt_cake
+ART["Soggy Cake"] = soggy_cake
+
 def svg(name):
     return f'<svg viewBox="0 0 120 84" xmlns="http://www.w3.org/2000/svg">{ART[name]()}</svg>'
