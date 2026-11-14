@@ -82,6 +82,10 @@ tr.win td:nth-child(3) { color: var(--accent); font-weight: 700 }
 .lkey { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .84rem; color: var(--muted) }
 .lbars { display: flex; flex-direction: column; gap: 12px }
 @media (max-width: 600px) { .lrow { grid-template-columns: minmax(0, 1fr) 52px } .lrow .lbar { grid-column: 1 / -1; grid-row: 2 } }
+.sheets { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px }
+.sheets figure { margin: 0; display: flex; flex-direction: column; gap: 6px }
+.sheets img { width: 100%; height: auto; border: 1.5px solid var(--rule); border-radius: 8px; display: block }
+.sheets figcaption { font-size: .85rem; color: var(--muted) }
 /* numbers */
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px }
 .stat { background: var(--panel); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px }
@@ -156,6 +160,17 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   <p class="legend">Shapes run from spike (Soufflé, Macarons, Scones peak at Risen), through plateau (Cupcakes, Brownies, Carrot Cake), to slow burn (Croquembouche, Black Forest, Pavlova peak at Dark). Cakes were tuned by moving only each peak, so the shapes stayed as designed. They now earn %%PPBMIN%% to %%PPBMAX%% points per bake.</p>
 </section>
 
+<section id="print">
+  <h2>Print-ready cards</h2>
+  <p>Poker-size cards (63 &times; 88 mm), nine to an A4 sheet, with crop marks. Four pages: fronts for cakes 1&ndash;9, their backs, fronts for cakes 10&ndash;18, their backs. Print at 100%, double-sided, flip on the long edge. The three card colours show how a cake behaves: pink for quick risers that peak at Risen, yellow for steady bakers that peak at Golden, violet for slow burns that peak at Dark. The gold badge on each card marks its peak.</p>
+  <div class="sheets">
+    <figure><img src="%%IMG1%%" alt="Print sheet 1: fronts of cakes 1 to 9, three rows of three cartoon cake cards on pink and yellow backgrounds"><figcaption>Sheet 1 &middot; cakes 01&ndash;09</figcaption></figure>
+    <figure><img src="%%IMG2%%" alt="Print sheet 2: fronts of cakes 10 to 18 on yellow and violet backgrounds"><figcaption>Sheet 2 &middot; cakes 10&ndash;18</figcaption></figure>
+    <figure><img src="%%IMG3%%" alt="Card back sheet: pink polka-dot backs with a smiling cake and the Crumb Coat title"><figcaption>Back sheet</figcaption></figure>
+  </div>
+  <p class="legend">The PDF is <code>cards/crumb-coat-cards.pdf</code>. Numbers on the cards are read straight from the simulator's card data when the sheets are built.</p>
+</section>
+
 <section id="solo">
   <h2>Solo grades</h2>
   <p>Losing and winning get different kinds of names. A loss says what went wrong with the bake. A win says how good a baker you are. The win line sits between Soggy Bottom and Apprentice.</p>
@@ -190,7 +205,7 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
     <li><b>Effects were not tuned on their own.</b> Only dial peaks moved. The point values I gave each effect are my estimates, and Draught and Second helping are the most likely to need a second look.</li>
     <li><b>Water bath may be redundant.</b> Now that slams only hit early stages, Cheesecake and Fruitcake may not need it. Untested.</li>
     <li><b>Solo ladder is calibrated on bots.</b> The thresholds will shift once people play.</li>
-    <li><b>Name and art.</b> Crumb Coat is a working title. There is no art and no print layout yet.</li>
+    <li><b>Name and print check.</b> Crumb Coat is a working title. The cards have not been test-printed, so check the cut marks and the front-to-back alignment on your printer.</li>
   </ul>
 </section>
 
@@ -218,6 +233,7 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
     <li><code>tune.py</code><span>shape-preserving tuner</span></li>
     <li><code>exp.py</code><span>compares rule variants (the slam options)</span></li>
     <li><code>final.py</code>, <code>ladder.py</code><span>the runs behind the numbers on this page</span></li>
+    <li><code>cards/</code><span>card art (<code>art.py</code>), sheet builder (<code>build_cards.py</code>), PDF render (<code>render.js</code>)</span></li>
     <li><code>make_hub.py</code><span>builds this page from <code>results.json</code> and <code>ladder.json</code></span></li>
   </ul>
 </section>

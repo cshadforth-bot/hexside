@@ -70,5 +70,8 @@ page = (page.replace("%%CARDROWS%%", rows).replace("%%LADDER%%", ladder_rows).re
         .replace("%%SLAMS%%", f"{R['slams']:.1f}").replace("%%SKILL%%", f"{R['skill']*100:.0f}")
         .replace("%%MARGIN%%", f"{R['median_margin']:.0f}")
         .replace("%%PPBMIN%%", f"{min(c['ppb'] for c in R['cards']):.1f}").replace("%%PPBMAX%%", f"{max(c['ppb'] for c in R['cards']):.1f}"))
+import base64
+for k, f in (("%%IMG1%%", "sheet1.jpg"), ("%%IMG2%%", "sheet2.jpg"), ("%%IMG3%%", "back.jpg")):
+    page = page.replace(k, "data:image/jpeg;base64," + base64.b64encode(open("cards/" + f, "rb").read()).decode())
 open("hub.html", "w").write(page)
 print("ok", len(page))
