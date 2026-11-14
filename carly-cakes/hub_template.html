@@ -84,6 +84,7 @@ tr.win td:nth-child(3) { color: var(--accent); font-weight: 700 }
 @media (max-width: 600px) { .lrow { grid-template-columns: minmax(0, 1fr) 52px } .lrow .lbar { grid-column: 1 / -1; grid-row: 2 } }
 .sheets { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px }
 .sheets figure { margin: 0; display: flex; flex-direction: column; gap: 6px }
+.sheets.two { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) } .sheets.one { grid-template-columns: minmax(0, 560px) }
 .sheets img { width: 100%; height: auto; border: 1.5px solid var(--rule); border-radius: 8px; display: block }
 .sheets figcaption { font-size: .85rem; color: var(--muted) }
 /* numbers */
@@ -171,6 +172,36 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   <p class="legend">The PDF is <code>cards/carly-cakes-cards.pdf</code>. Numbers on the cards are read straight from the simulator's card data when the sheets are built.</p>
 </section>
 
+<section id="rules-sheet">
+  <h2>Rules sheet</h2>
+  <p>Two A4 pages in the same cartoon style as the cards: the idea, the dial, setup, a turn, the slam, days, effects, quick answers, solo play, the score attack grades and tips for new bakers. Print it single-sided on plain paper.</p>
+  <div class="sheets two">
+    <figure><img src="%%IMGR1%%" alt="Rules sheet page 1: pink banner with the title, the dial explained with a Soufflé card, setup, days, the four turn actions and how the slam works"><figcaption>Page 1 &middot; how to play</figcaption></figure>
+    <figure><img src="%%IMGR2%%" alt="Rules sheet page 2: card effects, winning, quick answers, solo play, the six score attack grades and tips"><figcaption>Page 2 &middot; effects, solo, grades</figcaption></figure>
+  </div>
+  <p class="legend">The PDF is <code>cards/carly-cakes-rules.pdf</code>.</p>
+</section>
+
+<section id="rival">
+  <h2>Rival Baker</h2>
+  <p>The solo deck: an automated Player 2 for solo versus play, driven by six Rival cards. It follows a four-step list (pull a cake that can't get better, slam if it would cost you 3 or more, bake, bin) and each card changes one thing about it. It plays Tip jar, Glaze, Draught, Chef's pick and Reheat, and ignores every other effect. A tie goes to the Rival. This is separate from score attack, which has no opponent.</p>
+  <div class="sheets one"><figure><img src="%%IMGV1%%" alt="Rival Baker sheet: six teal cards with cartoon bakers called By the book, Newest first, Early bird, Door slammer, Sweet tooth and Regular customer, above a rules panel"><figcaption>Rival Baker sheet &middot; six cards and the rules panel to cut from the bottom row</figcaption></figure></div>
+  <div class="stats">
+    <div class="stat"><b>%%RVC%%%</b><span>wins for the casual bot</span></div>
+    <div class="stat"><b>%%RVS%%%</b><span>wins for the stronger bot</span></div>
+    <div class="stat"><b>%%RVE%%%</b><span>wins for the planning bot (300 games)</span></div>
+    <div class="stat"><b>%%RVM%%%</b><span>Player 1 wins when two Rivals play each other</span></div>
+  </div>
+  <p class="legend">The bots are the same ones used elsewhere on this page. The Rival Baker PDF is <code>cards/carly-cakes-rival-baker.pdf</code>: sheet 1 has the fronts and sheet 2 the backs, with the bottom row left blank.</p>
+  <h3>How the deck was tuned</h3>
+  <ul class="plain">
+    <li><b>Effects.</b> If the Rival ignored every effect, a casual bot won 52% and a stronger bot 78%. With every effect it was far too hard: a stronger bot won only 41%. Tip jar, Glaze, Draught, Chef's pick and Reheat gave 38% and 69%.</li>
+    <li><b>Back-to-back removed.</b> An extra action every turn made one card unbeatable by itself, even with a weaker second action. It became Regular customer, a +1 bonus.</li>
+    <li><b>Open for business replaced.</b> Baking before pulling made it too weak, so it became Early bird.</li>
+    <li><b>Still uneven.</b> Played alone, Door slammer is weak (the human wins 66% and 91% in the two bots' hands), while the others range from even to moderately strong. They average out across the six.</li>
+  </ul>
+</section>
+
 <section id="solo">
   <h2>Solo grades</h2>
   <p>Losing and winning get different kinds of names. A loss says what went wrong with the bake. A win says how good a baker you are. The win line sits between Soggy Bottom and Apprentice.</p>
@@ -205,6 +236,7 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
     <li><b>Effects were not tuned on their own.</b> Only dial peaks moved. The point values I gave each effect are my estimates, and Draught and Second helping are the most likely to need a second look.</li>
     <li><b>Water bath may be redundant.</b> Now that slams only hit early stages, Cheesecake and Fruitcake may not need it. Untested.</li>
     <li><b>Solo ladder is calibrated on bots.</b> The thresholds will shift once people play.</li>
+    <li><b>The Rival Baker is simple.</b> Its list is deliberately easy to run by hand, so it never plans two moves ahead. A good human may find it easier than the numbers suggest.</li>
     <li><b>Name and print check.</b> The cards have not been test-printed, so check the cut marks and the front-to-back alignment on your printer.</li>
   </ul>
 </section>
@@ -234,6 +266,9 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
     <li><code>exp.py</code><span>compares rule variants (the slam options)</span></li>
     <li><code>final.py</code>, <code>ladder.py</code><span>the runs behind the numbers on this page</span></li>
     <li><code>cards/</code><span>card art (<code>art.py</code>), sheet builder (<code>build_cards.py</code>), PDF render (<code>render.js</code>)</span></li>
+    <li><code>rival.py</code><span>the Rival Baker rules as the simulator plays them</span></li>
+    <li><code>rival_mc.py</code>, <code>rival_final.py</code><span>planning bot against the Rival, and the runs behind its numbers</span></li>
+    <li><code>cards/build_rules.py</code>, <code>cards/build_rival.py</code><span>rules sheet and Rival Baker sheet builders</span></li>
     <li><code>make_hub.py</code><span>builds this page from <code>results.json</code> and <code>ladder.json</code></span></li>
   </ul>
 </section>

@@ -71,7 +71,10 @@ page = (page.replace("%%CARDROWS%%", rows).replace("%%LADDER%%", ladder_rows).re
         .replace("%%MARGIN%%", f"{R['median_margin']:.0f}")
         .replace("%%PPBMIN%%", f"{min(c['ppb'] for c in R['cards']):.1f}").replace("%%PPBMAX%%", f"{max(c['ppb'] for c in R['cards']):.1f}"))
 import base64
-for k, f in (("%%IMG1%%", "sheet1.jpg"), ("%%IMG2%%", "sheet2.jpg"), ("%%IMG3%%", "back.jpg")):
+for k, f in (("%%IMG1%%", "sheet1.jpg"), ("%%IMG2%%", "sheet2.jpg"), ("%%IMG3%%", "back.jpg"), ("%%IMGR1%%", "rules1.jpg"), ("%%IMGR2%%", "rules2.jpg"), ("%%IMGV1%%", "rival1.jpg")):
     page = page.replace(k, "data:image/jpeg;base64," + base64.b64encode(open("cards/" + f, "rb").read()).decode())
+RV = json.load(open("rival_results.json"))
+for k, v in (("%%RVC%%", RV["casual"]["win"]), ("%%RVS%%", RV["strong"]["win"]), ("%%RVE%%", RV["expert"]["win"]), ("%%RVM%%", RV["mirror_p1"])):
+    page = page.replace(k, f"{v*100:.0f}")
 open("hub.html", "w").write(page)
 print("ok", len(page))

@@ -60,18 +60,18 @@ def learn_potentials(rounds=4, n=1500, **kw):
 
 class P:
     def __init__(self, ai):
-        self.ai = ai; self.racks = []; self.score = 0; self.rest = False
+        self.ai = ai; self.racks = []; self.score = 0; self.rest = False; self.fx = True
         self.pulled = []; self.nbake = 0
 
 class Game:
     def __init__(self, seed, ai0, ai1=None, solo=False, leftover=0.0, counter_n=None, racks=2,
-                 stats=None, p2_start_day2=True, slam=True, slam_mode='early', days=2, wash='sold'):
+                 stats=None, p2_start_day2=True, slam=True, slam_mode='early', days=2, wash='sold', rival=False):
         self.r = random.Random(seed); self.solo = solo; self.leftover = leftover
         self.N = counter_n or (3 if solo else 4); self.nracks = racks
         self.pl = [P(ai0)] + ([] if solo else [P(ai1)])
         self.deck = list(range(18)); self.r.shuffle(self.deck)
         self.disc = []; self.counter = []; self.day = 1
-        self.days = days; self.wash = wash; self.sold = []; self.slam_on = slam; self.slam_mode = slam_mode; self.nslam = 0; self.stats = stats; self.turns = 0; self.pi = 0; self.done = False; self.p2d2 = p2_start_day2
+        self.rival = rival; self.days = days; self.wash = wash; self.sold = []; self.slam_on = slam; self.slam_mode = slam_mode; self.nslam = 0; self.stats = stats; self.turns = 0; self.pi = 0; self.done = False; self.p2d2 = p2_start_day2
         self.setup()
 
     # ---- helpers
@@ -81,7 +81,7 @@ class Game:
 
     def setup(self):
         face = [self.deck.pop() for _ in range(3)]
-        order = [0] if self.solo else [1, 0]
+        order = [0] if self.solo else ([0, 1] if self.rival else [1, 0])
         for pi in order:
             p = self.pl[pi]
             pick = p.ai.pick_start(self, p, face)
@@ -107,6 +107,7 @@ class Game:
         p = self.pl[pi]; ci = cake["c"]; v = val(ci, cake["st"])
         p.racks.remove(cake); gain = v
         eff = CAKES[ci][2]
+        if p.fx is not True and eff not in (p.fx or ()): eff = "none"
         if eff == "tip": gain += 1
         if eff == "glaze": gain += len(p.racks)
         p.score += gain; self.disc_after = ci
@@ -183,7 +184,11 @@ class Game:
 
     def turn(self, pi):
         self.rotate(pi)
-        self.apply(pi, self.pl[pi].ai.choose(self, pi))
+        ai = self.pl[pi].ai
+        self.apply(pi, ai.choose(self, pi))
+        if getattr(ai, "again", False):
+            ai.again = False
+            self.apply(pi, ai.choose(self, pi))
         self.end_turn()
 
     def day_over(self): return not self.deck and not self.counter

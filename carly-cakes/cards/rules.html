@@ -1,0 +1,151 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Carly Cakes rules</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,600;0,700;0,800;1,700&display=swap"><style>
+@page { size: A4; margin: 0 }
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html, body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact }
+body { font-family: "Nunito", system-ui, sans-serif; color: #3a2118 }
+.sheet { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; break-after: page }
+.grid { position: absolute; left: 10.5mm; top: 16.5mm; width: 189mm; height: 264mm; display: grid; grid-template-columns: repeat(3, 63mm); grid-template-rows: repeat(3, 88mm) }
+.mark { position: absolute; background: #9a8c84 }
+.mark.v { width: .2mm; height: 5mm } .mark.h { height: .2mm; width: 5mm }
+.note { position: absolute; left: 10.5mm; right: 10.5mm; bottom: 5.5mm; font-size: 2.7mm; color: #7b665a; display: flex; justify-content: space-between; gap: 4mm }
+.card { width: 63mm; height: 88mm; position: relative; overflow: hidden; background: var(--main) }
+.dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.55) 0.45mm, transparent 0.5mm); background-size: 4.2mm 4.2mm }
+.panel { position: absolute; left: 8mm; top: 8mm; width: 47mm; height: 72mm; background: #fffdf8; border: .5mm solid #3a2118; border-radius: 3mm; padding: 1.5mm 2mm 1.2mm; display: flex; flex-direction: column; gap: .7mm }
+.name { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 4.9mm; line-height: 1.05; text-align: center; letter-spacing: .1mm }
+.tag { font-style: italic; font-weight: 700; font-size: 2.35mm; text-align: center; color: #7b665a; line-height: 1.1 }
+.art { background: var(--pale); border: .4mm solid #3a2118; border-radius: 2.2mm; margin-top: .4mm; aspect-ratio: 120 / 84; width: 100%; overflow: hidden }
+.art svg { width: 100%; height: 100%; display: block }
+.quirk { background: #3a2118; color: #fff; font-size: 2.4mm; line-height: 1.15; padding: .5mm 1.6mm; border-radius: 1.2mm; text-align: center }
+.quirk b { font-family: "Fredoka", sans-serif; letter-spacing: .1mm; text-transform: uppercase; color: var(--mid) }
+.eff { flex: 1; min-height: 0; background: var(--pale); border: .4mm solid #3a2118; border-radius: 2mm; padding: .9mm 1.8mm; display: flex; flex-direction: column; justify-content: center; gap: .3mm; text-align: center }
+.eff .et { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 3.1mm; line-height: 1 }
+.eff .ex { font-weight: 700; font-size: 2.55mm; line-height: 1.14 }
+.foot { display: flex; justify-content: space-between; align-items: center; font-size: 2.1mm; font-weight: 700; padding: 0 .4mm }
+.fam { font-family: "Fredoka", sans-serif; letter-spacing: .2mm; background: var(--main); color: #3a2118; padding: .3mm 1.6mm; border-radius: 1mm; border: .3mm solid #3a2118 }
+.no { color: #7b665a }
+.pill { position: absolute; width: 25mm; height: 7mm; margin-left: -12.5mm; margin-top: -3.5mm; background: #fffdf8; border: .45mm solid #3a2118; border-radius: 3.5mm; display: flex; align-items: center; gap: 1mm; padding: 0 1.6mm 0 .35mm }
+.e-top { left: 31.5mm; top: 4.3mm } .e-bottom { left: 31.5mm; top: 83.7mm; transform: rotate(180deg) }
+.e-left { left: 4.3mm; top: 44mm; transform: rotate(-90deg) } .e-right { left: 58.7mm; top: 44mm; transform: rotate(90deg) }
+.num { flex: none; width: 5.8mm; height: 5.8mm; border-radius: 50%; background: var(--pale); border: .4mm solid #3a2118; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 4.2mm; line-height: 5mm; text-align: center }
+.num.peak { background: #ffd23f; box-shadow: 0 0 0 .35mm #fffdf8, 0 0 0 .75mm #3a2118 }
+.lab { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 2.6mm; letter-spacing: .25mm; flex: 1 }
+.ico { width: 3.9mm; height: 3.9mm; color: var(--main); flex: none; filter: drop-shadow(0 0 .01mm #3a2118) } .ico svg { width: 100%; height: 100%; display: block; stroke: #3a2118; stroke-width: .0 }
+.ico svg * { paint-order: stroke }
+.batter { padding-left: 1.4mm } .batter .lab { flex: none }
+.turn { font-size: 2.1mm; font-weight: 700; color: #7b665a; white-space: nowrap }
+.card.back { background: #ff5c8a } .card.back svg { width: 100%; height: 100% }
+
+html, body { background: #fff }
+.pg { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; break-after: page; padding: 10mm 12mm 9mm; background: #fffdf8; display: flex; flex-direction: column; gap: 4.2mm; font-size: 3.15mm; line-height: 1.3 }
+.banner { height: 31mm; border-radius: 5mm; background: #ff6f98; border: .5mm solid #3a2118; position: relative; overflow: hidden; display: flex; align-items: center; padding: 0 7mm; gap: 6mm; flex: none }
+.banner::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.5) .5mm, transparent .55mm); background-size: 4.6mm 4.6mm }
+.banner h1 { position: relative; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 13.5mm; line-height: .95; color: #fff; -webkit-text-stroke: 1.6mm #3a2118; paint-order: stroke fill; letter-spacing: .2mm }
+.banner .sub { position: relative; display: flex; gap: 1.6mm; flex-wrap: wrap; margin-top: 2.2mm }
+.chip { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 2.9mm; background: #fffdf8; border: .4mm solid #3a2118; border-radius: 3mm; padding: .6mm 2.4mm; white-space: nowrap }
+.banner .cake { position: absolute; right: 4mm; top: 2mm; width: 50mm; height: 35mm }
+.banner .cake svg { width: 100%; height: 100% }
+h2 { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 5mm; line-height: 1; text-transform: uppercase; letter-spacing: .25mm; display: inline-block; padding: 1.1mm 3.4mm; border-radius: 2.6mm; border: .45mm solid #3a2118; color: #3a2118; margin-bottom: 2mm }
+.h-pink { background: #ffb3c9 } .h-yellow { background: #ffd966 } .h-violet { background: #c6b8f8 } .h-teal { background: #8fe0d4 }
+h3 { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 3.5mm; margin-bottom: .6mm }
+p { margin-bottom: 1.2mm } b { font-weight: 800 } .m { color: #7b665a }
+ol, ul { padding-left: 4.6mm } li { margin-bottom: .8mm }
+.row { display: flex; gap: 6mm } .col { flex: 1; min-width: 0 }
+.cardfig { width: 46mm; height: 64mm; flex: none; position: relative } .cardfig .card { transform: scale(.73); transform-origin: top left; position: absolute; left: 0; top: 0; border-radius: 3mm; border: .45mm solid #3a2118 }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.6mm }
+.tile { border: .45mm solid #3a2118; border-radius: 3mm; padding: 2mm 2.4mm; display: flex; flex-direction: column; gap: .8mm; background: #fff }
+.tile .t { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 4.3mm; line-height: 1 }
+.tile.pull { background: #fff3c4 } .tile.bake { background: #ffe0ea } .tile.slam { background: #e6defc } .tile.bin { background: #d6f3ee }
+.callout { border: .5mm dashed #3a2118; border-radius: 4mm; padding: 3mm 4mm; background: #fff1f5 }
+.steps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4mm; margin-top: 1.4mm }
+.steps3 div { background: #fff; border: .4mm solid #3a2118; border-radius: 2.4mm; padding: 1.4mm 2mm; font-size: 2.95mm }
+.steps3 b { font-family: "Fredoka", sans-serif; font-weight: 700 }
+.mini { display: flex; align-items: center; gap: 1.6mm; margin-bottom: 1.2mm }
+.chip.e { background: #ffe9a8 } .chip.q { background: #3a2118; color: #fff }
+.efx { display: grid; grid-template-columns: 31mm 1fr; gap: 1.1mm 2.6mm; align-items: center }
+.efx .chip { text-align: center; font-size: 2.9mm; padding: .5mm 1.2mm }
+.fam3 { display: flex; gap: 2mm; margin-top: 1.4mm } .fam3 span { flex: 1; text-align: center; border: .4mm solid #3a2118; border-radius: 2.4mm; padding: 1mm 1.4mm; font-size: 2.9mm; line-height: 1.2 }
+.fam3 b { display: block; font-family: "Fredoka", sans-serif; font-size: 3.2mm }
+table.lad { border-collapse: separate; border-spacing: 0 1.2mm; width: 100% }
+table.lad td { padding: 1.2mm 2.6mm; font-size: 3.1mm; border-top: .4mm solid #3a2118; border-bottom: .4mm solid #3a2118 }
+table.lad td:first-child { border-left: .4mm solid #3a2118; border-radius: 3mm 0 0 3mm; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 3.7mm }
+table.lad td:last-child { border-right: .4mm solid #3a2118; border-radius: 0 3mm 3mm 0 }
+.lw td:nth-child(3) { font-weight: 800 }
+.foot2 { margin-top: auto; display: flex; justify-content: space-between; font-size: 2.6mm; color: #7b665a }
+</style></head><body><div class="pg">
+<div class="banner"><div><h1>Carly Cakes</h1><div class="sub"><span class="chip">1&ndash;2 bakers</span><span class="chip">25 minutes</span><span class="chip">18 cards</span><span class="chip">ages 10+</span></div></div>
+<div class="cake"><svg viewBox="0 0 120 84" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="79" rx="40" ry="4" fill="#3a2118" opacity=".16"/><ellipse cx="60" cy="74" rx="50" ry="8" fill="#ffffff" stroke="#3a2118" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><ellipse cx="60" cy="72" rx="42" ry="5" fill="#e8f0f5" opacity=".9"/><path d="M22 34 L22 66 Q60 80 98 66 L98 34Z" fill="#f4c565" stroke="#3a2118" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><path d="M22 46 Q60 60 98 46 L98 51 Q60 65 22 51Z" fill="#fffaf0" stroke="#3a2118" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" /><path d="M22 51 Q60 65 98 51 L98 56 Q60 70 22 56Z" fill="#e0243f" stroke="#3a2118" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" /><ellipse cx="60" cy="34" rx="38" ry="12" fill="#fbe0a0" stroke="#3a2118" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><path d="M30 33 Q36 28 44 31 M70 28 Q78 26 88 32 M44 37 Q60 41 78 36" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".85"/><path d="M53.5 22.1 Q60 18.85 66.5 22.1 Q65.85 33.8 60 35.75 Q54.15 33.8 53.5 22.1Z" fill="#ff4a5e" stroke="#3a2118" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" /><ellipse cx="57.5" cy="25" rx=".8" ry="1.3" fill="#ffe27a"/><ellipse cx="62.5" cy="25" rx=".8" ry="1.3" fill="#ffe27a"/><ellipse cx="60" cy="27.6" rx=".8" ry="1.3" fill="#ffe27a"/><ellipse cx="57.8" cy="29" rx=".8" ry="1.3" fill="#ffe27a"/><ellipse cx="62.2" cy="29" rx=".8" ry="1.3" fill="#ffe27a"/><path d="M56 21.45 L58.5 16.25 L60 20.8 L61.5 16.25 L64 21.45Z" fill="#59b84a" stroke="#3a2118" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" /><circle cx="40" cy="36" r="1.1" fill="#fff"/><circle cx="82" cy="34" r="1.1" fill="#fff"/><circle cx="52" cy="30" r="1.1" fill="#fff"/><circle cx="70" cy="38" r="1.1" fill="#fff"/><ellipse cx="53.8" cy="56.0" rx="2.3" ry="3.0" fill="#3a2118"/><circle cx="53.0" cy="54.9" r="0.9" fill="#fff"/><ellipse cx="66.2" cy="56.0" rx="2.3" ry="3.0" fill="#3a2118"/><circle cx="65.4" cy="54.9" r="0.9" fill="#fff"/><ellipse cx="49.4" cy="60.2" rx="3.3" ry="2.0" fill="#ff7f9d" opacity=".75"/><ellipse cx="70.6" cy="60.2" rx="3.3" ry="2.0" fill="#ff7f9d" opacity=".75"/><path d="M55.5 59.4 Q60.0 66.0 64.5 59.4 Z" fill="#3a2118" stroke="#3a2118" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" /><path d="M57.8 62.8 Q60.0 61.2 62.2 62.8 Q60.0 64.8 57.8 62.8Z" fill="#ff6b81"/><path d="M48 12 L53 20 L60 8 L67 20 L72 12 L72 22 L48 22Z" fill="#ffd23f" stroke="#3a2118" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" /><path d="M100 14 Q100 18 104 18 Q100 18 100 22 Q100 18 96 18 Q100 18 100 14Z" fill="#fff" stroke="#3a2118" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" /><path d="M16 17 Q16 20 19 20 Q16 20 16 23 Q16 20 13 20 Q16 20 16 17Z" fill="#fff" stroke="#3a2118" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" /></svg></div></div>
+
+<div><h2 class="h-pink">The idea</h2>
+<p>You run a one-oven bakery. Every card is a cake with a <b>dial</b>: you turn it every turn, it rises, peaks and then burns. <b>Pull</b> each cake when it is worth the most. Or <b>slam the oven door</b> on a rival's rising cake and wreck their timing. Most points wins, and you can also play it alone.</p></div>
+
+<div class="row">
+ <div class="cardfig"><div class="card" style="--main:#ff6f98;--pale:#ffe3ec;--mid:#ffb3c9">
+  <div class="dots"></div><div class="pill e-top batter"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 10h18q-1 10-9 10T3 10z" fill="currentColor"/><path d="M6 10q3-7 6-2 3-5 6 2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><span class="lab">BATTER</span></div><div class="pill e-left"><span class="num peak">9</span><span class="lab">RISEN</span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 21V6M5.5 12.5 12 5l6.5 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="pill e-bottom"><span class="num">2</span><span class="lab">GOLDEN</span><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></div><div class="pill e-right"><span class="num">0</span><span class="lab">DARK</span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2Q19 9 17 16q-1 6-5 6t-5-6q-1-4 3-7 0-3 2-7z" fill="currentColor"/></svg></span></div>
+  <div class="panel">
+    <div class="name">Souffl&eacute;</div>
+    <div class="tag">Shhh... don&#x27;t slam the door!</div>
+    <div class="art"><svg viewBox="0 0 120 84" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="79" rx="40" ry="4" fill="#3a2118" opacity=".16"/><path d="M46 10 q-4 -4 0 -8 q4 -4 0 -7" fill="none" stroke="#3a2118" stroke-width="1.8" stroke-linecap="round" opacity=".4"/><path d="M60 10 q-4 -4 0 -8 q4 -4 0 -7" fill="none" stroke="#3a2118" stroke-width="1.8" stroke-linecap="round" opacity=".4"/><path d="M74 10 q-4 -4 0 -8 q4 -4 0 -7" fill="none" stroke="#3a2118" stroke-width="1.8" stroke-linecap="round" opacity=".4"/><path d="M26 52 C6 26 34 4 60 9 C86 4 114 26 94 52 Z" fill="#f7b84b" stroke="#3a2118" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><path d="M30 32 C34 21 46 15 57 16" fill="none" stroke="#fff3c4" stroke-width="3.8" stroke-linecap="round"/><path d="M64 12 C68 19 78 19 84 15" fill="none" stroke="#e08a1e" stroke-width="2" stroke-linecap="round"/><path d="M36 55 L84 55 L80 77 Q60 83 40 77 Z" fill="#d6ecff" stroke="#3a2118" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><path d="M42 58 L43 78" stroke="#3a2118" stroke-width="1.7" opacity=".4" stroke-linecap="round"/><path d="M50 58 L50.5 78" stroke="#3a2118" stroke-width="1.7" opacity=".4" stroke-linecap="round"/><path d="M58 58 L58.5 78" stroke="#3a2118" stroke-width="1.7" opacity=".4" stroke-linecap="round"/><path d="M66 58 L66 78" stroke="#3a2118" stroke-width="1.7" opacity=".4" stroke-linecap="round"/><path d="M74 58 L73.5 78" stroke="#3a2118" stroke-width="1.7" opacity=".4" stroke-linecap="round"/><path d="M80 58 L79 78" stroke="#3a2118" stroke-width="1.7" opacity=".4" stroke-linecap="round"/><rect x="30" y="49" width="60" height="9" rx="4.5" fill="#ffffff" stroke="#3a2118" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><path d="M36 53.5 L84 53.5" stroke="#9fd0f5" stroke-width="2" stroke-linecap="round"/><ellipse cx="53.5" cy="33.0" rx="2.4" ry="3.2" fill="#3a2118"/><circle cx="52.6" cy="31.8" r="0.9" fill="#fff"/><ellipse cx="66.5" cy="33.0" rx="2.4" ry="3.2" fill="#3a2118"/><circle cx="65.7" cy="31.8" r="0.9" fill="#fff"/><ellipse cx="48.9" cy="37.4" rx="3.5" ry="2.1" fill="#ff7f9d" opacity=".75"/><ellipse cx="71.1" cy="37.4" rx="3.5" ry="2.1" fill="#ff7f9d" opacity=".75"/><ellipse cx="60.0" cy="39.5" rx="2.3" ry="2.9" fill="#3a2118"/><path d="M106 9 Q106 14 111 14 Q106 14 106 19 Q106 14 101 14 Q106 14 106 9Z" fill="#fff3c4" stroke="#3a2118" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" /><path d="M14 16.5 Q14 20 17.5 20 Q14 20 14 23.5 Q14 20 10.5 20 Q14 20 14 16.5Z" fill="#fff3c4" stroke="#3a2118" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" /></svg></div>
+    
+    <div class="eff"><span class="et">Second helping</span><span class="ex">Take another Counter card and use it.</span></div>
+    <div class="foot"><span class="fam">QUICK RISER</span><span class="no">01/18</span></div>
+  </div>
+</div></div>
+ <div class="col"><h2 class="h-yellow">Your cards</h2>
+  <p>Each card is a cake, and its four edges are the dial. At the start of your turn, give every cake in your oven a <b>quarter-turn clockwise</b>. The edge now on top is the cake's stage:</p>
+  <ul><li><b>Batter</b> (top edge): nothing to score yet.</li><li><b>Risen, Golden, Dark</b>: points. The gold badge shows the peak.</li><li>One more turn after Dark and it is <b>cinders</b>: the card goes in the Bin and scores nothing.</li></ul>
+  <div class="fam3"><span style="background:#ffe3ec"><b>Pink</b>Quick riser. Peaks at Risen.</span><span style="background:#fff2c9"><b>Yellow</b>Steady baker. Peaks at Golden.</span><span style="background:#e9e2fd"><b>Violet</b>Slow burn. Peaks at Dark.</span></div>
+ </div>
+</div>
+
+<div class="row">
+ <div class="col"><h2 class="h-teal">Setup</h2>
+  <ol><li>Shuffle the 18 cakes and deal 3 face up.</li><li>Player 2 picks one for their oven, then Player 1 picks one. Put it in a rack with Batter on top. Each baker has <b>two racks</b>.</li><li>The third card starts <b>the Counter</b>. Deal it up to 4 cards. The rest is the deck.</li><li>Player 1 goes first.</li></ol></div>
+ <div class="col"><h2 class="h-violet">Days</h2>
+  <p>The game lasts two <b>days</b>. A day ends when the deck and the Counter are both empty.</p>
+  <p><b>Washing up:</b> shuffle the <b>Sold pile</b> into a new deck. Everything in the Bin leaves the game. Deal a new Counter. Cakes still in the oven stay there. <b>Player 2 starts day 2.</b> When day 2 ends, cakes still baking score nothing.</p></div>
+</div>
+
+<div><h2 class="h-pink">Your turn</h2>
+<p><b>1. Turn</b> every cake in your oven a quarter-turn clockwise.&nbsp; <b>2. Do one thing.</b>&nbsp; <b>3. Refill</b> the Counter to 4 cards.</p>
+<div class="tiles">
+ <div class="tile pull"><span class="t">Pull</span><span>Take a cake that is Risen, Golden or Dark. Score the number on its top edge, do its effect, then put it on the Sold pile.</span></div>
+ <div class="tile bake"><span class="t">Bake</span><span>Take a Counter card into an empty rack, Batter edge up.</span></div>
+ <div class="tile slam"><span class="t">Slam</span><span>Tuck a Counter card sideways under an opposing cake that is Batter or Risen. Turn that cake a quarter-turn at once. The card goes in the Bin.</span></div>
+ <div class="tile bin"><span class="t">Bin</span><span>Take a Counter card and put it in the Bin, so your rival can't have it.</span></div>
+</div>
+<p class="m" style="margin-top:1.6mm">If the Counter is empty you must pull. If you can do nothing, skip your turn.</p></div>
+
+<div class="callout"><h3>Slam the door: how it works</h3>
+<p>A slam makes the cake <b>skip a stage</b>. It turns once when you slam it, and again when its owner starts their turn. Slam when the next number is the peak, and they lose it.</p>
+<div class="steps3"><div><b>Their Soufflé is Batter.</b> Its next numbers are 9 (Risen), then 2 (Golden).</div><div><b>You slam it.</b> It jumps to Risen at once. Then on their turn it turns on to Golden.</div><div><b>They score 2, not 9.</b> But slam a cake whose next number is small and the one after is big, and you help them!</div></div>
+<p class="m" style="margin-top:1.4mm">Only Batter or Risen cakes can be slammed: once a cake is Golden or Dark it has set.</p></div>
+</div><div class="pg">
+<div><h2 class="h-yellow">Card effects</h2>
+<p>Most cakes have an effect that happens when you <b>pull</b> them. <i>Use a card</i> means: bake it, slam with it, or put it in the Bin.</p>
+<div class="efx"><span class="chip e">Tip jar</span><span>+1 point.</span><span class="chip e">Glaze</span><span>+1 point for each other cake in your oven.</span><span class="chip e">Second helping</span><span>Take another Counter card and use it.</span><span class="chip e">Chef's pick</span><span>Use the top card of the deck.</span><span class="chip e">Fresh batch</span><span>Bin the whole Counter and deal a new one.</span><span class="chip e">Draught</span><span>Slam any one of your opponent's cakes, at any stage.</span><span class="chip e">Cooling rack</span><span>Your cakes don't turn at the start of your next turn.</span><span class="chip e">Reheat</span><span>Use the most recently discarded card.</span></div>
+<div class="mini" style="margin-top:2.4mm"><span class="chip q">Water bath</span><span>Can't be slammed (Cheesecake, Fruitcake).</span></div>
+<div class="mini"><span class="chip q">Preheated</span><span>Bake it with the Risen edge up (Tiramisu).</span></div></div>
+
+<div class="row">
+ <div class="col"><h2 class="h-pink">Winning</h2>
+  <p>After day 2, the baker with the <b>most points</b> wins. A tie is a shared win.</p>
+  <h3>Quick answers</h3>
+  <ul><li><b>Can I pull a Batter cake?</b> No. It must be Risen, Golden or Dark.</li><li><b>Can I throw away a cake of my own?</b> No. Pull it, or let it burn.</li><li><b>What happens to a Dark cake that gets Draughted?</b> It turns to cinders.</li><li><b>Do I turn a cake I just baked?</b> Not on that turn. It starts turning on your next one.</li></ul></div>
+ <div class="col"><h2 class="h-violet">Playing alone</h2>
+  <p>There are two ways to play solo.</p>
+  <p><b>Score attack.</b> One oven with two racks, and a Counter of <b>3</b>. After each turn the oldest Counter card goes cold and leaves the game. No slamming, and ignore Draught. Play two days and grade yourself below.</p>
+  <p><b>Rival Baker.</b> Play the two-player game against an automated rival, using the Rival Baker deck. Its rules are on the deck sheet. Casual players beat it about 38 games in 100, and strong players about 69.</p></div>
+</div>
+
+<div><h2 class="h-teal">Score attack grades</h2>
+<table class="lad"><tbody><tr class=""><td style="background:#c98b6b">Burnt Offering</td><td>36 or less</td><td>Lose</td><td>The batch is ruined.</td></tr><tr class=""><td style="background:#e3b08f">Soggy Bottom</td><td>37–42</td><td>Lose</td><td>It rose, then it didn't hold.</td></tr><tr class="lw"><td style="background:#ffe08a">Apprentice</td><td>43–49</td><td>Win</td><td>You got it out of the oven.</td></tr><tr class="lw"><td style="background:#ffb25e">Journeyman</td><td>50–56</td><td>Win</td><td>Competent. You'd get hired.</td></tr><tr class="lw"><td style="background:#ff7aa2">Head Baker</td><td>57–62</td><td>Win</td><td>You ran the bakery well.</td></tr><tr class="lw"><td style="background:#b99bf0">Master Baker</td><td>63+</td><td>Win</td><td>Near-perfect. Rare.</td></tr></tbody></table>
+<p class="m">A win is Apprentice or better. In simulation a casual player earns Apprentice or better about 59 games in 100 and a good player about 79. Master Baker is rare.</p></div>
+
+<div><h2 class="h-yellow">Tips for new bakers</h2>
+<ul><li><b>Pull at the peak.</b> Check the next edge: if it is no bigger than the one showing, pull now.</li>
+<li><b>Two cakes peaking together?</b> You can only pull one. Bake so your peaks take turns.</li>
+<li><b>A Golden cake is safe from a slam</b>, but a Draught can still hit it, and a slow cake keeps a rack busy for longer.</li>
+<li><b>Spend a slam where it hurts.</b> Look for a rising cake whose next number is the biggest.</li></ul></div>
+
+<div class="foot2"><span>Carly Cakes &middot; rules, draft 0.1</span><span>A cake game made for Carly Cakes</span></div>
+</div></body></html>

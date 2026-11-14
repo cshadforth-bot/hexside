@@ -86,3 +86,29 @@ Play two days alone with one oven and two racks.
 ## Status
 
 Draft 0.1, simulated only. Nobody has played it at a table yet. See `hub.html` for results and open issues.
+
+## Rival Baker (solo versus mode)
+
+Play the two-player game against an automated Player 2, driven by six Rival cards (`cards/build_rival.py`).
+**Setup:** deal 3 cakes. You pick one, the Rival takes the left-most of the other two, the third starts the Counter. You go first.
+**Rival's turn:** turn its cakes, flip the top Rival card (when they run out, shuffle all six), do what it says, refill the Counter.
+
+**The usual list** (do the first that works):
+1. **Pull** a cake that can't get better: its next number is the same or lower, or it is Dark. Biggest number first.
+2. **Slam** one of your Batter or Risen cakes if skipping a stage would cost it 3 or more (not a Water bath). Use the Counter card with the smallest biggest-number.
+3. **Bake**, if it has an empty rack: the Counter card with the biggest number on it.
+4. **Bin** the left-most Counter card.
+If the Counter is empty it pulls its best cake, or skips. Ties go to the left-most card.
+
+**Effects it plays:** Tip jar and Glaze (points), Draught (on your cake that would lose most), Chef's pick and Reheat (bake the card if it has a free rack, otherwise bin it). It ignores every other effect.
+
+| Rival card | What it does |
+|---|---|
+| By the book | Usual list, reading the Counter from the left. |
+| Newest first | Usual list, reading the Counter from the right. |
+| Early bird | First, pull the cake showing the biggest number if that number is 5 or more. Then the usual list. |
+| Door slammer | Slam first if one of your Batter or Risen cakes would lose 2 or more. Then pull, bake, bin. |
+| Sweet tooth | Usual list, but it bakes the card with the biggest Dark number. |
+| Regular customer | The Rival scores +1 point. Then the usual list. |
+
+Most points wins. **A tie goes to the Rival.** Simulated: casual bot wins 38%, heuristic bot 69%, planning bot 71%.
