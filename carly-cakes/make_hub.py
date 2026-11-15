@@ -80,5 +80,9 @@ for k, f in (("%%IMG1%%", "sheet1.jpg"), ("%%IMG2%%", "sheet2.jpg"), ("%%IMG3%%"
 RV = json.load(open("rival_results.json"))
 for k, v in (("%%RVC%%", RV["casual"]["win"]), ("%%RVS%%", RV["strong"]["win"]), ("%%RVE%%", RV["expert"]["win"]), ("%%RVM%%", RV["mirror_p1"])):
     page = page.replace(k, f"{v*100:.0f}")
+SOURCES = ["RULES.md", "sim.py", "rival.py", "rival_mc.py", "rival_final.py", "solo_mc.py", "tune.py", "exp.py", "final.py", "ladder.py",
+           "cardstats.py", "make_hub.py", "hub_template.html", "results.json", "ladder.json", "rival_results.json",
+           "cards/art.py", "cards/art_rival.py", "cards/build_cards.py", "cards/build_rival.py", "cards/build_rules.py", "cards/render.js"]
+page = page.replace("%%SOURCES%%", json.dumps(SOURCES))
 open("hub.html", "w").write(page)
 print("ok", len(page))

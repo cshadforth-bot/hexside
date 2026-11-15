@@ -88,6 +88,11 @@ tr.win td:nth-child(3) { color: var(--accent); font-weight: 700 }
 .sheets.two { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) } .sheets.one { grid-template-columns: minmax(0, 560px) }
 .sheets img { width: 100%; height: auto; border: 1.5px solid var(--rule); border-radius: 8px; display: block }
 .sheets figcaption { font-size: .85rem; color: var(--muted) }
+.dls { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px }
+.dl { width: 100%; height: 100%; text-align: left; display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 10px; border: 1.5px solid var(--rule); background: var(--panel); color: var(--ink); font: inherit; cursor: pointer }
+.dl:hover:not(:disabled) { border-color: var(--accent) } .dl:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px } .dl:disabled { cursor: default; opacity: .65 }
+.dl-name { font: 700 1.02rem var(--display) } .dl-name::after { content: " \2193"; color: var(--accent) }
+.dl-sub { font-size: .84rem; color: var(--muted); line-height: 1.4 } .dl-note { font-size: .88rem; color: var(--muted) } .dl-note:empty { display: none }
 /* numbers */
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px }
 .stat { background: var(--panel); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px }
@@ -109,6 +114,17 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   <div class="facts"><span class="draft">Draft 0.1</span><span>1–2 bakers</span><span>25 minutes</span><span>18 cards</span><span>Ages 10+</span></div>
   <p class="meta">Simulated only, not yet played at a table · rules in <code>RULES.md</code></p>
 </header>
+
+<section id="downloads">
+  <h2>Print and play</h2>
+  <ul class="dls">
+    <li><button type="button" class="dl" data-file="carly-cakes-cards.pdf" id="dl-0"><span class="dl-name">Cake cards</span><span class="dl-sub">18 cards with backs, poker size, nine to a sheet · 4 A4 pages · double-sided, flip on the long edge</span></button></li>
+    <li><button type="button" class="dl" data-file="carly-cakes-rules.pdf" id="dl-1"><span class="dl-name">Rules sheet</span><span class="dl-sub">Illustrated, with worked examples · 4 A4 pages · single-sided</span></button></li>
+    <li><button type="button" class="dl" data-file="carly-cakes-rival-baker.pdf" id="dl-2"><span class="dl-name">Rival Baker deck</span><span class="dl-sub">6 solo rival cards, backs and rules panel · 2 A4 pages · double-sided, flip on the long edge</span></button></li>
+    <li><button type="button" class="dl" data-file="carly-cakes-source.zip" id="dl-3"><span class="dl-name">Source files</span><span class="dl-sub">Rules, simulator, card art and build scripts · zip, built as you save</span></button></li>
+  </ul>
+  <p class="dl-note" id="dl-note" role="status"></p>
+</section>
 
 <section id="rules">
   <h2>How it plays</h2>
@@ -276,3 +292,43 @@ ul.plain { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
   </ul>
 </section>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+// Source files are published individually (Artifacts don't host .zip); this zips them on click.
+const SOURCES = %%SOURCES%%;
+async function fileData(file) {
+  if (file !== 'carly-cakes-source.zip') {
+    const res = await fetch(file);
+    if (!res.ok) throw { code: 'fetch' };
+    return res.blob();
+  }
+  if (!window.JSZip) throw { code: 'fetch' };
+  const zip = new JSZip();
+  for (const name of SOURCES) {
+    const res = await fetch('source/' + name);
+    if (!res.ok) throw { code: 'fetch' };
+    zip.file('carly-cakes/' + name, await res.text());
+  }
+  return zip.generateAsync({ type: 'blob' });
+}
+(async () => {
+  const buttons = [...document.querySelectorAll('.dl')];
+  const note = document.getElementById('dl-note');
+  let dl = null;
+  try { dl = window.claude ? await window.claude.use('downloads') : null; } catch (e) { dl = null; }
+  if (!dl) {
+    buttons.forEach(b => { b.disabled = true; });
+    note.textContent = "Downloads aren't available in this view. Open the page in claude.ai to save the files.";
+    return;
+  }
+  buttons.forEach(b => b.addEventListener('click', async () => {
+    const file = b.dataset.file; note.textContent = '';
+    try { await dl.save({ filename: file, data: await fileData(file) }); }
+    catch (e) {
+      if (e && e.code === 'declined') return;
+      if (e && e.code === 'rate_limited') { note.textContent = 'A save prompt is already open. Finish that one first.'; return; }
+      note.textContent = "That file couldn't be saved here. Try again from claude.ai.";
+    }
+  }));
+})();
+</script>
