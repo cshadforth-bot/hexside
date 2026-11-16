@@ -49,7 +49,7 @@ function garment(c){
 }
 const band=(cls,f,inner)=>`<div class="band ${cls}"><svg viewBox="0 0 ${cls==='bt'||cls==='bb'?'252 38':'28 280'}" preserveAspectRatio="xMidYMid slice">${fill(f,252,280)}</svg>${inner}</div>`;
 function cardHTML(c,i){
-  const nm=f=>FABRICS[f][0], dot=f=>`<span class="dot" title="${nm(f)}">${nm(f)[0]}</span>`;
+  const nm=f=>FABRICS[f][0], dot=f=>`<span class="vpill">${nm(f)}</span>`; // side edges: the full fabric name, written vertically
   return `<div class="c" style="--f:${FABRICS[c.top][1]}">
 ${band('bt',c.top,`<span class="pill">${nm(c.top)}</span>`)}
 <div class="mid">${band('bl',c.left,dot(c.left))}
